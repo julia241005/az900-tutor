@@ -23,8 +23,8 @@ Agente de IA que ajuda estudantes a se preparar para o exame **Microsoft Azure F
 |---|---|---|
 | 1 · Alimentação | Coleta, limpeza, chunking, embeddings, busca | ✅ Concluída |
 | 2 · RAG + API | LLM local (Ollama) responde com fontes, via FastAPI com streaming | ✅ Concluída |
-| 3 · Agente | Decide a ação: buscar docs, gerar simulado, corrigir · memória de conversa | 🔄 Em teste |
-| 4 · Progresso | Desempenho por área + recomendação de estudo | ⏳ |
+| 3 · Agente | Decide a ação: buscar docs, gerar simulado, corrigir · memória de conversa | ✅ Concluída |
+| 4 · Progresso | Desempenho por área (pesos oficiais) + recomendação + banco de perguntas revisado | 🔄 Em teste |
 | 5 · Interface | Next.js + Tailwind + shadcn/ui (chat, simulado, painel) | ⏳ |
 | 6 · Qualidade e custo | Avaliação automática + tokens/custo por pergunta | ⏳ |
 | 7 · Publicação | Deploy em planos gratuitos e demo | ⏳ |
@@ -41,7 +41,7 @@ Passo a passo completo: [ROADMAP.md](ROADMAP.md)
 | 04 | [Embeddings e indexação](docs/04-embeddings-e-indexacao.md) | ✅ |
 | 05 | [Recuperação e RAG](docs/05-recuperacao-e-rag.md) | ✅ |
 | 06 | [Agente e ferramentas](docs/06-agente-e-ferramentas.md) | ✅ |
-| 07 | Progresso e banco de perguntas (human-in-the-loop) | ⏳ Fase 4 |
+| 07 | [Progresso e banco de perguntas](docs/07-progresso-e-banco-de-perguntas.md) | ✅ |
 | 08 | Atualização da base | ⏳ Fase 6 |
 | 09 | Avaliação de qualidade | ⏳ Fase 6 |
 | 10 | Custo e tokens | ⏳ Fase 6 |
@@ -76,6 +76,14 @@ uvicorn api:app --reload                            # API → abra http://localh
 
 ```bash
 python chat.py      # converse: tire dúvidas, peça "um simulado de governança" e responda com A/B/C/D
+```
+
+## Como rodar (Fase 4 · progresso)
+
+```bash
+python progresso.py            # seu desempenho por área do exame
+python gerar_banco.py 3        # gera 3 perguntas por área para o banco
+python revisar_perguntas.py    # revisão humana: aprovar ou rejeitar perguntas
 ```
 
 > Conteúdo de origem: Microsoft Learn, sempre citado. O texto coletado não é publicado neste repositório. Projeto de estudo, sem vínculo com a Microsoft.

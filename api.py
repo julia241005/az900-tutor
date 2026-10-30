@@ -11,9 +11,12 @@ from dataclasses import asdict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
+from openai import APIConnectionError
 from pydantic import BaseModel, Field
 
+import banco
+import progresso
 from agente import ResultadoAgente, conversar, conversar_stream
 from config import LLM_MODELO
 from rag import Resultado, responder, responder_stream
@@ -21,7 +24,7 @@ from rag import Resultado, responder, responder_stream
 app = FastAPI(
     title="AZ-900 Tutor API",
     description="Tutor de IA para o exame AZ-900, com respostas baseadas na documentação oficial da Microsoft.",
-    version="0.3.0",
+    version="0.4.0",
 )
 
 # Permite que o frontend (Next.js, na porta 3000) chame esta API
@@ -31,6 +34,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(APIConnectionError)
+def llm_fora_do_ar(_request, _erro):
+    """Se o Ollama estiver fechado, devolve um erro claro em vez de uma falha genérica."""
+    return JSONResponse(status_code=503, content={"erro": "Modelo de IA indisponível. Verifique se o Ollama está aberto."})
 
 
 class Pergunta(BaseModel):
@@ -74,6 +83,18 @@ def perguntar_stream(dados: Pergunta):
                 yield f"data: {json.dumps({'evento': 'texto', 'conteudo': parte}, ensure_ascii=False)}\n\n"
 
     return StreamingResponse(eventos(), media_type="text/event-stream")
+
+
+@app.get("/progresso/{sessao_id}", tags=["Progresso"])
+def ver_progresso(sessao_id: str):
+    """Desempenho do aluno por área do exame (com pesos oficiais) e recomendação de estudo."""
+    return progresso.calcular(sessao_id)
+
+
+@app.get("/banco/resumo", tags=["Progresso"])
+def resumo_banco():
+    """Quantidade de perguntas no banco por área e status (pendente, aprovada, rejeitada)."""
+    return banco.resumo_banco()
 
 
 @app.post("/chat", tags=["Agente"])

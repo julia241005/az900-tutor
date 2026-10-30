@@ -10,7 +10,8 @@ Diferença para o RAG da Fase 2: aqui o LLM DECIDE o que fazer.
         ▼
   LLM + histórico + cartões das ferramentas  ──► decide:
         ├─ buscar_documentacao → trechos oficiais → LLM escreve a resposta (streaming)
-        ├─ gerar_simulado      → perguntas → mostradas direto ao aluno
+        ├─ gerar_simulado      → perguntas (banco aprovado ou geradas) → mostradas direto ao aluno
+        ├─ ver_progresso       → desempenho por área + recomendação → mostrado direto
         └─ nenhuma             → conversa simples (ex.: "oi"); se for dúvida, cai no RAG
 
 Detalhes: docs/06-agente-e-ferramentas.md
@@ -32,6 +33,7 @@ Você tem ferramentas:
 - buscar_documentacao: use SEMPRE para qualquer dúvida sobre Azure ou nuvem. Nunca responda \
 conceitos de memória.
 - gerar_simulado: use quando o aluno quiser praticar, fazer quiz, teste ou simulado.
+- ver_progresso: use quando o aluno perguntar como está indo, seu desempenho ou o que estudar.
 
 Ao responder com base nos trechos da documentação:
 1. Use SOMENTE as informações dos trechos. Se não houver a resposta, diga que não encontrou \
@@ -48,10 +50,11 @@ RESPOSTA_SIMULADO = re.compile(r"^\s*(?:letra\s*)?\(?([A-Da-d])\)?\s*[.!]?\s*$")
 @dataclass
 class ResultadoAgente:
     resposta: str = ""
-    tipo: str = "resposta"            # resposta | simulado | correcao | conversa
+    tipo: str = "resposta"            # resposta | simulado | correcao | progresso | conversa
     ferramentas_usadas: list = field(default_factory=list)
     fontes: list = field(default_factory=list)
     pergunta: dict | None = None      # pergunta atual do simulado (sem gabarito), para o visual
+    progresso: dict | None = None     # dados do painel de desempenho, quando pedido
     tokens_entrada: int = 0
     tokens_saida: int = 0
     segundos: float = 0.0
@@ -134,9 +137,10 @@ def conversar_stream(sessao_id: str, mensagem: str):
         saida = executar(nome, chamada.function.arguments, sessao)
         _somar_uso(res, saida.get("uso"))
 
-        if "exibir_direto" in saida:  # ex.: simulado → mostra as perguntas sem passar pelo LLM
-            res.tipo = "simulado"
+        if "exibir_direto" in saida:  # simulado/progresso → mostra direto, sem passar pelo LLM
+            res.tipo = "progresso" if nome == "ver_progresso" else "simulado"
             res.pergunta = saida.get("pergunta")
+            res.progresso = saida.get("progresso")
             yield saida["exibir_direto"]
             yield finalizar(saida["exibir_direto"])
             return

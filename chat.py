@@ -7,8 +7,11 @@ Exemplos:
   - E o ZRS?                         (usa a memória da conversa)
   - Me faz um simulado de governança com 2 perguntas
   - B                                (responde o simulado)
+  - Como está meu progresso?         (desempenho por área do exame)
 Digite "sair" para encerrar.
 """
+from openai import APIConnectionError
+
 from agente import ResultadoAgente, conversar_stream
 from config import LLM_MODELO
 
@@ -26,11 +29,15 @@ while True:
         break
 
     print("\n🤖 Tutor: ", end="", flush=True)
-    for parte in conversar_stream("terminal", mensagem):
-        if isinstance(parte, ResultadoAgente):
-            r = parte
-        else:
-            print(parte, end="", flush=True)
+    try:
+        for parte in conversar_stream("terminal", mensagem):
+            if isinstance(parte, ResultadoAgente):
+                r = parte
+            else:
+                print(parte, end="", flush=True)
+    except APIConnectionError:
+        print("não consegui falar com o modelo. O Ollama está aberto? (procure a lhama 🦙 perto do relógio)\n")
+        continue
 
     if r.fontes:
         print("\n\n📚 Fontes:")

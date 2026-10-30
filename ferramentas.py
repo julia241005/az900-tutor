@@ -7,6 +7,7 @@ Cada ferramenta tem:
 """
 import json
 
+import progresso
 import simulado
 from ingestao.fontes import AREA_ARQUITETURA, AREA_CONCEITOS, AREA_GOVERNANCA
 from rag import lista_fontes, montar_contexto, recuperar
@@ -52,6 +53,16 @@ FERRAMENTAS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "ver_progresso",
+            "description": "Mostra o desempenho do aluno por área do exame e o que estudar a seguir. "
+                           "Use quando o aluno perguntar como está indo, seu progresso, desempenho, "
+                           "pontos fracos ou o que deve estudar.",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
 ]
 
 
@@ -80,10 +91,14 @@ def executar(nome: str, argumentos: str | dict, sessao: Sessao) -> dict:
         area = area if area in AREAS else None  # "Todas" ou valor inválido → todas as áreas
         qtd = argumentos.get("quantidade") or 3
         qtd = max(1, min(5, int(qtd))) if str(qtd).isdigit() else 3
-        perguntas, uso = simulado.gerar_perguntas(area, qtd)
+        perguntas, uso = simulado.obter_perguntas(sessao, area, qtd)
         if not perguntas:
             return {"exibir_direto": "Não consegui gerar as perguntas agora. Pode pedir de novo?", "uso": uso}
         return {"exibir_direto": simulado.iniciar(sessao, perguntas), "uso": uso,
                 "pergunta": {k: v for k, v in sessao.pergunta_atual.items() if k not in ("correta", "explicacao")}}
+
+    if nome == "ver_progresso":
+        dados = progresso.calcular(sessao.sessao_id)
+        return {"exibir_direto": progresso.formatar(dados), "progresso": dados}
 
     return {"conteudo": f"Ferramenta desconhecida: {nome}"}

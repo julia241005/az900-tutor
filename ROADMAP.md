@@ -52,7 +52,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] Endpoints `/chat` e `/chat/stream` na API
 - [x] Chat no terminal (`python chat.py`)
 - [x] Documentar: `docs/06-agente-e-ferramentas.md`
-- [ ] Testar com perguntas variadas e registrar exemplos
+- [x] Testar com perguntas variadas
 - [ ] (Extra) Ferramenta `buscar_microsoft_learn` via servidor MCP oficial
 - [ ] Commit + tag `fase-3`
 
@@ -63,13 +63,18 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 ## Fase 4 · Simulado e progresso (≈ 1–2 semanas)
 **Objetivo:** acompanhar o aluno como o relatório oficial da Microsoft, só que melhor.
 
-- [ ] Banco de dados SQLite: respostas, acertos, área e data
-- [ ] **Banco de perguntas com revisão humana:** a IA gera, você aprova (script `revisar_perguntas.py`)
-- [ ] Cálculo do desempenho por área do exame
-- [ ] Ferramenta `recomendar_estudo` (o que revisar, com links)
-- [ ] Endpoints `/simulado` e `/progresso`
-- [ ] Adicionar seus flashcards e "pegadinhas" como fonte própria
-- [ ] Documentar: `docs/07-progresso-e-banco-de-perguntas.md`
+- [x] Banco de dados SQLite: respostas, acertos, área e data (`banco.py`)
+- [x] **Banco de perguntas com revisão humana:** a IA gera, você aprova (`revisar_perguntas.py`)
+- [x] Geração em lote para o banco (`gerar_banco.py`)
+- [x] Simulado usa primeiro as perguntas aprovadas (mais rápido e confiável)
+- [x] Desempenho por área com os pesos oficiais do exame (`progresso.py`)
+- [x] Recomendação de estudo + páginas para revisar
+- [x] Ferramenta `ver_progresso` no agente ("como está meu progresso?")
+- [x] Endpoints `/progresso/{sessao_id}` e `/banco/resumo`
+- [x] Mensagem clara quando o Ollama está fechado (chat e API)
+- [x] Documentar: `docs/07-progresso-e-banco-de-perguntas.md`
+- [ ] Gerar e revisar as primeiras perguntas do banco
+- [ ] (Extra) Adicionar seus flashcards e "pegadinhas" como fonte própria
 - [ ] Commit + tag `fase-4`
 
 **Conceitos:** memória de longo prazo, human-in-the-loop, dados estruturados + IA.

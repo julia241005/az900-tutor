@@ -14,6 +14,7 @@ RAIZ = Path(__file__).parent
 PASTA_BRUTOS = RAIZ / "data" / "brutos"              # textos baixados (1 arquivo por página)
 ARQ_FRAGMENTOS = RAIZ / "data" / "fragmentos.jsonl"  # pedaços prontos para indexar
 PASTA_VETORES = RAIZ / "data" / "vetores"            # banco vetorial (ChromaDB)
+ARQ_BANCO = RAIZ / "data" / "tutor.db"               # banco SQLite: respostas e banco de perguntas
 
 # ── Fragmentação (chunking) ──────────────────────────────────────────────
 TAMANHO_FRAGMENTO = 1200   # caracteres por pedaço (~300 tokens)

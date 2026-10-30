@@ -1,15 +1,17 @@
 """
 simulado.py — Geração e correção de perguntas no estilo do exame AZ-900.
 
-GERAR  (usa IA):     sorteia trechos oficiais da área → o LLM cria perguntas em JSON
-                     → o código valida e embaralha as alternativas.
-CORRIGIR (sem IA):   comparação exata da letra escolhida com o gabarito.
-                     Correção não pode "alucinar", então é feita por código.
+OBTER (banco primeiro): usa perguntas já APROVADAS por humano (rápido, sem IA).
+GERAR (usa IA):         se faltar, sorteia trechos oficiais → o LLM cria perguntas em JSON
+                        → o código valida, embaralha e salva como "pendente" para revisão.
+CORRIGIR (sem IA):      comparação exata da letra com o gabarito + registro no banco.
 """
 import json
 import random
 import re
+from dataclasses import dataclass
 
+import banco
 from buscar import amostra_por_area
 from config import LLM_MODELO
 from rag import cliente, montar_contexto
@@ -18,17 +20,18 @@ from sessao import Sessao
 LETRAS = ["A", "B", "C", "D"]
 
 PROMPT_SIMULADO = """Você cria perguntas de múltipla escolha no estilo do exame Microsoft AZ-900, \
-em português do Brasil, baseadas SOMENTE nos trechos oficiais fornecidos.
+em português do Brasil, baseadas SOMENTE no trecho oficial fornecido.
 
 Regras:
 - Cada pergunta tem 4 alternativas (A, B, C, D) e apenas UMA correta.
-- As alternativas erradas devem ser plausíveis (conceitos parecidos do Azure).
-- A explicação diz por que a correta está certa, em 1 ou 2 frases.
-- "trecho" é o número do trecho usado como base.
+- As alternativas erradas devem ser plausíveis (conceitos parecidos do Azure), mas claramente incorretas segundo o trecho.
+- Não use detalhes que o trecho não afirma.
+- A explicação diz por que a correta está certa, em 1 ou 2 frases, SEM citar letras \
+(escreva o conceito, não "a opção B").
 
 Responda APENAS com JSON válido, neste formato:
 {"perguntas": [{"enunciado": "...", "alternativas": {"A": "...", "B": "...", "C": "...", "D": "..."}, \
-"correta": "B", "explicacao": "...", "trecho": 1}]}"""
+"correta": "B", "explicacao": "..."}]}"""
 
 
 def _extrair_json(texto: str) -> dict:
@@ -46,11 +49,20 @@ def _validar_e_embaralhar(p: dict, trechos: list[dict], area: str | None) -> dic
     if not p.get("enunciado") or set(alts) != set(LETRAS) or correta not in LETRAS:
         return None
 
-    texto_correto = alts[correta]
-    textos = [alts[l] for l in LETRAS]
-    random.shuffle(textos)
-    novas = dict(zip(LETRAS, textos))
-    nova_correta = LETRAS[textos.index(texto_correto)]
+    ordem = LETRAS[:]
+    random.shuffle(ordem)                       # ordem[i] = letra antiga que vai para a posição i
+    novas = {LETRAS[i]: alts[antiga] for i, antiga in enumerate(ordem)}
+    de_para = {antiga: LETRAS[i] for i, antiga in enumerate(ordem)}
+    nova_correta = de_para[correta]
+
+    # A explicação pode citar letras ("a opção B..."). Depois de embaralhar, elas precisam ser
+    # atualizadas para a nova posição (bug encontrado na revisão humana).
+    explicacao = re.sub(
+        r"\b(op[çc][ãa]o|alternativa|letra|resposta)(\s+\(?)([A-D])\b",
+        lambda m: m.group(1) + m.group(2) + de_para[m.group(3)],
+        str(p.get("explicacao", "")).strip(),
+        flags=re.IGNORECASE,
+    )
 
     idx = p.get("trecho", 1)
     trecho = trechos[idx - 1] if isinstance(idx, int) and 1 <= idx <= len(trechos) else trechos[0]
@@ -58,34 +70,65 @@ def _validar_e_embaralhar(p: dict, trechos: list[dict], area: str | None) -> dic
         "enunciado": p["enunciado"].strip(),
         "alternativas": novas,
         "correta": nova_correta,
-        "explicacao": str(p.get("explicacao", "")).strip(),
+        "explicacao": explicacao,
         "area": area or trecho["area"],
         "fonte": {"titulo": trecho["titulo"], "url": trecho["url"]},
     }
 
 
-def gerar_perguntas(area: str | None, quantidade: int = 3) -> tuple[list[dict], object]:
-    """Gera perguntas. Retorna (perguntas, uso_de_tokens)."""
-    trechos = amostra_por_area(area, max(2, quantidade))
-    if not trechos:
-        return [], None
-    resp = cliente.chat.completions.create(
-        model=LLM_MODELO,
-        messages=[
-            {"role": "system", "content": PROMPT_SIMULADO},
-            {"role": "user", "content": f"TRECHOS OFICIAIS:\n\n{montar_contexto(trechos)}\n\n"
-                                        f"Crie {quantidade} pergunta(s)."},
-        ],
-        temperature=0.5,
-        response_format={"type": "json_object"},
-    )
-    dados = _extrair_json(resp.choices[0].message.content or "")
-    perguntas = [v for p in dados.get("perguntas", []) if (v := _validar_e_embaralhar(p, trechos, area))]
-    return perguntas[:quantidade], resp.usage
+@dataclass
+class Uso:
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+
+
+def gerar_perguntas(area: str | None, quantidade: int = 3) -> tuple[list[dict], Uso]:
+    """Gera perguntas. Retorna (perguntas, uso_de_tokens).
+    Uma pergunta por trecho, em chamadas separadas: assim a FONTE citada é sempre
+    o trecho que originou a pergunta (modelos pequenos erravam o número do trecho)."""
+    uso = Uso()
+    perguntas = []
+    for trecho in amostra_por_area(area, quantidade):
+        resp = cliente.chat.completions.create(
+            model=LLM_MODELO,
+            messages=[
+                {"role": "system", "content": PROMPT_SIMULADO},
+                {"role": "user", "content": f"TRECHO OFICIAL:\n\n{montar_contexto([trecho])}\n\nCrie 1 pergunta."},
+            ],
+            temperature=0.5,
+            response_format={"type": "json_object"},
+        )
+        if resp.usage:
+            uso.prompt_tokens += resp.usage.prompt_tokens or 0
+            uso.completion_tokens += resp.usage.completion_tokens or 0
+        dados = _extrair_json(resp.choices[0].message.content or "")
+        for p in dados.get("perguntas", [])[:1]:
+            p["trecho"] = 1
+            if v := _validar_e_embaralhar(p, [trecho], area):
+                perguntas.append(v)
+    return perguntas, uso
+
+
+def obter_perguntas(sessao: Sessao, area: str | None, quantidade: int = 3) -> tuple[list[dict], object]:
+    """Banco de perguntas aprovadas primeiro; a IA só gera o que faltar.
+    Perguntas novas são salvas como 'pendente' para revisão humana (revisar_perguntas.py)."""
+    ja_respondidas = {r["enunciado"] for r in banco.respostas_do_aluno(sessao.sessao_id)}
+    perguntas = banco.perguntas_aprovadas(area, quantidade, evitar=ja_respondidas)
+    uso = None
+    faltam = quantidade - len(perguntas)
+    if faltam > 0:
+        novas, uso = gerar_perguntas(area, faltam)
+        for p in novas:
+            banco.salvar_pergunta(p, status="pendente")
+            p["status"] = "pendente"
+        perguntas += novas
+    random.shuffle(perguntas)
+    return perguntas, uso
 
 
 def formatar_pergunta(p: dict, numero: int, total: int) -> str:
-    linhas = [f"📝 **Pergunta {numero} de {total}** · {p['area']}", "", p["enunciado"], ""]
+    selo = " · 🧪 nova (em revisão)" if p.get("status") == "pendente" else ""
+    linhas = [f"📝 **Pergunta {numero} de {total}** · {p['area']}{selo}", "", p["enunciado"], ""]
     linhas += [f"**{l})** {p['alternativas'][l]}" for l in LETRAS]
     linhas += ["", "Responda com a letra (A, B, C ou D)."]
     return "\n".join(linhas)
@@ -103,6 +146,7 @@ def corrigir(sessao: Sessao, letra: str) -> str:
     p = sessao.pergunta_atual
     acertou = letra.upper() == p["correta"]
     sessao.resultados.append({"area": p["area"], "correta": acertou})
+    banco.registrar_resposta(sessao.sessao_id, p, acertou)  # memória de longo prazo
     if acertou:
         sessao.acertos_rodada += 1
 
@@ -122,5 +166,5 @@ def corrigir(sessao: Sessao, letra: str) -> str:
         pct = round(100 * sessao.acertos_rodada / sessao.total_rodada)
         partes += ["", "---", "",
                    f"🏁 **Fim do simulado:** {sessao.acertos_rodada} de {sessao.total_rodada} ({pct}%).",
-                   "Meta para a prova: 80% ou mais. Quer outra rodada ou revisar algum tema?"]
+                   "Meta para a prova: 80% ou mais. Peça \"meu progresso\" para ver seu desempenho por área."]
     return "\n".join(partes)
