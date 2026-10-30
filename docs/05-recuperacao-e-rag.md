@@ -80,8 +80,8 @@ Documentação interativa automática: `http://localhost:8000/docs`
 
 **Exemplo de evento do streaming:**
 ```
-data: {"tipo": "texto", "conteudo": "O GRS copia..."}
-data: {"tipo": "fim", "resposta": "...", "fontes": [...], "tokens_entrada": 1100, "tokens_saida": 220, "segundos": 8.4}
+data: {"evento": "texto", "conteudo": "O GRS copia..."}
+data: {"evento": "fim", "resposta": "...", "fontes": [...], "tokens_entrada": 1100, "tokens_saida": 220, "segundos": 8.4}
 ```
 
 ## Limitações conhecidas

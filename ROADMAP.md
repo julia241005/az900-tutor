@@ -32,7 +32,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] Mostrar tokens e tempo de cada resposta
 - [x] **Streaming:** a resposta aparece aos poucos
 - [x] **API com FastAPI:** `/saude`, `/perguntar`, `/perguntar/stream`
-- [ ] Testar no terminal (`python rag.py`) e na API (`http://localhost:8000/docs`)
+- [x] Testar no terminal (`python rag.py`) e na API (`http://localhost:8000/docs`)
 - [x] Documentar: `docs/05-recuperacao-e-rag.md`
 - [ ] Commit + tag `fase-2`
 
@@ -43,14 +43,17 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 ## Fase 3 · Agente com ferramentas (≈ 1–2 semanas)
 **Objetivo:** o tutor deixa de só responder e passa a **decidir o que fazer**.
 
-- [ ] Ferramenta `buscar_documentacao` (nossa base local)
-- [ ] Ferramenta `buscar_microsoft_learn` (servidor MCP oficial, busca ao vivo)
-- [ ] Ferramenta `gerar_simulado` (perguntas por área do exame)
-- [ ] Ferramenta `corrigir_resposta` (corrige e explica o erro)
-- [ ] Ciclo do agente: pergunta → LLM escolhe a ferramenta → executa → responde
-- [ ] Histórico da conversa (memória de curto prazo)
-- [ ] Endpoint `/chat` na API
+- [x] Ferramenta `buscar_documentacao` (nossa base local)
+- [x] Ferramenta `gerar_simulado` (perguntas por área, JSON validado, alternativas embaralhadas)
+- [x] Correção determinística `corrigir_resposta` (código, sem IA)
+- [x] Ciclo do agente: pergunta → LLM escolhe a ferramenta → executa → responde
+- [x] Guardrail: dúvida sem busca é redirecionada ao RAG
+- [x] Histórico da conversa (memória de curto prazo)
+- [x] Endpoints `/chat` e `/chat/stream` na API
+- [x] Chat no terminal (`python chat.py`)
+- [x] Documentar: `docs/06-agente-e-ferramentas.md`
 - [ ] Testar com perguntas variadas e registrar exemplos
+- [ ] (Extra) Ferramenta `buscar_microsoft_learn` via servidor MCP oficial
 - [ ] Commit + tag `fase-3`
 
 **Conceitos:** agentes, tool use / function calling, MCP, memória de conversa.
@@ -66,7 +69,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [ ] Ferramenta `recomendar_estudo` (o que revisar, com links)
 - [ ] Endpoints `/simulado` e `/progresso`
 - [ ] Adicionar seus flashcards e "pegadinhas" como fonte própria
-- [ ] Documentar: `docs/06-banco-de-perguntas.md`
+- [ ] Documentar: `docs/07-progresso-e-banco-de-perguntas.md`
 - [ ] Commit + tag `fase-4`
 
 **Conceitos:** memória de longo prazo, human-in-the-loop, dados estruturados + IA.
@@ -103,7 +106,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [ ] Registrar tokens e custo de cada pergunta
 - [ ] Relatório de custo: custo médio por pergunta e por aluno (FinOps de IA)
 - [ ] Rotina de atualização da base (recoletar e reindexar)
-- [ ] Documentar: `docs/07-atualizacao.md`, `docs/08-avaliacao.md`, `docs/09-custo.md`
+- [ ] Documentar: `docs/08-atualizacao.md`, `docs/09-avaliacao.md`, `docs/10-custo.md`
 - [ ] Commit + tag `fase-6`
 
 **Conceitos:** evals, LLM-as-judge, observabilidade, unit economics de IA.
@@ -119,7 +122,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [ ] LLM da versão online: provedor com plano gratuito ou demo em vídeo usando o Ollama local
 - [ ] Variáveis de ambiente e segredos (nunca no código)
 - [ ] Proteções: limite de perguntas por usuário
-- [ ] Documentar: `docs/10-seguranca-e-etica.md`
+- [ ] Documentar: `docs/11-seguranca-e-etica.md`
 - [ ] README final: demo, GIF, arquitetura, resultados da avaliação e custo
 - [ ] Tornar o repositório público
 - [ ] Post no LinkedIn contando a jornada
@@ -136,7 +139,7 @@ az900-tutor/
 ├── ingestao/           ← Python: pipeline de alimentação
 ├── rag.py · api.py     ← Python: RAG, agente e API (FastAPI)
 ├── frontend/           ← Next.js: chat, simulado, painel
-├── docs/               ← processos 01–10 + imagens
+├── docs/               ← processos 01–11 + imagens
 ├── avaliacao/          ← perguntas de teste e resultados
 ├── README.md
 └── ROADMAP.md          ← este arquivo

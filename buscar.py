@@ -4,6 +4,7 @@ Mostra quais pedaços da documentação o tutor usaria para responder.
 
 Rode:  python buscar.py "qual a diferença entre LRS e GRS?"
 """
+import random
 import sys
 
 import chromadb
@@ -15,16 +16,34 @@ _modelo = None
 _colecao = None
 
 
+def _colecao_chroma():
+    global _colecao
+    if _colecao is None:
+        _colecao = chromadb.PersistentClient(path=str(PASTA_VETORES)).get_collection(NOME_COLECAO)
+    return _colecao
+
+
+def amostra_por_area(area: str | None, n: int) -> list[dict]:
+    """Sorteia n trechos de conteúdo (sem o guia de estudo) de uma área do exame.
+    Usado para gerar perguntas de simulado variadas."""
+    r = _colecao_chroma().get(include=["documents", "metadatas"])
+    candidatos = [
+        {"texto": doc, "similaridade": 1.0, **meta}
+        for doc, meta in zip(r["documents"], r["metadatas"])
+        if meta.get("tipo") != "guia" and len(doc) > 300 and (not area or meta.get("area") == area)
+    ]
+    return random.sample(candidatos, min(n, len(candidatos)))
+
+
 def buscar(pergunta: str, k: int = TOP_K, area: str | None = None) -> list[dict]:
     """Retorna os k fragmentos mais parecidos com a pergunta."""
-    global _modelo, _colecao
+    global _modelo
     if _modelo is None:
         _modelo = SentenceTransformer(MODELO_EMBEDDING)
-        _colecao = chromadb.PersistentClient(path=str(PASTA_VETORES)).get_collection(NOME_COLECAO)
 
     vetor = _modelo.encode([pergunta], normalize_embeddings=True).tolist()
     filtro = {"area": area} if area else None
-    r = _colecao.query(query_embeddings=vetor, n_results=k, where=filtro)
+    r = _colecao_chroma().query(query_embeddings=vetor, n_results=k, where=filtro)
 
     return [
         {"texto": doc, "similaridade": round(1 - dist, 3), **meta}
