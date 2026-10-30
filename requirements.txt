@@ -2,6 +2,7 @@ requests
 beautifulsoup4
 sentence-transformers
 chromadb
-anthropic
+openai
+fastapi
+uvicorn
 python-dotenv
-streamlit

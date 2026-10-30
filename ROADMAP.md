@@ -4,6 +4,7 @@ Passo a passo do início ao fim do projeto. Marque `[x]` conforme avançar.
 Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fase-N` → `git push --tags`
 
 **Duração estimada:** 8 a 10 semanas, com algumas horas por semana.
+**Custo:** zero. LLM local (Ollama), embeddings locais e hospedagem em planos gratuitos.
 
 ---
 
@@ -15,7 +16,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] Gerar embeddings e indexar no ChromaDB
 - [x] Testar a busca semântica
 - [x] Documentar processos 01–04
-- [ ] **Git:** criar repositório (privado), commit e tag `fase-1`
+- [x] **Git:** commit e tag `fase-1`
 
 **Conceitos:** ingestão de dados, chunking, embeddings, banco vetorial, busca semântica.
 
@@ -24,16 +25,15 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 ## Fase 2 · RAG + API (≈ 1–2 semanas)
 **Objetivo:** o LLM lê os trechos encontrados e responde em português, como um professor, citando as fontes.
 
-- [ ] Criar a chave de API (Anthropic) e salvar no `.env`
-- [ ] Reorganizar o projeto: código Python vai para a pasta `backend/`
-- [ ] `rag.py`: pergunta → busca trechos → monta o prompt → LLM → resposta
-- [ ] **Prompt de sistema:** papel de tutor, responder só com base nos trechos, dizer "não sei" quando não houver fonte
-- [ ] Citação de fontes na resposta (título + link)
-- [ ] Mostrar tokens usados em cada resposta
-- [ ] **Streaming:** a resposta aparece aos poucos
-- [ ] **API com FastAPI:** endpoint `/perguntar`
-- [ ] Testar a API pelo navegador (`/docs` do FastAPI)
-- [ ] Documentar: `docs/05-recuperacao-e-rag.md`
+- [x] Instalar o Ollama e o modelo `qwen2.5:3b` (LLM local, **custo zero**)
+- [x] `rag.py`: pergunta → busca trechos → filtro de relevância → monta o prompt → LLM → resposta
+- [x] **Prompt de sistema:** papel de tutor, responder só com base nos trechos, dizer "não sei" quando não houver fonte
+- [x] Citação de fontes na resposta (título + link)
+- [x] Mostrar tokens e tempo de cada resposta
+- [x] **Streaming:** a resposta aparece aos poucos
+- [x] **API com FastAPI:** `/saude`, `/perguntar`, `/perguntar/stream`
+- [ ] Testar no terminal (`python rag.py`) e na API (`http://localhost:8000/docs`)
+- [x] Documentar: `docs/05-recuperacao-e-rag.md`
 - [ ] Commit + tag `fase-2`
 
 **Conceitos:** RAG, prompt de sistema, guardrails, contexto, tokens, streaming, API REST.
@@ -114,10 +114,11 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 **Objetivo:** projeto no ar, com link para mostrar.
 
 - [ ] Dockerfile do backend
-- [ ] Deploy do backend (Azure Container Apps ou Render)
-- [ ] Deploy do frontend (Vercel)
+- [ ] Deploy do backend em plano gratuito (ex.: Hugging Face Spaces ou Render)
+- [ ] Deploy do frontend em plano gratuito (Vercel)
+- [ ] LLM da versão online: provedor com plano gratuito ou demo em vídeo usando o Ollama local
 - [ ] Variáveis de ambiente e segredos (nunca no código)
-- [ ] Proteções de custo: limite de perguntas por usuário + alerta de orçamento
+- [ ] Proteções: limite de perguntas por usuário
 - [ ] Documentar: `docs/10-seguranca-e-etica.md`
 - [ ] README final: demo, GIF, arquitetura, resultados da avaliação e custo
 - [ ] Tornar o repositório público
@@ -132,7 +133,8 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 
 ```
 az900-tutor/
-├── backend/            ← Python: ingestão, RAG, agente, API (FastAPI)
+├── ingestao/           ← Python: pipeline de alimentação
+├── rag.py · api.py     ← Python: RAG, agente e API (FastAPI)
 ├── frontend/           ← Next.js: chat, simulado, painel
 ├── docs/               ← processos 01–10 + imagens
 ├── avaliacao/          ← perguntas de teste e resultados
