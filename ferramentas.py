@@ -93,7 +93,8 @@ def executar(nome: str, argumentos: str | dict, sessao: Sessao) -> dict:
         qtd = max(1, min(5, int(qtd))) if str(qtd).isdigit() else 3
         perguntas, uso = simulado.obter_perguntas(sessao, area, qtd)
         if not perguntas:
-            return {"exibir_direto": "Não consegui gerar as perguntas agora. Pode pedir de novo?", "uso": uso}
+            return {"exibir_direto": "Ainda não há perguntas aprovadas para essa área. "
+                                     "Rode `python importar_perguntas.py` para carregar o banco inicial.", "uso": uso}
         return {"exibir_direto": simulado.iniciar(sessao, perguntas), "uso": uso,
                 "pergunta": {k: v for k, v in sessao.pergunta_atual.items() if k not in ("correta", "explicacao")}}
 

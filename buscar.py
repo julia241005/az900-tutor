@@ -15,6 +15,9 @@ from config import MODELO_EMBEDDING, NOME_COLECAO, PASTA_VETORES, TOP_K
 _modelo = None
 _colecao = None
 
+# Unidades de introdução e resumo falam do curso (ex.: como usar o Copilot), não do conteúdo da prova
+UNIDADES_SEM_CONTEUDO_DE_PROVA = ("/1-introduction", "-summary")
+
 
 def _colecao_chroma():
     global _colecao
@@ -31,6 +34,7 @@ def amostra_por_area(area: str | None, n: int) -> list[dict]:
         {"texto": doc, "similaridade": 1.0, **meta}
         for doc, meta in zip(r["documents"], r["metadatas"])
         if meta.get("tipo") != "guia" and len(doc) > 300 and (not area or meta.get("area") == area)
+        and not any(p in meta.get("url", "") for p in UNIDADES_SEM_CONTEUDO_DE_PROVA)
     ]
     return random.sample(candidatos, min(n, len(candidatos)))
 

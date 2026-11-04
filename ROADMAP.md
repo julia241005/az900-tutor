@@ -34,7 +34,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] **API com FastAPI:** `/saude`, `/perguntar`, `/perguntar/stream`
 - [x] Testar no terminal (`python rag.py`) e na API (`http://localhost:8000/docs`)
 - [x] Documentar: `docs/05-recuperacao-e-rag.md`
-- [ ] Commit + tag `fase-2`
+- [x] Commit + tag `fase-2`
 
 **Conceitos:** RAG, prompt de sistema, guardrails, contexto, tokens, streaming, API REST.
 
@@ -54,7 +54,7 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] Documentar: `docs/06-agente-e-ferramentas.md`
 - [x] Testar com perguntas variadas
 - [ ] (Extra) Ferramenta `buscar_microsoft_learn` via servidor MCP oficial
-- [ ] Commit + tag `fase-3`
+- [x] Commit + tag `fase-3`
 
 **Conceitos:** agentes, tool use / function calling, MCP, memória de conversa.
 
@@ -73,31 +73,30 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 - [x] Endpoints `/progresso/{sessao_id}` e `/banco/resumo`
 - [x] Mensagem clara quando o Ollama está fechado (chat e API)
 - [x] Documentar: `docs/07-progresso-e-banco-de-perguntas.md`
-- [ ] Gerar e revisar as primeiras perguntas do banco
+- [x] Gerar e revisar as primeiras perguntas do banco (0 de 11 aprovadas → estratégia revista)
+- [x] Banco curado de 30 perguntas com fonte oficial (`importar_perguntas.py`)
+- [x] Simulado usa só perguntas aprovadas; geração por IA vira opcional
 - [ ] (Extra) Adicionar seus flashcards e "pegadinhas" como fonte própria
-- [ ] Commit + tag `fase-4`
+- [x] Commit + tag `fase-4`
 
 **Conceitos:** memória de longo prazo, human-in-the-loop, dados estruturados + IA.
 
 ---
 
-## Fase 5 · Interface moderna (≈ 2–3 semanas)
-**Objetivo:** visual de produto real, elegante e responsivo.
+## Fase 5 · Interface (v1 concluída)
+**Objetivo:** usar o tutor pelo navegador, sem terminal.
 
-- [ ] Protótipo visual das 3 telas (aprovar o design antes de programar)
-- [ ] Instalar Node.js
-- [ ] Criar o app Next.js na pasta `frontend/`
-- [ ] Configurar Tailwind CSS + shadcn/ui + Framer Motion
-- [ ] Identidade visual: dark mode, paleta azul/violeta, tipografia Inter/Geist
-- [ ] **Tela Chat:** streaming, cards de fonte, etiqueta da área, sugestões de perguntas
-- [ ] **Tela Simulado:** cartões, barra de progresso, feedback animado
-- [ ] **Tela Painel:** desempenho por área, evolução, card "Estude agora"
-- [ ] Conectar o frontend à API
-- [ ] Responsivo (celular) + tema claro/escuro
-- [ ] Prints e GIF na pasta `docs/imagens/`
-- [ ] Commit + tag `fase-5`
+- [x] Interface web servida pela própria API (`web/index.html`, sem instalar nada novo)
+- [x] Aba Tirar dúvidas: chat com streaming, fontes oficiais, tokens e tempo
+- [x] Aba Simulado: perguntas aprovadas do banco, correção instantânea com explicação e fonte
+- [x] Aba Meu progresso: desempenho por área com pesos oficiais e recomendação
+- [x] Tema claro/escuro automático e layout para celular
+- [x] Atalho `Iniciar AZ-900 Tutor.bat` (liga a API e abre o navegador)
+- [x] Endpoints `/simulado/perguntas` e `/simulado/responder` (sem IA, instantâneos)
+- [ ] Prints da interface na pasta `docs/imagens/` para o README
+- [ ] (v2, opcional) Migrar para Next.js + Tailwind + shadcn/ui, reaproveitando a mesma API
 
-**Conceitos:** frontend moderno, TypeScript, integração com API, UX de produtos de IA.
+**Conceitos:** frontend consumindo API REST, streaming (SSE) no navegador, UX de produtos de IA.
 
 ---
 

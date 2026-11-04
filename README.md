@@ -24,8 +24,8 @@ Agente de IA que ajuda estudantes a se preparar para o exame **Microsoft Azure F
 | 1 · Alimentação | Coleta, limpeza, chunking, embeddings, busca | ✅ Concluída |
 | 2 · RAG + API | LLM local (Ollama) responde com fontes, via FastAPI com streaming | ✅ Concluída |
 | 3 · Agente | Decide a ação: buscar docs, gerar simulado, corrigir · memória de conversa | ✅ Concluída |
-| 4 · Progresso | Desempenho por área (pesos oficiais) + recomendação + banco de perguntas revisado | 🔄 Em teste |
-| 5 · Interface | Next.js + Tailwind + shadcn/ui (chat, simulado, painel) | ⏳ |
+| 4 · Progresso | Desempenho por área (pesos oficiais) + recomendação + banco curado de perguntas | ✅ Concluída |
+| 5 · Interface | Interface web: chat com streaming e fontes, simulado e painel de progresso | ✅ v1 (HTML servido pela API) |
 | 6 · Qualidade e custo | Avaliação automática + tokens/custo por pergunta | ⏳ |
 | 7 · Publicação | Deploy em planos gratuitos e demo | ⏳ |
 
@@ -46,6 +46,12 @@ Passo a passo completo: [ROADMAP.md](ROADMAP.md)
 | 09 | Avaliação de qualidade | ⏳ Fase 6 |
 | 10 | Custo e tokens | ⏳ Fase 6 |
 | 11 | Segurança e ética | ⏳ Fase 7 |
+
+## Como usar (interface gráfica)
+
+1. Abra o Ollama (modelo `qwen2.5:3b` baixado).
+2. Dê dois cliques em **`Iniciar AZ-900 Tutor.bat`**. O navegador abre em `http://localhost:8000`.
+3. Use as abas **Tirar dúvidas**, **Simulado** e **Meu progresso**. Para desligar, feche a janela preta.
 
 ## Como rodar (Fase 1)
 
@@ -81,9 +87,10 @@ python chat.py      # converse: tire dúvidas, peça "um simulado de governança
 ## Como rodar (Fase 4 · progresso)
 
 ```bash
+python importar_perguntas.py   # carrega o banco curado (30 perguntas, 10 por área)
 python progresso.py            # seu desempenho por área do exame
-python gerar_banco.py 3        # gera 3 perguntas por área para o banco
 python revisar_perguntas.py    # revisão humana: aprovar ou rejeitar perguntas
+python gerar_banco.py 3        # (experimental) a IA gera perguntas para revisão
 ```
 
 > Conteúdo de origem: Microsoft Learn, sempre citado. O texto coletado não é publicado neste repositório. Projeto de estudo, sem vínculo com a Microsoft.

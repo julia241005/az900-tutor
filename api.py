@@ -9,9 +9,11 @@ Teste: abra http://localhost:8000/docs no navegador
 import json
 from dataclasses import asdict
 
-from fastapi import FastAPI
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from openai import APIConnectionError
 from pydantic import BaseModel, Field
 
@@ -24,7 +26,7 @@ from rag import Resultado, responder, responder_stream
 app = FastAPI(
     title="AZ-900 Tutor API",
     description="Tutor de IA para o exame AZ-900, com respostas baseadas na documentação oficial da Microsoft.",
-    version="0.4.0",
+    version="0.5.0",
 )
 
 # Permite que o frontend (Next.js, na porta 3000) chame esta API
@@ -55,6 +57,41 @@ class Mensagem(BaseModel):
 
 def _sse(dados: dict) -> str:
     return f"data: {json.dumps(dados, ensure_ascii=False)}\n\n"
+
+
+PAGINA = Path(__file__).parent / "web" / "index.html"
+
+
+@app.get("/", include_in_schema=False)
+def interface():
+    """Interface gráfica do tutor (chat, simulado e progresso)."""
+    return FileResponse(PAGINA)
+
+
+class Resposta(BaseModel):
+    sessao_id: str = Field(..., min_length=1, max_length=64)
+    pergunta_id: int
+    resposta: str = Field(..., pattern="^[ABCD]$")
+
+
+@app.get("/simulado/perguntas", tags=["Simulado"])
+def simulado_perguntas(sessao_id: str, area: str | None = None, quantidade: int = Query(5, ge=1, le=30)):
+    """Sorteia perguntas APROVADAS do banco (sem gabarito), evitando as que o aluno já respondeu.
+    Não usa IA: é instantâneo."""
+    ja = {r["enunciado"] for r in banco.respostas_do_aluno(sessao_id)}
+    perguntas = banco.perguntas_aprovadas(area or None, quantidade, evitar=ja)
+    return [{k: p[k] for k in ("id", "area", "enunciado", "alternativas")} for p in perguntas]
+
+
+@app.post("/simulado/responder", tags=["Simulado"])
+def simulado_responder(dados: Resposta):
+    """Corrige por código (sem IA), registra no progresso e devolve a explicação com a fonte."""
+    p = banco.obter_pergunta(dados.pergunta_id)
+    if not p:
+        raise HTTPException(404, "Pergunta não encontrada")
+    acertou = dados.resposta == p["correta"]
+    banco.registrar_resposta(dados.sessao_id, p, acertou)
+    return {"acertou": acertou, "correta": p["correta"], "explicacao": p["explicacao"], "fonte": p["fonte"]}
 
 
 @app.get("/saude", tags=["Status"])

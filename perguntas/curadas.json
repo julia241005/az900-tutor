@@ -1,0 +1,247 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo AZ-900, escritas com base na trilha oficial do Microsoft Learn (pt-br). Cada pergunta cita a unidade oficial onde o conceito é explicado. Conteúdo original (não são perguntas do exame).",
+  "perguntas": [
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "No modelo de responsabilidade compartilhada, quem é responsável pelo sistema operacional de uma máquina virtual hospedada como IaaS?",
+      "alternativas": {"A": "O provedor de nuvem", "B": "O cliente", "C": "A responsabilidade é dividida igualmente", "D": "Ninguém, o sistema operacional é gerenciado automaticamente"},
+      "correta": "B",
+      "explicacao": "Em IaaS, o provedor cuida da infraestrutura física (datacenter, rede física e hosts). O sistema operacional, as aplicações e os dados ficam sob responsabilidade do cliente.",
+      "fonte": {"titulo": "Descrever o modelo de responsabilidade compartilhada", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/4-describe-shared-responsibility-model"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Qual item é SEMPRE responsabilidade do cliente, independentemente do tipo de serviço de nuvem (IaaS, PaaS ou SaaS)?",
+      "alternativas": {"A": "O datacenter físico", "B": "A rede física", "C": "As informações e os dados", "D": "Os hosts físicos"},
+      "correta": "C",
+      "explicacao": "Informações e dados, dispositivos e contas/identidades são sempre do cliente. Datacenter, rede física e hosts físicos são sempre do provedor.",
+      "fonte": {"titulo": "Descrever o modelo de responsabilidade compartilhada", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/4-describe-shared-responsibility-model"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Uma empresa mantém alguns sistemas em seu próprio datacenter e outros em uma nuvem pública, com as duas partes trabalhando juntas. Qual modelo de nuvem é esse?",
+      "alternativas": {"A": "Nuvem híbrida", "B": "Nuvem privada", "C": "Nuvem pública", "D": "Nuvem comunitária"},
+      "correta": "A",
+      "explicacao": "A nuvem híbrida combina nuvem pública e nuvem privada (ou ambiente local), permitindo que as cargas de trabalho usem os dois ambientes.",
+      "fonte": {"titulo": "Definir modelos de nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/5-define-cloud-models"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "No modelo baseado em consumo da nuvem, pagar apenas pelos recursos utilizados, sem grande investimento inicial, é um exemplo de:",
+      "alternativas": {"A": "Despesa de capital (CapEx)", "B": "Despesa operacional (OpEx)", "C": "Depreciação de ativos", "D": "Custo fixo de infraestrutura"},
+      "correta": "B",
+      "explicacao": "Na nuvem, os gastos são despesas operacionais (OpEx): você paga conforme usa. CapEx é o investimento inicial em infraestrutura física, como comprar servidores.",
+      "fonte": {"titulo": "Descrever o modelo baseado em consumo", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/6-describe-consumption-based-model"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Durante uma promoção, uma loja on-line adiciona mais máquinas virtuais para atender ao aumento de acessos. Esse é um exemplo de:",
+      "alternativas": {"A": "Escalar verticalmente", "B": "Alta disponibilidade", "C": "Escalar horizontalmente", "D": "Recuperação de desastres"},
+      "correta": "C",
+      "explicacao": "Escalar horizontalmente é adicionar ou remover instâncias (mais máquinas). Escalar verticalmente é aumentar ou diminuir a capacidade de uma mesma máquina, como CPU e memória.",
+      "fonte": {"titulo": "Descrever os benefícios da alta disponibilidade e da escalabilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Qual benefício da nuvem descreve garantir o máximo de tempo de atividade de um serviço, mesmo quando ocorrem interrupções ou falhas?",
+      "alternativas": {"A": "Alta disponibilidade", "B": "Escalabilidade", "C": "Governança", "D": "Gerenciabilidade"},
+      "correta": "A",
+      "explicacao": "Alta disponibilidade significa manter o serviço disponível o máximo possível, apesar de interrupções. Os provedores expressam isso em SLAs (contratos de nível de serviço).",
+      "fonte": {"titulo": "Descrever os benefícios da alta disponibilidade e da escalabilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "A capacidade de um sistema se recuperar de falhas e continuar funcionando é chamada de:",
+      "alternativas": {"A": "Elasticidade", "B": "Previsibilidade", "C": "Escalabilidade", "D": "Confiabilidade"},
+      "correta": "D",
+      "explicacao": "Confiabilidade é a capacidade de se recuperar de falhas e continuar funcionando. A nuvem favorece isso com recursos distribuídos em várias regiões do mundo.",
+      "fonte": {"titulo": "Descrever os benefícios da confiabilidade e da previsibilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/3-reliability-predictability-cloud"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Uma empresa quer migrar suas aplicações para a nuvem do jeito que estão (lift-and-shift), mantendo controle sobre o sistema operacional. Qual tipo de serviço é o mais indicado?",
+      "alternativas": {"A": "SaaS", "B": "PaaS", "C": "IaaS", "D": "Serverless"},
+      "correta": "C",
+      "explicacao": "Na migração lift-and-shift, os recursos da nuvem são configurados de forma parecida com o datacenter local e as cargas de trabalho são movidas para a infraestrutura IaaS, com o cliente gerenciando o sistema operacional.",
+      "fonte": {"titulo": "Descrever a infraestrutura como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/2-describe-infrastructure-service"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Uma equipe de desenvolvimento quer publicar sua aplicação sem precisar gerenciar sistema operacional, patches ou servidores, mas mantendo o controle do código. Qual tipo de serviço atende melhor?",
+      "alternativas": {"A": "PaaS", "B": "IaaS", "C": "SaaS", "D": "Nuvem privada"},
+      "correta": "A",
+      "explicacao": "Em PaaS, o provedor gerencia a infraestrutura e o sistema operacional, e a equipe foca na aplicação e nos dados.",
+      "fonte": {"titulo": "Descrever a plataforma como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/3-describe-platform-service"}
+    },
+    {
+      "area": "Conceitos de nuvem",
+      "enunciado": "Usar um serviço de e-mail corporativo pronto, como o do Microsoft 365, em que o cliente apenas configura e usa o software, é um exemplo de:",
+      "alternativas": {"A": "IaaS", "B": "SaaS", "C": "PaaS", "D": "Nuvem híbrida"},
+      "correta": "B",
+      "explicacao": "SaaS é um software completo entregue pela nuvem. O provedor gerencia quase tudo; o cliente cuida principalmente dos dados, dispositivos e contas.",
+      "fonte": {"titulo": "Descrever o software como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/4-describe-software-service"}
+    },
+
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "O que são zonas de disponibilidade no Azure?",
+      "alternativas": {"A": "Regiões em continentes diferentes", "B": "Datacenters fisicamente separados dentro de uma mesma região do Azure", "C": "Cópias de backup armazenadas em outra região", "D": "Grupos de assinaturas de uma mesma empresa"},
+      "correta": "B",
+      "explicacao": "Zonas de disponibilidade são datacenters fisicamente separados dentro de uma região, com energia, refrigeração e rede independentes. Se uma zona falhar, as outras continuam funcionando.",
+      "fonte": {"titulo": "Descrever a infraestrutura física do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/5-describe-azure-physical-infrastructure"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Qual é o principal objetivo dos pares de regiões do Azure?",
+      "alternativas": {"A": "Reduzir o custo das máquinas virtuais", "B": "Aumentar a velocidade da internet", "C": "Permitir a recuperação em caso de desastre que afete uma região inteira", "D": "Separar recursos de produção e de teste"},
+      "correta": "C",
+      "explicacao": "A maioria das regiões é emparelhada com outra da mesma geografia, a pelo menos 300 milhas de distância quando possível, para replicação e recuperação caso uma região inteira seja afetada.",
+      "fonte": {"titulo": "Descrever a infraestrutura física do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/5-describe-azure-physical-infrastructure"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Em quantos grupos de recursos um mesmo recurso do Azure pode estar ao mesmo tempo?",
+      "alternativas": {"A": "Em apenas um", "B": "Em até dois", "C": "Em quantos forem necessários", "D": "Em nenhum; recursos ficam diretamente na assinatura"},
+      "correta": "A",
+      "explicacao": "Todo recurso pertence a exatamente um grupo de recursos. Ele pode ser movido para outro grupo, mas não pode estar em dois ao mesmo tempo.",
+      "fonte": {"titulo": "Descrever a infraestrutura de gerenciamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/6-describe-azure-management-infrastructure"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "O que acontece com os recursos quando um grupo de recursos é excluído?",
+      "alternativas": {"A": "São movidos automaticamente para outro grupo", "B": "Continuam funcionando sem grupo", "C": "São movidos para a assinatura", "D": "Também são excluídos"},
+      "correta": "D",
+      "explicacao": "Excluir um grupo de recursos exclui todos os recursos que estão dentro dele. Por isso é comum agrupar recursos com o mesmo ciclo de vida, como os de um ambiente de teste.",
+      "fonte": {"titulo": "Descrever a infraestrutura de gerenciamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/6-describe-azure-management-infrastructure"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Qual opção de redundância do Armazenamento do Azure mantém três cópias dos dados em um único datacenter da região primária?",
+      "alternativas": {"A": "GRS", "B": "ZRS", "C": "LRS", "D": "GZRS"},
+      "correta": "C",
+      "explicacao": "O LRS (armazenamento com redundância local) replica os dados três vezes em um único datacenter da região primária. É a opção de menor custo, mas não protege contra um desastre nesse datacenter.",
+      "fonte": {"titulo": "Descrever a redundância do armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/3-redundancy"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Uma empresa precisa que seus dados de armazenamento continuem protegidos mesmo se uma região inteira do Azure ficar indisponível. Qual opção atende a esse requisito?",
+      "alternativas": {"A": "GRS", "B": "LRS", "C": "ZRS", "D": "Nenhuma opção de redundância protege contra isso"},
+      "correta": "A",
+      "explicacao": "O GRS (armazenamento com redundância geográfica) copia os dados para uma região secundária distante da primária. LRS e ZRS mantêm as cópias apenas dentro da região primária.",
+      "fonte": {"titulo": "Descrever a redundância do armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/3-redundancy"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Qual camada de acesso do Armazenamento de Blobs é indicada para dados raramente acessados, que podem tolerar uma latência de várias horas para leitura, com o menor custo de armazenamento?",
+      "alternativas": {"A": "Frequente (Hot)", "B": "Esporádica (Cool)", "C": "Fria (Cold)", "D": "Arquivo (Archive)"},
+      "correta": "D",
+      "explicacao": "A camada de arquivo tem o menor custo de armazenamento, mas os dados ficam offline e a recuperação pode levar horas. É indicada para backups antigos e dados guardados por exigência legal.",
+      "fonte": {"titulo": "Descrever os serviços de Armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/4-describe-azure-storage-services"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Qual serviço oferece uma conexão privada e dedicada entre a rede local da empresa e o Azure, sem passar pela internet pública?",
+      "alternativas": {"A": "Gateway de VPN do Azure", "B": "Azure ExpressRoute", "C": "DNS do Azure", "D": "Emparelhamento de redes virtuais"},
+      "correta": "B",
+      "explicacao": "O ExpressRoute cria conexões privadas que não passam pela internet pública. O Gateway de VPN também conecta a rede local ao Azure, mas o tráfego criptografado passa pela internet pública.",
+      "fonte": {"titulo": "Descrever o Azure ExpressRoute", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-networking-services/4-expressroute"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Uma equipe quer executar um trecho de código sempre que um arquivo for enviado para o armazenamento, sem gerenciar servidores e pagando só pelo tempo de execução. Qual serviço é o mais indicado?",
+      "alternativas": {"A": "Azure Functions", "B": "Máquinas Virtuais do Azure", "C": "Serviço de Kubernetes do Azure (AKS)", "D": "Área de Trabalho Virtual do Azure"},
+      "correta": "A",
+      "explicacao": "O Azure Functions é um serviço sem servidor (serverless) que executa código em resposta a eventos, sem gerenciar infraestrutura, e cobra conforme a execução.",
+      "fonte": {"titulo": "Descrever o Azure Functions", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-compute-networking-services/6-functions"}
+    },
+    {
+      "area": "Arquitetura e serviços do Azure",
+      "enunciado": "Exigir que o usuário confirme o login com a senha e também com um código no celular é um exemplo de:",
+      "alternativas": {"A": "Logon único (SSO)", "B": "Controle de acesso baseado em função (RBAC)", "C": "Autenticação multifator (MFA)", "D": "Identidades externas"},
+      "correta": "C",
+      "explicacao": "A autenticação multifator exige dois ou mais elementos de verificação, como algo que você sabe (senha) e algo que você tem (celular).",
+      "fonte": {"titulo": "Descrever métodos de autenticação do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-identity-access-security/3-authentication-methods"}
+    },
+
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Uma empresa quer garantir que novos recursos só possam ser criados em regiões do Brasil. Qual serviço do Azure permite impor essa regra?",
+      "alternativas": {"A": "Azure Advisor", "B": "Integridade do Serviço do Azure", "C": "Bloqueios de recurso", "D": "Azure Policy"},
+      "correta": "D",
+      "explicacao": "O Azure Policy cria e aplica regras de conformidade, como regiões permitidas, e pode impedir a criação de recursos que não as cumpram.",
+      "fonte": {"titulo": "Descrever a finalidade do Azure Policy", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/3-describe-purpose-azure-policy"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Qual tipo de bloqueio de recurso impede a exclusão acidental, mas ainda permite que usuários autorizados leiam e modifiquem o recurso?",
+      "alternativas": {"A": "Bloqueio de exclusão (Excluir)", "B": "Bloqueio somente leitura (ReadOnly)", "C": "Azure Policy", "D": "Tag de proteção"},
+      "correta": "A",
+      "explicacao": "O bloqueio de exclusão impede apagar o recurso, mas permite ler e modificar. O bloqueio somente leitura impede exclusões e também alterações.",
+      "fonte": {"titulo": "Descrever a finalidade dos bloqueios de recurso", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/4-describe-purpose-resource-locks"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Um usuário com a função de Proprietário tenta excluir um recurso que tem um bloqueio de exclusão. O que acontece?",
+      "alternativas": {"A": "A exclusão funciona, porque o Proprietário tem todas as permissões", "B": "A exclusão falha até que o bloqueio seja removido", "C": "O recurso é movido para a lixeira", "D": "O bloqueio é removido automaticamente"},
+      "correta": "B",
+      "explicacao": "Os bloqueios valem independentemente das permissões RBAC. Mesmo um Proprietário precisa remover o bloqueio antes de excluir o recurso.",
+      "fonte": {"titulo": "Descrever a finalidade dos bloqueios de recurso", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/4-describe-purpose-resource-locks"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "A equipe financeira quer saber quanto cada departamento gasta no Azure. O que pode ser aplicado aos recursos para identificar o departamento responsável?",
+      "alternativas": {"A": "Bloqueios de recurso", "B": "Zonas de disponibilidade", "C": "Tags (marcas)", "D": "Pares de regiões"},
+      "correta": "C",
+      "explicacao": "Tags são pares de nome e valor aplicados aos recursos, como departamento=financeiro. Elas ajudam a organizar recursos e a acompanhar e atribuir custos.",
+      "fonte": {"titulo": "Descrever a finalidade das marcas", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/7-describe-purpose-of-tags"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Uma empresa quer comparar o custo de manter seu datacenter local com o custo de executar a mesma infraestrutura no Azure. Qual ferramenta é a mais indicada?",
+      "alternativas": {"A": "Calculadora de TCO (custo total de propriedade)", "B": "Calculadora de preços", "C": "Azure Advisor", "D": "Azure Monitor"},
+      "correta": "A",
+      "explicacao": "A calculadora de TCO compara custos da infraestrutura local com os do Azure. A calculadora de preços estima o custo de recursos que você pretende provisionar no Azure.",
+      "fonte": {"titulo": "Comparar as calculadoras de preços e de custo total de propriedade", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/3-compare-pricing-total-cost-of-ownership-calculators"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Antes de criar recursos, uma equipe quer estimar quanto vai pagar por mês por duas máquinas virtuais e uma conta de armazenamento no Azure. Qual ferramenta deve usar?",
+      "alternativas": {"A": "Calculadora de TCO", "B": "Calculadora de preços", "C": "Integridade do Serviço do Azure", "D": "Microsoft Purview"},
+      "correta": "B",
+      "explicacao": "A calculadora de preços estima o custo de provisionar recursos no Azure. A calculadora de TCO é para comparar o ambiente local com o Azure.",
+      "fonte": {"titulo": "Comparar as calculadoras de preços e de custo total de propriedade", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/3-compare-pricing-total-cost-of-ownership-calculators"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Uma empresa quer receber um alerta quando os gastos de uma assinatura chegarem a 80% do valor planejado para o mês. Qual recurso deve ser configurado?",
+      "alternativas": {"A": "Um bloqueio de recurso", "B": "Uma política do Azure Policy", "C": "Um orçamento no Gerenciamento de Custos", "D": "Uma zona de disponibilidade"},
+      "correta": "C",
+      "explicacao": "No Gerenciamento de Custos, os orçamentos definem um limite de gastos e podem disparar alertas quando um percentual é atingido.",
+      "fonte": {"titulo": "Descrever a ferramenta Gerenciamento de Custos", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/6-describe-azure-tool"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Qual serviço analisa os recursos implantados e faz recomendações personalizadas para melhorar custo, segurança, confiabilidade, desempenho e excelência operacional?",
+      "alternativas": {"A": "Integridade do Serviço do Azure", "B": "Azure Arc", "C": "Azure Policy", "D": "Azure Advisor"},
+      "correta": "D",
+      "explicacao": "O Azure Advisor avalia seus recursos e faz recomendações em cinco categorias: confiabilidade, segurança, desempenho, excelência operacional e custo.",
+      "fonte": {"titulo": "Descrever a finalidade do Azure Advisor", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-monitoring-tools-azure/2-describe-purpose-of-azure-advisor"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Qual serviço informa sobre incidentes e manutenções planejadas do Azure que podem afetar os recursos da sua empresa?",
+      "alternativas": {"A": "Integridade do Serviço do Azure", "B": "Azure Advisor", "C": "Calculadora de preços", "D": "Microsoft Defender para Nuvem"},
+      "correta": "A",
+      "explicacao": "A Integridade do Serviço do Azure mostra o status dos serviços e regiões do Azure, incluindo incidentes e manutenções planejadas que afetam os seus recursos.",
+      "fonte": {"titulo": "Descrever a Integridade do Serviço do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-monitoring-tools-azure/3-describe-azure-service-health"}
+    },
+    {
+      "area": "Gestão e governança do Azure",
+      "enunciado": "Uma empresa tem servidores no próprio datacenter e em outra nuvem e quer gerenciá-los pelo portal do Azure, aplicando as mesmas políticas. Qual serviço permite isso?",
+      "alternativas": {"A": "Azure Advisor", "B": "Azure Arc", "C": "Azure ExpressRoute", "D": "Azure Functions"},
+      "correta": "B",
+      "explicacao": "O Azure Arc estende o gerenciamento do Azure a recursos fora dele (locais, outras nuvens e borda), permitindo usar recursos como Azure Policy e tags nesses ambientes.",
+      "fonte": {"titulo": "Descrever a finalidade do Azure Arc", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-manage-deploy-azure-resources/3-describe-purpose-of-azure-arc"}
+    }
+  ]
+}

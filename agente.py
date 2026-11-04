@@ -44,6 +44,12 @@ na documentação oficial.
 
 Se o assunto não for Azure, nuvem ou o exame AZ-900, diga educadamente que você só ajuda com o AZ-900."""
 
+# Mensagens de conversa simples, que não precisam da documentação
+CONVERSA_SIMPLES = re.compile(
+    r"^\s*(oi+|ol[áa]|e a[íi]|bom dia|boa tarde|boa noite|obrigad[oa]|valeu|vlw|tchau|"
+    r"at[ée] mais|ok|beleza|blz|show|legal|perfeito|tudo bem\??|quem [ée] voc[êe]\??)[\s!.?]*$",
+    re.IGNORECASE,
+)
 RESPOSTA_SIMULADO = re.compile(r"^\s*(?:letra\s*)?\(?([A-Da-d])\)?\s*[.!]?\s*$")
 
 
@@ -104,11 +110,14 @@ def conversar_stream(sessao_id: str, mensagem: str):
 
     # ── Sem ferramenta: conversa simples ou dúvida respondida "de memória" ──
     if not escolha.tool_calls:
-        if len(mensagem.split()) >= 4:
-            # Guardrail: dúvidas reais sempre passam pela documentação (RAG da Fase 2)
+        if not CONVERSA_SIMPLES.match(mensagem):
+            # Guardrail: qualquer coisa que não seja conversa simples passa pela documentação.
+            # Perguntas de continuação ("E o ZRS?") ganham o contexto da pergunta anterior.
             res.ferramentas_usadas = ["buscar_documentacao"]
+            anterior = next((m["content"] for m in reversed(sessao.historico) if m["role"] == "user"), "")
+            consulta = f"{anterior} {mensagem}" if anterior and len(mensagem.split()) < 6 else mensagem
             partes = []
-            for parte in responder_stream(mensagem):
+            for parte in responder_stream(consulta):
                 if isinstance(parte, Resultado):
                     res.fontes = parte.fontes
                     res.tokens_entrada += parte.tokens_entrada

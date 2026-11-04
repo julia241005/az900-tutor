@@ -111,6 +111,12 @@ def perguntas_aprovadas(area: str | None, quantidade: int, evitar: set[str] = fr
     return (novas or todas)[:quantidade]
 
 
+def obter_pergunta(pergunta_id: int) -> dict | None:
+    with conectar() as con:
+        l = con.execute("SELECT * FROM perguntas WHERE id = ?", (pergunta_id,)).fetchone()
+        return _linha_para_pergunta(l) if l else None
+
+
 def perguntas_por_status(status: str = "pendente") -> list[dict]:
     with conectar() as con:
         return [_linha_para_pergunta(l) for l in con.execute("SELECT * FROM perguntas WHERE status = ? ORDER BY id", (status,))]

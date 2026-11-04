@@ -15,8 +15,9 @@ O tutor só responde com base em **fontes oficiais e rastreáveis**. Toda respos
 | 1 · Oficial | Trilha de treinamento AZ-900 (12 módulos) | `treinamento` | Conteúdo didático, no nível do exame | ✅ Fase 1 |
 | 1 · Oficial | Documentação técnica do Azure (28 páginas) | `documentacao` | Aprofundamento e detalhes técnicos | ✅ Fase 1 |
 | 1 · Oficial | Servidor MCP do Microsoft Learn | — | Busca ao vivo quando a base local não tiver a resposta | ⏳ Fase 3 |
-| 2 · Próprio | Anotações, flashcards e "pegadinhas" | `proprio` | Explicações simples em português | ⏳ Fase 4 |
-| 3 · Gerado + revisado | Banco de perguntas de simulado | `simulado` | Perguntas geradas pela IA e **aprovadas por humano** | ⏳ Fase 4 |
+| 2 · Próprio | Banco curado de 30 perguntas (`perguntas/curadas.json`) | — | Simulado confiável, com fonte oficial em cada pergunta | ✅ Fase 4 |
+| 2 · Próprio | Anotações, flashcards e "pegadinhas" | `proprio` | Explicações simples em português | ⏳ Extra |
+| 3 · Gerado + revisado | Perguntas geradas pela IA | — | Só experimental: 0 de 11 aprovadas na revisão (ver doc 07) | ⚠️ Desligado |
 
 ## Organização por área do exame
 

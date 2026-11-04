@@ -36,3 +36,9 @@ LLM_MODELO = os.getenv("LLM_MODELO", "qwen2.5:3b")
 LLM_CHAVE = os.getenv("LLM_CHAVE", "ollama")  # o Ollama não exige chave; o texto é só um marcador
 LLM_TEMPERATURA = 0.2   # baixa = respostas mais fiéis e menos "criativas"
 LLM_MAX_TOKENS = 700    # limite de tamanho da resposta
+
+# ── Simulado ─────────────────────────────────────────────────────────────
+# Na avaliação, o modelo local (3B) gerou 11 perguntas e nenhuma foi aprovada na revisão
+# humana. Por isso o simulado usa só perguntas APROVADAS. Mude para True apenas para
+# experimentos (perguntas geradas na hora aparecem com o selo "nova (em revisão)").
+SIMULADO_GERAR_COM_IA = False

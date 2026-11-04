@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 import banco
 from buscar import amostra_por_area
-from config import LLM_MODELO
+from config import LLM_MODELO, SIMULADO_GERAR_COM_IA
 from rag import cliente, montar_contexto
 from sessao import Sessao
 
@@ -110,13 +110,13 @@ def gerar_perguntas(area: str | None, quantidade: int = 3) -> tuple[list[dict], 
 
 
 def obter_perguntas(sessao: Sessao, area: str | None, quantidade: int = 3) -> tuple[list[dict], object]:
-    """Banco de perguntas aprovadas primeiro; a IA só gera o que faltar.
-    Perguntas novas são salvas como 'pendente' para revisão humana (revisar_perguntas.py)."""
+    """Usa o banco de perguntas aprovadas. Se SIMULADO_GERAR_COM_IA estiver ligado, a IA gera
+    o que faltar e salva como 'pendente' para revisão humana (revisar_perguntas.py)."""
     ja_respondidas = {r["enunciado"] for r in banco.respostas_do_aluno(sessao.sessao_id)}
     perguntas = banco.perguntas_aprovadas(area, quantidade, evitar=ja_respondidas)
     uso = None
     faltam = quantidade - len(perguntas)
-    if faltam > 0:
+    if faltam > 0 and SIMULADO_GERAR_COM_IA:
         novas, uso = gerar_perguntas(area, faltam)
         for p in novas:
             banco.salvar_pergunta(p, status="pendente")

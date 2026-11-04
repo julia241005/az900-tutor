@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AZ-900 Tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: app de estudo — barra lateral com as 3 áreas (Chat, Simulado, Progresso), conteúdo à direita; no celular a barra vira abas no topo */
+:root{
+  --bg:#f2f4f7; --surface:#ffffff; --ink:#17202b; --muted:#5b6676; --line:#d8dde5;
+  --accent:#0b5cad; --accent-ink:#ffffff; --accent-soft:#e2edf9;
+  --good:#1f7a48; --good-soft:#e1f2e8; --bad:#b0281f; --bad-soft:#fbe5e3; --warn:#97590a; --warn-soft:#fbefd9;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f141b; --surface:#17202a; --ink:#e5eaf0; --muted:#98a4b3; --line:#2a3644;
+  --accent:#5ba8ef; --accent-ink:#0a1420; --accent-soft:#1a2c40;
+  --good:#5fca8e; --good-soft:#153023; --bad:#f08a80; --bad-soft:#3a1c1a; --warn:#f0b65a; --warn-soft:#3a2b14; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);height:100%}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:6px}
+.brand{padding:0 10px 18px}
+.brand b{display:block;font-size:18px}
+.brand span{color:var(--muted);font-size:13px}
+.nav{display:flex;align-items:center;gap:10px;white-space:nowrap;border:0;background:none;color:var(--ink);padding:10px 12px;border-radius:8px;text-align:left;font-weight:500}
+.nav:hover{background:var(--accent-soft)}
+.nav.on{background:var(--accent);color:var(--accent-ink)}
+.nav svg{width:18px;height:18px;flex:none}
+.side .foot{margin-top:auto;padding:10px;font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px}
+.dot.ok{background:var(--good)} .dot.no{background:var(--bad)}
+main{min-width:0;overflow:auto}
+.view{max-width:860px;margin:0 auto;padding:28px 24px 40px}
+h1{font-size:24px;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 16px;border-radius:7px;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+
+/* chat */
+.chat{display:flex;flex-direction:column;height:100%}
+.chat .view{flex:1;width:100%}
+.msgs{display:flex;flex-direction:column;gap:16px}
+.msg{max-width:88%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.msg.eu{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.msg p{margin:0 0 8px} .msg p:last-child{margin:0}
+.msg ul,.msg ol{margin:4px 0 8px;padding-left:20px}
+.msg a{color:inherit}
+.fontes{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:6px}
+.fontes a{font-size:13px;color:var(--accent);text-decoration:none}
+.fontes a:hover{text-decoration:underline}
+.meta{font-size:12px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+.typing{color:var(--muted);font-style:italic}
+.sugs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.sug{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
+.sug:hover{border-color:var(--accent);color:var(--accent)}
+.composer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:14px 24px}
+.composer form{max-width:860px;margin:0 auto;display:flex;gap:10px}
+.composer input{flex:1;min-width:0;font:inherit;padding:11px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+
+/* simulado */
+.cfg{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.cfg label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.cfg select{font:inherit;padding:8px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.qtop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:18px}
+.bar span{display:block;height:100%;background:var(--accent);transition:width .25s}
+.qtext{font-size:17px;font-weight:500;margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:12px 14px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt b{font-family:var(--mono);color:var(--muted)}
+.opt.certa{border-color:var(--good);background:var(--good-soft)}
+.opt.errada{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.feedback{margin-top:16px;border-radius:8px;padding:14px;border:1px solid var(--line)}
+.feedback.ok{background:var(--good-soft);border-color:var(--good)}
+.feedback.no{background:var(--bad-soft);border-color:var(--bad)}
+.feedback p{margin:4px 0}
+.feedback a{color:var(--accent)}
+.row{display:flex;justify-content:flex-end;margin-top:16px;gap:10px}
+.big{font-family:var(--mono);font-size:42px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* progresso */
+.areas{display:grid;gap:16px;margin-top:16px}
+.area .top{display:flex;justify-content:space-between;gap:12px}
+.area .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:6px 0}
+.area .track span{display:block;height:100%}
+.area small{color:var(--muted)}
+.area a{font-size:13px;color:var(--accent)}
+.rec{margin-top:18px;padding:14px;border-radius:8px;background:var(--accent-soft)}
+.empty{color:var(--muted)}
+.erro{background:var(--bad-soft);border:1px solid var(--bad);color:var(--ink);border-radius:8px;padding:12px;margin-top:12px}
+
+@media (max-width:720px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .side{flex-direction:row;padding:8px 12px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .brand,.side .foot{display:none}
+  .view{padding:20px 16px 32px} .composer{padding:12px 16px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>AZ-900 Tutor</b><span>Microsoft Azure Fundamentals</span></div>
+    <button class="nav on" data-v="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Tirar dúvidas</button>
+    <button class="nav" data-v="sim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>Simulado</button>
+    <button class="nav" data-v="prog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Meu progresso</button>
+    <div class="foot"><span class="dot" id="st"></span><span id="sttxt">Verificando…</span></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script>
+const SESSAO = "web";
+const AREAS = ["Conceitos de nuvem","Arquitetura e serviços do Azure","Gestão e governança do Azure"];
+const main = document.getElementById("main");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Markdown simples: negrito, links, listas e parágrafos
+function md(t){
+  const linhas = esc(t).split("\n"); let html = "", lista = null;
+  const inl = s => s.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const fecha = () => { if (lista){ html += `</${lista}>`; lista = null; } };
+  for (const l of linhas){
+    let m;
+    if ((m = l.match(/^\s*[-*•]\s+(.*)/))){ if (lista!=="ul"){ fecha(); html+="<ul>"; lista="ul"; } html += `<li>${inl(m[1])}</li>`; }
+    else if ((m = l.match(/^\s*\d+[.)]\s+(.*)/))){ if (lista!=="ol"){ fecha(); html+="<ol>"; lista="ol"; } html += `<li>${inl(m[1])}</li>`; }
+    else if (/^\s*(---|#+\s*)$/.test(l) || !l.trim()){ fecha(); }
+    else { fecha(); html += `<p>${inl(l.replace(/^#+\s*/,""))}</p>`; }
+  }
+  fecha(); return html;
+}
+
+async function status(){
+  try { const r = await fetch("/saude"); const d = await r.json();
+    document.getElementById("st").className = "dot ok"; document.getElementById("sttxt").textContent = `Ligado · ${d.modelo}`;
+  } catch { document.getElementById("st").className = "dot no"; document.getElementById("sttxt").textContent = "Tutor desligado"; }
+}
+
+/* ───────── CHAT ───────── */
+const historico = [];
+function viewChat(){
+  main.innerHTML = `
+  <div class="chat">
+    <div class="view">
+      <h1>Tirar dúvidas</h1>
+      <p class="sub">Respostas com base na documentação oficial da Microsoft, com as fontes. O modelo roda no seu computador, então pode levar alguns segundos.</p>
+      <div class="sugs" id="sugs">${["Qual a diferença entre ZRS e GRS?","Para que serve o Gateway de VPN?","Zonas de disponibilidade ou pares de regiões?","Calculadora de preços ou Cost Management?"].map(s=>`<button class="sug">${esc(s)}</button>`).join("")}</div>
+      <div class="msgs" id="msgs"></div>
+    </div>
+    <div class="composer"><form id="f"><input id="txt" placeholder="Pergunte sobre Azure ou o exame AZ-900…" autocomplete="off" aria-label="Sua pergunta"><button class="btn primary" id="send">Enviar</button></form></div>
+  </div>`;
+  const msgs = document.getElementById("msgs");
+  historico.forEach(h => msgs.insertAdjacentHTML("beforeend", h));
+  document.querySelectorAll(".sug").forEach(b => b.onclick = () => enviar(b.textContent));
+  document.getElementById("f").onsubmit = e => { e.preventDefault(); const t = document.getElementById("txt").value.trim(); if (t) enviar(t); };
+  document.getElementById("txt").focus();
+}
+
+async function enviar(texto){
+  const msgs = document.getElementById("msgs"), input = document.getElementById("txt"), send = document.getElementById("send");
+  input.value = ""; send.disabled = true;
+  const eu = `<div class="msg eu">${esc(texto)}</div>`; historico.push(eu); msgs.insertAdjacentHTML("beforeend", eu);
+  const box = document.createElement("div"); box.className = "msg"; box.innerHTML = `<span class="typing">Pensando…</span>`; msgs.appendChild(box);
+  box.scrollIntoView({block:"end"});
+  let texto_resp = "";
+  try {
+    const r = await fetch("/chat/stream", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sessao_id:SESSAO, mensagem:texto})});
+    if (!r.ok){ const d = await r.json().catch(()=>({})); throw new Error(d.erro || `Erro ${r.status}`); }
+    const leitor = r.body.getReader(), dec = new TextDecoder(); let buf = "";
+    while (true){
+      const {value, done} = await leitor.read(); if (done) break;
+      buf += dec.decode(value, {stream:true});
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0){
+        const linha = buf.slice(0,i).replace(/^data:\s*/,""); buf = buf.slice(i+2);
+        if (!linha) continue;
+        const ev = JSON.parse(linha);
+        if (ev.evento === "texto"){ texto_resp += ev.conteudo; box.innerHTML = md(texto_resp); }
+        else if (ev.evento === "fim"){
+          box.innerHTML = md(ev.resposta || texto_resp);
+          if (ev.fontes?.length) box.insertAdjacentHTML("beforeend", `<div class="fontes"><span class="label">Fontes oficiais</span>${ev.fontes.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener">[${f.numero}] ${esc(f.titulo)}</a>`).join("")}</div>`);
+          box.insertAdjacentHTML("beforeend", `<div class="meta">${ev.tokens_entrada + ev.tokens_saida} tokens · ${ev.segundos}s · custo US$ 0,00</div>`);
+        }
+      }
+      box.scrollIntoView({block:"end"});
+    }
+  } catch(e){
+    box.innerHTML = `<div class="erro">Não consegui falar com o tutor: ${esc(e.message)}. Verifique se o Ollama está aberto (a lhama perto do relógio).</div>`;
+  }
+  historico.push(box.outerHTML); send.disabled = false; input.focus();
+}
+
+/* ───────── SIMULADO ───────── */
+let sim = null;
+function viewSim(){
+  if (sim && sim.pos < sim.qs.length) return renderQ();
+  main.innerHTML = `
+  <div class="view">
+    <h1>Simulado</h1>
+    <p class="sub">Perguntas revisadas, com correção na hora e a fonte oficial. Cada resposta entra no seu progresso.</p>
+    <div class="card">
+      <div class="cfg">
+        <label for="area">Área do exame<select id="area"><option value="">Todas as áreas</option>${AREAS.map(a=>`<option>${esc(a)}</option>`).join("")}</select></label>
+        <label for="qtd">Questões<select id="qtd"><option>5</option><option selected>10</option><option>15</option></select></label>
+        <button class="btn primary" id="ini">Começar</button>
+      </div>
+      <div id="simerr"></div>
+    </div>
+  </div>`;
+  document.getElementById("ini").onclick = async () => {
+    const area = document.getElementById("area").value, qtd = document.getElementById("qtd").value;
+    try {
+      const r = await fetch(`/simulado/perguntas?sessao_id=${SESSAO}&quantidade=${qtd}&area=${encodeURIComponent(area)}`);
+      const qs = await r.json();
+      if (!qs.length) throw new Error("O banco ainda não tem perguntas aprovadas. Rode uma vez: python importar_perguntas.py");
+      sim = {qs, pos:0, acertos:0, respondida:null}; renderQ();
+    } catch(e){ document.getElementById("simerr").innerHTML = `<div class="erro">${esc(e.message)}</div>`; }
+  };
+}
+
+function renderQ(){
+  const q = sim.qs[sim.pos], n = sim.qs.length, r = sim.respondida;
+  main.innerHTML = `
+  <div class="view">
+    <div class="qtop"><span class="label">${esc(q.area)}</span><span class="label">Questão ${sim.pos+1} de ${n}</span></div>
+    <div class="bar"><span style="width:${(sim.pos/n)*100}%"></span></div>
+    <div class="card">
+      <p class="qtext">${esc(q.enunciado)}</p>
+      <div class="opts">${Object.entries(q.alternativas).map(([l,t])=>{
+        let c = ""; if (r){ if (l===r.correta) c="certa"; else if (l===r.escolha) c="errada"; }
+        return `<button class="opt ${c}" data-l="${l}" ${r?"disabled":""}><b>${l}</b><span>${esc(t)}</span></button>`;}).join("")}</div>
+      ${r ? `<div class="feedback ${r.acertou?"ok":"no"}">
+        <p><b>${r.acertou?"Correto!":`Não foi dessa vez. A resposta certa é ${r.correta}.`}</b></p>
+        <p>${esc(r.explicacao)}</p>
+        <p><a href="${esc(r.fonte.url)}" target="_blank" rel="noopener">Fonte: ${esc(r.fonte.titulo)}</a></p></div>
+        <div class="row"><button class="btn primary" id="prox">${sim.pos+1<n?"Próxima":"Ver resultado"}</button></div>` : ""}
+    </div>
+  </div>`;
+  if (!r) document.querySelectorAll(".opt").forEach(b => b.onclick = async () => {
+    document.querySelectorAll(".opt").forEach(x => x.disabled = true);
+    const res = await fetch("/simulado/responder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessao_id:SESSAO,pergunta_id:q.id,resposta:b.dataset.l})}).then(x=>x.json());
+    if (res.acertou) sim.acertos++;
+    sim.respondida = {...res, escolha:b.dataset.l}; renderQ();
+  });
+  else document.getElementById("prox").onclick = () => { sim.pos++; sim.respondida = null; sim.pos < n ? renderQ() : fimSim(); };
+}
+
+function fimSim(){
+  const n = sim.qs.length, pct = Math.round(100*sim.acertos/n);
+  main.innerHTML = `
+  <div class="view">
+    <h1>Resultado</h1>
+    <div class="card">
+      <div class="big">${sim.acertos}/${n} · ${pct}%</div>
+      <p class="sub" style="margin:6px 0 16px">${pct>=80?"Acima da meta de 80% recomendada pela Microsoft.":"Abaixo da meta de 80%. Revise as explicações e tente de novo."}</p>
+      <div class="row" style="justify-content:flex-start"><button class="btn primary" id="nova">Novo simulado</button><button class="btn" id="vp">Ver meu progresso</button></div>
+    </div>
+  </div>`;
+  sim = null;
+  document.getElementById("nova").onclick = viewSim;
+  document.getElementById("vp").onclick = () => ir("prog");
+}
+
+/* ───────── PROGRESSO ───────── */
+async function viewProg(){
+  main.innerHTML = `<div class="view"><h1>Meu progresso</h1><p class="sub">Desempenho por área do exame, com os pesos oficiais.</p><div class="card" id="pc"><span class="empty">Carregando…</span></div></div>`;
+  try {
+    const p = await fetch(`/progresso/${SESSAO}`).then(r=>r.json());
+    const pc = document.getElementById("pc");
+    if (!p.respostas){ pc.innerHTML = `<p class="empty">Ainda não há respostas. Faça um simulado para começar a medir seu progresso.</p><button class="btn primary" id="gs">Fazer simulado</button>`; document.getElementById("gs").onclick = () => ir("sim"); return; }
+    const cor = a => a.percentual==null ? "var(--line)" : a.percentual>=80 ? "var(--good)" : a.percentual>=70 ? "var(--warn)" : "var(--bad)";
+    pc.innerHTML = `
+      <div class="big">${p.percentual_geral}%</div>
+      <p class="sub" style="margin:4px 0 0">${p.acertos} de ${p.respostas} acertos · meta ${p.meta}%</p>
+      <div class="areas">${p.areas.map(a=>`
+        <div class="area">
+          <div class="top"><span>${esc(a.area)} <small>· peso ${esc(a.peso_no_exame)}</small></span><b>${a.percentual==null?"—":a.percentual+"%"}</b></div>
+          <div class="track"><span style="width:${a.percentual??0}%;background:${cor(a)}"></span></div>
+          <small>${a.acertos}/${a.respostas} · ${esc(a.situacao)}</small>
+          ${a.revisar.map(r=>`<div><a href="${esc(r.url)}" target="_blank" rel="noopener">Revisar: ${esc(r.titulo)}</a></div>`).join("")}
+        </div>`).join("")}</div>
+      <div class="rec"><span class="label">Próximo passo</span><p style="margin:4px 0 0">${esc(p.recomendacao)}</p></div>`;
+  } catch(e){ document.getElementById("pc").innerHTML = `<div class="erro">Não consegui carregar o progresso.</div>`; }
+}
+
+/* ───────── navegação ───────── */
+const VIEWS = {chat:viewChat, sim:viewSim, prog:viewProg};
+function ir(v){
+  document.querySelectorAll(".nav").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  VIEWS[v]();
+}
+document.querySelectorAll(".nav").forEach(b => b.onclick = () => ir(b.dataset.v));
+ir("chat"); status();
+</script>
+</body>
+</html>
