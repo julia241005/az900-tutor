@@ -1,0 +1,118 @@
+{
+  "buscas": [
+    {
+      "modo": "vetorial",
+      "acerto_k": 1.0,
+      "mrr": 1.0,
+      "ms_medio": 15,
+      "por_area": {
+        "Conceitos de nuvem": 1.0
+      },
+      "falhas": [],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 16
+        }
+      ]
+    },
+    {
+      "modo": "hibrida",
+      "acerto_k": 1.0,
+      "mrr": 1.0,
+      "ms_medio": 14,
+      "por_area": {
+        "Conceitos de nuvem": 1.0
+      },
+      "falhas": [],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 13
+        }
+      ]
+    }
+  ],
+  "respostas": {
+    "resumo": {
+      "palavras": 0.667,
+      "citou": 1.0,
+      "fonte_certa": 1.0,
+      "recusa_fora_do_escopo": null,
+      "segundos_medio": 30.56,
+      "tokens_medio": 1196.667
+    },
+    "linhas": [
+      {
+        "id": "c01",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é computação em nuvem?",
+        "segundos": 33.48,
+        "tokens_entrada": 927,
+        "tokens_saida": 141,
+        "resposta": "[1] A computação em nuvem é a entrega de serviços de computação pela Internet. Esses serviços incluem infraestrutura de TI comum, como máquinas virtuais, armazenamento, bancos de dados e rede. Além disso, a computação em nuvem expandiu as ofertas tradicionais de TI para incluir itens como IoT (Internet das Coisas), ML (machine learning) e IA (inteligência artificial). Esses serviços são fornecidos",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c02",
+        "area": "Conceitos de nuvem",
+        "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+        "segundos": 18.24,
+        "tokens_entrada": 982,
+        "tokens_saida": 115,
+        "resposta": "[1] No modelo de responsabilidade compartilhada, o gerenciamento de máquinas virtuais, sistemas operacionais e aplicações é sempre responsabilidade do cliente, especialmente quando a carga de trabalho é hospedada em infraestrutura como serviço (IaaS).\n\n💡 Dica para a prova: Ao entender quem é responsável por quais tarefas, você pode melhorar sua compreensão do modelo de responsabilidade compartilha",
+        "palavras": 0.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c03",
+        "area": "Conceitos de nuvem",
+        "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+        "segundos": 39.96,
+        "tokens_entrada": 1050,
+        "tokens_saida": 375,
+        "resposta": "[1] [2] [3] [4] A diferença entre nuvem pública, privada e híbrida reside na natureza de controle e escala que cada modelo oferece:\n\n- **Nuvem Pública**: É gerida e controlada por um provedor de nuvem de terceiros. É a mais aberta, permitindo que qualquer pessoa que queira adquirir serviços de nuvem possa acessar e usar os recursos. A nuvem pública é geralmente mais barata e flexível, mas os dados",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      }
+    ]
+  }
+}

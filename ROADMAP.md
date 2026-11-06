@@ -100,35 +100,40 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 
 ---
 
-## Fase 6 · Qualidade e custo (≈ 1 semana)
+## ✅ Fase 6 · Qualidade e custo (concluída)
 **Objetivo:** provar que o tutor acerta e saber quanto ele custa.
 
-- [ ] Conjunto de avaliação: 30 perguntas com resposta esperada e fonte correta
-- [ ] Métrica de busca: a fonte certa veio entre os trechos?
-- [ ] Métrica de resposta: a resposta é fiel aos trechos? (LLM como avaliador)
-- [ ] Ajustar chunking, `TOP_K` e prompt com base nos resultados
-- [ ] Registrar tokens e custo de cada pergunta
-- [ ] Relatório de custo: custo médio por pergunta e por aluno (FinOps de IA)
-- [ ] Rotina de atualização da base (recoletar e reindexar)
-- [ ] Documentar: `docs/08-atualizacao.md`, `docs/09-avaliacao.md`, `docs/10-custo.md`
+- [x] Conjunto de avaliação: 30 perguntas com fonte e termos esperados + 3 fora do escopo (`avaliacao/conjunto.json`)
+- [x] Métrica de busca: acerto@4 e MRR, vetorial × híbrida (`python avaliar.py`)
+- [x] Busca híbrida (embeddings + BM25 + RRF): acerto@4 93% → 97%, MRR 0,80 → 0,90
+- [x] Métrica de resposta: termos esperados, citação, fonte certa, recusa fora do escopo (`--completo`)
+- [x] LLM como avaliador da fidelidade (`--juiz`, indicativo com modelo pequeno)
+- [x] Testes automáticos com pytest (27 testes, sem precisar do Ollama)
+- [x] Registro de cada interação em JSONL (observabilidade)
+- [x] Relatório de uso e custo: tempo médio e p95, tokens, custo por pergunta e por aluno (`relatorio.py`)
+- [x] Histórico do chat salvo no SQLite + botão "Nova conversa"
+- [x] Status da IA na interface (Ollama ligado ou desligado)
+- [x] Rotina de atualização da base com detecção de mudanças (`atualizar_base.py`)
+- [x] Documentar: `docs/08-atualizacao.md`, `docs/09-avaliacao.md`, `docs/10-custo.md`
 - [ ] Commit + tag `fase-6`
 
-**Conceitos:** evals, LLM-as-judge, observabilidade, unit economics de IA.
+**Conceitos:** evals, busca híbrida, LLM-as-judge, testes, observabilidade, unit economics de IA.
 
 ---
 
-## Fase 7 · Publicação (≈ 1 semana)
-**Objetivo:** projeto no ar, com link para mostrar.
+## Fase 7 · Publicação
+**Objetivo:** projeto no ar, com link para mostrar. Custo zero.
 
-- [ ] Dockerfile do backend
-- [ ] Deploy do backend em plano gratuito (ex.: Hugging Face Spaces ou Render)
-- [ ] Deploy do frontend em plano gratuito (Vercel)
-- [ ] LLM da versão online: provedor com plano gratuito ou demo em vídeo usando o Ollama local
-- [ ] Variáveis de ambiente e segredos (nunca no código)
-- [ ] Proteções: limite de perguntas por usuário
-- [ ] Documentar: `docs/11-seguranca-e-etica.md`
-- [ ] README final: demo, GIF, arquitetura, resultados da avaliação e custo
-- [ ] Tornar o repositório público
+- [x] Respostas mais rápidas: roteamento por regras, 1 chamada à IA por pergunta (`roteador.py`)
+- [x] Sessão por navegador na versão online (`MODO_DEMO=1`)
+- [x] Dockerfile para o Hugging Face Spaces com Ollama dentro (`deploy/huggingface/`)
+- [x] Variáveis de ambiente e segredos (nunca no código): `.env.example`
+- [x] Proteções: senha opcional e limite de mensagens por minuto (`seguranca.py`)
+- [x] Documentar: `docs/11-seguranca-e-etica.md`, `docs/12-publicacao.md`
+- [x] README reescrito: o que faz, o que não faz, como funciona e resultados
+- [ ] Repositório público no GitHub
+- [ ] Space criado no Hugging Face e funcionando
+- [ ] Prints e vídeo curto da interface
 - [ ] Post no LinkedIn contando a jornada
 - [ ] Tag `v1.0` 🎉
 
@@ -142,9 +147,11 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 az900-tutor/
 ├── ingestao/           ← Python: pipeline de alimentação
 ├── rag.py · api.py     ← Python: RAG, agente e API (FastAPI)
-├── frontend/           ← Next.js: chat, simulado, painel
+├── web/                ← interface (HTML, CSS e JavaScript)
+├── deploy/             ← publicação gratuita (Hugging Face)
 ├── docs/               ← processos 01–11 + imagens
 ├── avaliacao/          ← perguntas de teste e resultados
+├── tests/              ← testes automáticos (pytest)
 ├── README.md
 └── ROADMAP.md          ← este arquivo
 ```

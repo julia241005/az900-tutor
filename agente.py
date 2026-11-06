@@ -1,7 +1,11 @@
 """
 agente.py — FASE 3: o AGENTE.
 
-Diferença para o RAG da Fase 2: aqui o LLM DECIDE o que fazer.
+Diferença para o RAG da Fase 2: aqui o agente DECIDE o que fazer.
+
+Dois modos de decisão (config.ROTEAMENTO):
+  "regras" (padrão): o código decide pela mensagem (roteador.py) → o LLM é chamado 1 vez, mais rápido
+  "llm":             o LLM decide qual ferramenta usar (tool calling) → 2 chamadas, fluxo abaixo
 
   mensagem do aluno
         │
@@ -20,9 +24,11 @@ import re
 import time
 from dataclasses import dataclass, field
 
+import roteador
 import simulado
-from config import LLM_MAX_TOKENS, LLM_MODELO, LLM_TEMPERATURA
+from config import LLM_MAX_TOKENS, LLM_MODELO, LLM_TEMPERATURA, ROTEAMENTO
 from ferramentas import FERRAMENTAS, executar
+from observabilidade import registrar
 from rag import Resultado, cliente, responder_stream
 from sessao import obter_sessao
 
@@ -36,9 +42,10 @@ conceitos de memória.
 - ver_progresso: use quando o aluno perguntar como está indo, seu desempenho ou o que estudar.
 
 Ao responder com base nos trechos da documentação:
-1. Use SOMENTE as informações dos trechos. Se não houver a resposta, diga que não encontrou \
-na documentação oficial.
-2. Cite as fontes com o número do trecho, por exemplo [1].
+1. Use SOMENTE as informações dos trechos. Se a resposta estiver nos trechos, mesmo que em \
+partes, junte as partes e responda. Só diga que não encontrou na documentação oficial quando \
+nenhum trecho tratar do assunto.
+2. Cite as fontes no fim das frases com o número do trecho, por exemplo [1].
 3. Português do Brasil, didático e objetivo: resposta direta primeiro, depois detalhes.
 4. Quando útil, termine com "💡 Dica para a prova:".
 
@@ -73,6 +80,24 @@ def _somar_uso(res: ResultadoAgente, uso):
         res.tokens_saida += uso.completion_tokens or 0
 
 
+def _responder_com_documentacao(sessao, mensagem: str, res: ResultadoAgente, finalizar):
+    """RAG: busca os trechos oficiais e o LLM responde (1 chamada, em streaming).
+    Perguntas de continuação ("E o ZRS?") ganham o contexto da pergunta anterior."""
+    res.ferramentas_usadas = ["buscar_documentacao"]
+    anterior = next((m["content"] for m in reversed(sessao.historico) if m["role"] == "user"), "")
+    consulta = f"{anterior} {mensagem}" if anterior and len(mensagem.split()) < 6 else mensagem
+    partes = []
+    for parte in responder_stream(consulta):
+        if isinstance(parte, Resultado):
+            res.fontes = parte.fontes
+            res.tokens_entrada += parte.tokens_entrada
+            res.tokens_saida += parte.tokens_saida
+        else:
+            partes.append(parte)
+            yield parte
+    yield finalizar("".join(partes))
+
+
 def conversar_stream(sessao_id: str, mensagem: str):
     """Gera pedaços de texto conforme a resposta é produzida e, no fim, um ResultadoAgente."""
     inicio = time.time()
@@ -83,7 +108,11 @@ def conversar_stream(sessao_id: str, mensagem: str):
         res.resposta = texto
         res.segundos = round(time.time() - inicio, 2)
         sessao.lembrar("user", mensagem)
-        sessao.lembrar("assistant", texto)
+        sessao.lembrar("assistant", texto, {"tipo": res.tipo, "fontes": res.fontes})
+        registrar("agente", sessao=sessao_id, pergunta=mensagem, tipo=res.tipo,
+                  ferramentas=res.ferramentas_usadas, fontes=len(res.fontes),
+                  tokens_entrada=res.tokens_entrada, tokens_saida=res.tokens_saida,
+                  segundos=res.segundos, modelo=res.modelo)
         return res
 
     # ── Atalho determinístico: resposta a uma pergunta do simulado ───────────
@@ -98,7 +127,29 @@ def conversar_stream(sessao_id: str, mensagem: str):
         yield finalizar(texto)
         return
 
-    # ── Passo 1: o LLM decide (com as ferramentas disponíveis) ──────────────
+    # ── Passo 1 (modo "regras", padrão): o código decide, sem gastar uma chamada ao LLM ──
+    if ROTEAMENTO == "regras":
+        intencao, argumentos = roteador.decidir(mensagem)
+        if intencao in ("gerar_simulado", "ver_progresso"):
+            res.ferramentas_usadas = [intencao]
+            saida = executar(intencao, argumentos, sessao)
+            _somar_uso(res, saida.get("uso"))
+            res.tipo = "progresso" if intencao == "ver_progresso" else "simulado"
+            res.pergunta = saida.get("pergunta")
+            res.progresso = saida.get("progresso")
+            yield saida["exibir_direto"]
+            yield finalizar(saida["exibir_direto"])
+            return
+        if intencao == "conversa":
+            res.tipo = "conversa"
+            texto = roteador.resposta_conversa(mensagem)
+            yield texto
+            yield finalizar(texto)
+            return
+        yield from _responder_com_documentacao(sessao, mensagem, res, finalizar)  # dúvida → RAG direto
+        return
+
+    # ── Passo 1 (modo "llm"): o LLM decide (com as ferramentas disponíveis) ──────────────
     mensagens = [{"role": "system", "content": PROMPT_AGENTE}, *sessao.historico,
                  {"role": "user", "content": mensagem}]
     decisao = cliente.chat.completions.create(
@@ -112,20 +163,7 @@ def conversar_stream(sessao_id: str, mensagem: str):
     if not escolha.tool_calls:
         if not CONVERSA_SIMPLES.match(mensagem):
             # Guardrail: qualquer coisa que não seja conversa simples passa pela documentação.
-            # Perguntas de continuação ("E o ZRS?") ganham o contexto da pergunta anterior.
-            res.ferramentas_usadas = ["buscar_documentacao"]
-            anterior = next((m["content"] for m in reversed(sessao.historico) if m["role"] == "user"), "")
-            consulta = f"{anterior} {mensagem}" if anterior and len(mensagem.split()) < 6 else mensagem
-            partes = []
-            for parte in responder_stream(consulta):
-                if isinstance(parte, Resultado):
-                    res.fontes = parte.fontes
-                    res.tokens_entrada += parte.tokens_entrada
-                    res.tokens_saida += parte.tokens_saida
-                else:
-                    partes.append(parte)
-                    yield parte
-            yield finalizar("".join(partes))
+            yield from _responder_com_documentacao(sessao, mensagem, res, finalizar)
             return
         res.tipo = "conversa"
         texto = escolha.content or "Olá! Posso explicar conceitos do AZ-900 ou fazer um simulado com você."

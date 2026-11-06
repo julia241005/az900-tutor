@@ -1,0 +1,458 @@
+{
+  "buscas": [
+    {
+      "modo": "vetorial",
+      "acerto_k": 0.933,
+      "mrr": 0.797,
+      "ms_medio": 16,
+      "por_area": {
+        "Conceitos de nuvem": 0.9,
+        "Arquitetura e serviços do Azure": 0.9,
+        "Gestão e governança do Azure": 1.0
+      },
+      "falhas": [
+        "c04 · Qual a diferença entre CapEx e OpEx?",
+        "a10 · O que é o Acesso Condicional do Microsoft Entra?"
+      ],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "c04",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre CapEx e OpEx?",
+          "posicao": null,
+          "ms": 15
+        },
+        {
+          "id": "c05",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre escalabilidade vertical e horizontal?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c06",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que significa alta disponibilidade e qual o papel do SLA?",
+          "posicao": 4,
+          "ms": 16
+        },
+        {
+          "id": "c07",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é IaaS e qual a responsabilidade do cliente nele?",
+          "posicao": 3,
+          "ms": 16
+        },
+        {
+          "id": "c08",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é PaaS? Dê um exemplo de uso.",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c09",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é SaaS?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c10",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é o modelo baseado em consumo na nuvem?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a01",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é uma zona de disponibilidade?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a02",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que são pares de regiões do Azure?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "a03",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Qual a diferença entre LRS e GRS?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "a04",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é ZRS?",
+          "posicao": 3,
+          "ms": 16
+        },
+        {
+          "id": "a05",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Quais são as camadas de acesso do Armazenamento de Blobs?",
+          "posicao": 2,
+          "ms": 17
+        },
+        {
+          "id": "a06",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Para que serve o Gateway de VPN?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a07",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O ExpressRoute passa pela internet pública?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a08",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Azure Functions e quando usar?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a09",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é RBAC no Azure?",
+          "posicao": 2,
+          "ms": 17
+        },
+        {
+          "id": "a10",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Acesso Condicional do Microsoft Entra?",
+          "posicao": null,
+          "ms": 15
+        },
+        {
+          "id": "g01",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Azure Policy?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g02",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Quais são os tipos de bloqueio de recursos?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "g03",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que servem as marcas (tags) nos recursos?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "g04",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Qual a diferença entre a calculadora de preços e a calculadora de TCO?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g05",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Cost Management faz?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g06",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Azure Advisor recomenda?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g07",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é a Integridade do Serviço do Azure (Service Health)?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g08",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é o Azure Arc?",
+          "posicao": 2,
+          "ms": 14
+        },
+        {
+          "id": "g09",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que são modelos ARM?",
+          "posicao": 2,
+          "ms": 17
+        },
+        {
+          "id": "g10",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Microsoft Purview?",
+          "posicao": 1,
+          "ms": 16
+        }
+      ]
+    },
+    {
+      "modo": "hibrida",
+      "acerto_k": 0.967,
+      "mrr": 0.9,
+      "ms_medio": 16,
+      "por_area": {
+        "Conceitos de nuvem": 0.9,
+        "Arquitetura e serviços do Azure": 1.0,
+        "Gestão e governança do Azure": 1.0
+      },
+      "falhas": [
+        "c06 · O que significa alta disponibilidade e qual o papel do SLA?"
+      ],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c04",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre CapEx e OpEx?",
+          "posicao": 4,
+          "ms": 14
+        },
+        {
+          "id": "c05",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre escalabilidade vertical e horizontal?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c06",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que significa alta disponibilidade e qual o papel do SLA?",
+          "posicao": null,
+          "ms": 14
+        },
+        {
+          "id": "c07",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é IaaS e qual a responsabilidade do cliente nele?",
+          "posicao": 2,
+          "ms": 15
+        },
+        {
+          "id": "c08",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é PaaS? Dê um exemplo de uso.",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c09",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é SaaS?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c10",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é o modelo baseado em consumo na nuvem?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a01",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é uma zona de disponibilidade?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a02",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que são pares de regiões do Azure?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a03",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Qual a diferença entre LRS e GRS?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a04",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é ZRS?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a05",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Quais são as camadas de acesso do Armazenamento de Blobs?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a06",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Para que serve o Gateway de VPN?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a07",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O ExpressRoute passa pela internet pública?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "a08",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Azure Functions e quando usar?",
+          "posicao": 1,
+          "ms": 19
+        },
+        {
+          "id": "a09",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é RBAC no Azure?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "a10",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Acesso Condicional do Microsoft Entra?",
+          "posicao": 4,
+          "ms": 18
+        },
+        {
+          "id": "g01",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Azure Policy?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g02",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Quais são os tipos de bloqueio de recursos?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g03",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que servem as marcas (tags) nos recursos?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "g04",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Qual a diferença entre a calculadora de preços e a calculadora de TCO?",
+          "posicao": 1,
+          "ms": 19
+        },
+        {
+          "id": "g05",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Cost Management faz?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "g06",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Azure Advisor recomenda?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g07",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é a Integridade do Serviço do Azure (Service Health)?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g08",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é o Azure Arc?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g09",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que são modelos ARM?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g10",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Microsoft Purview?",
+          "posicao": 1,
+          "ms": 14
+        }
+      ]
+    }
+  ],
+  "respostas": null
+}

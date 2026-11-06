@@ -24,9 +24,11 @@ que ajuda estudantes brasileiros a passar no exame AZ-900 (Microsoft Azure Funda
 
 REGRAS:
 1. Responda SOMENTE com base nos TRECHOS OFICIAIS fornecidos. Não invente informações.
-2. Cite as fontes usando o número do trecho entre colchetes, por exemplo [1] ou [2].
-3. Se os trechos não tiverem a resposta, diga: "Não encontrei isso na documentação oficial \
-que tenho." e sugira reformular a pergunta.
+2. Cite as fontes no fim das frases, com o número do trecho entre colchetes: [1], [2]. \
+Não copie a linha "Fonte:" dos trechos.
+3. Se a resposta estiver nos trechos, mesmo que em partes (ex.: um trecho explica o LRS e \
+outro o GRS), JUNTE as partes e responda. Só diga "Não encontrei isso na documentação \
+oficial que tenho." quando NENHUM trecho tratar do assunto.
 4. Responda sempre em português do Brasil, de forma didática, clara e objetiva.
 5. Use exemplos simples quando ajudar.
 6. Se a pergunta não for sobre Azure ou computação em nuvem, diga educadamente que você \
@@ -57,7 +59,8 @@ class Resultado:
 def recuperar(pergunta: str) -> list[dict]:
     """R do RAG: busca os trechos e descarta os pouco relevantes."""
     trechos = buscar(pergunta)
-    return [t for t in trechos if t["similaridade"] >= SIMILARIDADE_MINIMA]
+    # mantém o trecho se o significado for parecido OU se ele tiver a palavra exata (ex.: sigla "GRS")
+    return [t for t in trechos if t["similaridade"] >= SIMILARIDADE_MINIMA or t.get("palavra_chave")]
 
 
 def montar_contexto(trechos: list[dict]) -> str:

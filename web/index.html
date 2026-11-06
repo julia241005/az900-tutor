@@ -5,108 +5,188 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AZ-900 Tutor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap">
 <style>
-/* Layout: app de estudo — barra lateral com as 3 áreas (Chat, Simulado, Progresso), conteúdo à direita; no celular a barra vira abas no topo */
+/* Identidade visual: clara e elegante. Papel quente, tinta azul-marinho, um toque dourado.
+   Títulos em serifa (Instrument Serif), interface em sans (Instrument Sans). */
 :root{
-  --bg:#f2f4f7; --surface:#ffffff; --ink:#17202b; --muted:#5b6676; --line:#d8dde5;
-  --accent:#0b5cad; --accent-ink:#ffffff; --accent-soft:#e2edf9;
-  --good:#1f7a48; --good-soft:#e1f2e8; --bad:#b0281f; --bad-soft:#fbe5e3; --warn:#97590a; --warn-soft:#fbefd9;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --bg:#f6f3ec; --surface:#fffdf9; --surface-2:#f0ebe1; --ink:#1d2129; --muted:#6c6f76; --faint:#9a9ca1;
+  --line:#e4ddcf; --line-strong:#d3cab8;
+  --accent:#1f3a5f; --accent-ink:#fffdf9; --accent-soft:#e8edf3; --gold:#a8844a;
+  --good:#2f6b4f; --good-soft:#e7f0ea; --bad:#a23b2a; --bad-soft:#f6e6e2; --warn:#9a6a1c;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --radius:14px; --shadow:0 1px 2px rgba(29,33,41,.04),0 8px 24px rgba(29,33,41,.05);
 }
 @media (prefers-color-scheme: dark){:root{
-  --bg:#0f141b; --surface:#17202a; --ink:#e5eaf0; --muted:#98a4b3; --line:#2a3644;
-  --accent:#5ba8ef; --accent-ink:#0a1420; --accent-soft:#1a2c40;
-  --good:#5fca8e; --good-soft:#153023; --bad:#f08a80; --bad-soft:#3a1c1a; --warn:#f0b65a; --warn-soft:#3a2b14; color-scheme:dark}}
+  --bg:#16171a; --surface:#1d1f23; --surface-2:#24262b; --ink:#ece8df; --muted:#a3a29c; --faint:#77777a;
+  --line:#2f3137; --line-strong:#3c3f46;
+  --accent:#9db7d8; --accent-ink:#16171a; --accent-soft:#232c38; --gold:#c9a76c;
+  --good:#7fc29d; --good-soft:#1d2a23; --bad:#e59482; --bad-soft:#2e1f1c; --warn:#d9a94f;
+  --shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
-button{font:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.app{display:grid;grid-template-columns:230px minmax(0,1fr);height:100%}
-.side{background:var(--surface);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:6px}
-.brand{padding:0 10px 18px}
-.brand b{display:block;font-size:18px}
-.brand span{color:var(--muted);font-size:13px}
-.nav{display:flex;align-items:center;gap:10px;white-space:nowrap;border:0;background:none;color:var(--ink);padding:10px 12px;border-radius:8px;text-align:left;font-weight:500}
-.nav:hover{background:var(--accent-soft)}
-.nav.on{background:var(--accent);color:var(--accent-ink)}
-.nav svg{width:18px;height:18px;flex:none}
-.side .foot{margin-top:auto;padding:10px;font-size:12px;color:var(--muted)}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px}
-.dot.ok{background:var(--good)} .dot.no{background:var(--bad)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.serif{font-family:var(--serif);font-weight:400}
+
+/* ── Estrutura ── */
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);height:100%}
+.side{display:flex;flex-direction:column;padding:28px 22px;border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+.mark{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;font-family:var(--serif);font-size:22px;color:var(--accent);background:var(--surface);flex:none}
+.brand b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.1}
+.brand span{display:block;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.nav{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 4px;text-align:left;color:var(--muted);font-weight:500;border-bottom:1px solid transparent}
+.nav svg{width:18px;height:18px;flex:none;stroke-width:1.6}
+.nav:hover{color:var(--ink)}
+.nav.on{color:var(--ink)}
+.nav.on .num{color:var(--gold)}
+.nav .num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--faint);width:18px}
+.side .foot{margin-top:auto;font-size:12px;color:var(--muted);line-height:1.5}
+.side .foot .row{display:flex;align-items:center;gap:8px}
+.demo{margin:0 0 14px;padding:10px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none}
+.dot.ok{background:var(--good)} .dot.no{background:var(--bad)} .dot.warn{background:var(--warn)}
 main{min-width:0;overflow:auto}
-.view{max-width:860px;margin:0 auto;padding:28px 24px 40px}
-h1{font-size:24px;margin:0 0 4px;text-wrap:balance}
-.sub{color:var(--muted);margin:0 0 20px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
-.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 16px;border-radius:7px;font-weight:500}
-.btn:hover{border-color:var(--accent)}
+.view{max-width:780px;margin:0 auto;padding:48px 32px 56px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 10px}
+h1{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
+h1 em{color:var(--accent)}
+.lead{color:var(--muted);margin:0 0 32px;max-width:56ch}
+.btn{border:1px solid var(--line-strong);background:var(--surface);padding:10px 18px;border-radius:999px;font-weight:500;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--ink)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn[disabled]{opacity:.5;cursor:not-allowed}
-.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.label{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+kbd{font-family:var(--sans);font-size:11px;border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--muted)}
+.erro{background:var(--bad-soft);border:1px solid var(--bad);border-radius:10px;padding:12px 14px;color:var(--ink)}
 
-/* chat */
-.chat{display:flex;flex-direction:column;height:100%}
+/* ── Chat ── */
+.chat{display:flex;flex-direction:column;min-height:100%}
 .chat .view{flex:1;width:100%}
-.msgs{display:flex;flex-direction:column;gap:16px}
-.msg{max-width:88%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
-.msg.eu{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.msg p{margin:0 0 8px} .msg p:last-child{margin:0}
-.msg ul,.msg ol{margin:4px 0 8px;padding-left:20px}
-.msg a{color:inherit}
-.fontes{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:6px}
-.fontes a{font-size:13px;color:var(--accent);text-decoration:none}
-.fontes a:hover{text-decoration:underline}
-.meta{font-size:12px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
-.typing{color:var(--muted);font-style:italic}
-.sugs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
-.sug{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px}
-.sug:hover{border-color:var(--accent);color:var(--accent)}
-.composer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:14px 24px}
-.composer form{max-width:860px;margin:0 auto;display:flex;gap:10px}
-.composer input{flex:1;min-width:0;font:inherit;padding:11px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.chathead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:8px}
+.sug{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;transition:border-color .15s,transform .15s}
+.sug:hover{border-color:var(--accent);transform:translateY(-1px)}
+.sug .label{display:block;margin-bottom:6px;color:var(--gold)}
+.sug span:last-child{font-family:var(--serif);font-size:19px;line-height:1.25}
+.msgs{display:flex;flex-direction:column;gap:28px;margin-top:8px}
+.msg.eu{align-self:flex-end;max-width:80%;background:var(--accent);color:var(--accent-ink);padding:12px 18px;border-radius:18px 18px 4px 18px}
+.msg.ia{max-width:100%;padding-left:20px;border-left:1px solid var(--gold)}
+.msg.ia .quem{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px;margin-bottom:4px}
+.msg p{margin:0 0 10px} .msg p:last-child{margin:0}
+.msg ul,.msg ol{margin:4px 0 12px;padding-left:22px}
+.msg li{margin:2px 0}
+.fontes{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line-strong);display:grid;gap:6px}
+.fontes a{font-size:13.5px;text-decoration:none;color:var(--ink)}
+.fontes a b{font-family:var(--serif);font-weight:400;color:var(--gold);margin-right:6px}
+.fontes a:hover span{text-decoration:underline}
+.meta{font-size:12px;color:var(--faint);margin-top:10px;font-variant-numeric:tabular-nums}
+.typing{color:var(--muted);font-style:italic;font-family:var(--serif);font-size:17px}
+.composer{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,transparent);padding:20px 32px 28px}
+.composer form{max-width:780px;margin:0 auto;display:flex;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 6px 6px 22px;box-shadow:var(--shadow)}
+.composer form:focus-within{border-color:var(--accent)}
+.composer input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;color:var(--ink);padding:8px 0}
+.composer .send{width:42px;height:42px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.composer .send svg{width:18px;height:18px}
+.composer .send[disabled]{opacity:.4}
+.dica{max-width:780px;margin:8px auto 0;font-size:12px;color:var(--faint);text-align:center}
 
-/* simulado */
-.cfg{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
-.cfg label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
-.cfg select{font:inherit;padding:8px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.qtop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:18px}
-.bar span{display:block;height:100%;background:var(--accent);transition:width .25s}
-.qtext{font-size:17px;font-weight:500;margin:0 0 16px}
-.opts{display:grid;gap:10px}
-.opt{display:flex;gap:12px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:12px 14px}
+/* ── Simulado: configuração ── */
+.step-t{font-family:var(--serif);font-size:22px;margin:0 0 14px}
+.areas-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:32px}
+.pick{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;transition:border-color .15s}
+.pick:hover{border-color:var(--line-strong)}
+.pick.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.pick b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2;margin-bottom:4px}
+.pick small{color:var(--muted)}
+.qtds{display:flex;gap:10px;margin-bottom:36px}
+.qtd{min-width:72px;padding:12px 0;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);font-weight:600}
+.qtd.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.start-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.start-row .hint{color:var(--muted);font-size:13px}
+
+/* ── Simulado: questão ── */
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+.qcount{font-family:var(--serif);font-size:20px}
+.qcount i{color:var(--faint)}
+.track{height:2px;background:var(--line);border-radius:2px;margin-bottom:40px;overflow:hidden}
+.track span{display:block;height:100%;background:var(--gold);transition:width .3s ease}
+.qtext{font-family:var(--serif);font-size:30px;line-height:1.25;margin:0 0 32px;text-wrap:pretty}
+.opts{display:grid;gap:12px}
+.opt{display:flex;gap:16px;align-items:center;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;transition:border-color .15s,background .15s}
 .opt:hover:not([disabled]){border-color:var(--accent)}
-.opt b{font-family:var(--mono);color:var(--muted)}
-.opt.certa{border-color:var(--good);background:var(--good-soft)}
-.opt.errada{border-color:var(--bad);background:var(--bad-soft)}
+.opt .l{width:32px;height:32px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;font-family:var(--serif);font-size:18px;flex:none;color:var(--muted)}
 .opt[disabled]{cursor:default}
-.feedback{margin-top:16px;border-radius:8px;padding:14px;border:1px solid var(--line)}
-.feedback.ok{background:var(--good-soft);border-color:var(--good)}
-.feedback.no{background:var(--bad-soft);border-color:var(--bad)}
-.feedback p{margin:4px 0}
-.feedback a{color:var(--accent)}
-.row{display:flex;justify-content:flex-end;margin-top:16px;gap:10px}
-.big{font-family:var(--mono);font-size:42px;font-weight:600;font-variant-numeric:tabular-nums}
+.opt.certa{border-color:var(--good);background:var(--good-soft)}
+.opt.certa .l{background:var(--good);border-color:var(--good);color:#fff}
+.opt.errada{border-color:var(--bad);background:var(--bad-soft)}
+.opt.errada .l{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.apagada{opacity:.55}
+.feedback{margin-top:28px;padding:22px 24px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line)}
+.feedback .veredito{font-family:var(--serif);font-size:24px;margin:0 0 8px}
+.feedback.ok .veredito{color:var(--good)} .feedback.no .veredito{color:var(--bad)}
+.feedback p{margin:0 0 10px}
+.feedback .fonte{font-size:13.5px}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:12px;flex-wrap:wrap}
+.qfoot .hint{font-size:12.5px;color:var(--faint)}
 
-/* progresso */
-.areas{display:grid;gap:16px;margin-top:16px}
-.area .top{display:flex;justify-content:space-between;gap:12px}
-.area .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:6px 0}
-.area .track span{display:block;height:100%}
+/* ── Simulado: resultado ── */
+.result{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;margin-bottom:40px}
+.ring{position:relative;width:168px;height:168px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .v b{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1}
+.ring .v small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.porarea{display:grid;gap:14px;margin:0 0 40px}
+.pa-top{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.pa-top b{font-weight:600;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.bar span{display:block;height:100%;border-radius:6px}
+.revisar{display:grid;gap:12px}
+.rev{padding:18px 20px}
+.rev .q{font-family:var(--serif);font-size:19px;line-height:1.3;margin:0 0 8px}
+.rev .r{font-size:14px;color:var(--muted);margin:0 0 6px}
+.rev .r b{color:var(--good);font-weight:600}
+.rev a{font-size:13.5px}
+.parabens{font-family:var(--serif);font-size:22px;color:var(--good)}
+
+/* ── Progresso ── */
+.big{font-family:var(--serif);font-size:76px;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:28px;color:var(--muted)}
+.prog-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:36px}
+.meta-line{color:var(--muted)}
+.area{padding:22px 0;border-top:1px solid var(--line)}
+.area:last-child{border-bottom:1px solid var(--line)}
+.area .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.area .nome{font-family:var(--serif);font-size:22px}
+.area .pct{font-family:var(--serif);font-size:26px;font-variant-numeric:tabular-nums}
 .area small{color:var(--muted)}
-.area a{font-size:13px;color:var(--accent)}
-.rec{margin-top:18px;padding:14px;border-radius:8px;background:var(--accent-soft)}
+.area .links{margin-top:8px;display:flex;flex-direction:column;gap:2px}
+.area .links a{font-size:13.5px}
+.rec{margin-top:32px;padding:22px 24px;border-left:2px solid var(--gold);background:var(--surface)}
+.rec p{margin:6px 0 0;font-family:var(--serif);font-size:20px;line-height:1.35}
 .empty{color:var(--muted)}
-.erro{background:var(--bad-soft);border:1px solid var(--bad);color:var(--ink);border-radius:8px;padding:12px;margin-top:12px}
 
-@media (max-width:720px){
+@media (max-width:760px){
   .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
-  .side{flex-direction:row;padding:8px 12px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
-  .brand,.side .foot{display:none}
-  .view{padding:20px 16px 32px} .composer{padding:12px 16px}
+  .side{flex-direction:row;align-items:center;gap:4px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .brand{margin:0 10px 0 0} .brand div{display:none} .side .foot{display:none}
+  .nav{width:auto;padding:8px 10px;white-space:nowrap} .nav .num{display:none}
+  .view{padding:28px 16px 40px}
+  h1{font-size:34px}
+  .sugs,.areas-pick{grid-template-columns:1fr}
+  .qtext{font-size:24px}
+  .result{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .composer{padding:12px 16px 16px}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -114,20 +194,34 @@ h1{font-size:24px;margin:0 0 4px;text-wrap:balance}
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><b>AZ-900 Tutor</b><span>Microsoft Azure Fundamentals</span></div>
-    <button class="nav on" data-v="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Tirar dúvidas</button>
-    <button class="nav" data-v="sim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>Simulado</button>
-    <button class="nav" data-v="prog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Meu progresso</button>
-    <div class="foot"><span class="dot" id="st"></span><span id="sttxt">Verificando…</span></div>
+    <div class="brand"><div class="mark" id="mark">A</div><div><b id="nome-marca">AZ-900 Tutor</b><span id="sub-marca">Microsoft Azure Fundamentals</span></div></div>
+    <button class="nav on" data-v="chat"><span class="num">i.</span>Tirar dúvidas</button>
+    <button class="nav" data-v="sim"><span class="num">ii.</span>Simulado</button>
+    <button class="nav" data-v="prog"><span class="num">iii.</span>Meu progresso</button>
+    <div class="foot"><p class="demo" id="demo" hidden>Versão de demonstração. Seu histórico fica só neste navegador e pode ser apagado quando o servidor reiniciar.</p><div class="row"><span class="dot" id="st"></span><span id="sttxt">Verificando…</span></div></div>
   </aside>
   <main id="main"></main>
 </div>
 
 <script>
-const SESSAO = "web";
-const AREAS = ["Conceitos de nuvem","Arquitetura e serviços do Azure","Gestão e governança do Azure"];
+/* Nome do produto: troque aqui e ele muda na interface inteira. */
+const MARCA = { nome: "AZ-900 Tutor", sub: "Microsoft Azure Fundamentals", inicial: "A" };
+
+let SESSAO = "web";      // no seu computador: sempre a mesma sessão (seu progresso)
+let DEMO = false;         // versão online: cada navegador tem a própria sessão
+const AREAS = [
+  {nome:"Conceitos de nuvem", peso:"25–30%"},
+  {nome:"Arquitetura e serviços do Azure", peso:"35–40%"},
+  {nome:"Gestão e governança do Azure", peso:"30–35%"},
+];
 const main = document.getElementById("main");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ICONE_ENVIAR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+
+document.title = MARCA.nome;
+document.getElementById("nome-marca").textContent = MARCA.nome;
+document.getElementById("sub-marca").textContent = MARCA.sub;
+document.getElementById("mark").textContent = MARCA.inicial;
 
 // Markdown simples: negrito, links, listas e parágrafos
 function md(t){
@@ -144,37 +238,96 @@ function md(t){
   fecha(); return html;
 }
 
+// Status na lateral: verde = tudo ok · âmbar = tutor ligado mas Ollama fechado · vermelho = tutor desligado
 async function status(){
-  try { const r = await fetch("/saude"); const d = await r.json();
-    document.getElementById("st").className = "dot ok"; document.getElementById("sttxt").textContent = `Ligado · ${d.modelo}`;
-  } catch { document.getElementById("st").className = "dot no"; document.getElementById("sttxt").textContent = "Tutor desligado"; }
+  const st = document.getElementById("st"), txt = document.getElementById("sttxt");
+  try { const d = await (await fetch("/saude")).json();
+    if (d.ia_disponivel === false){ st.className = "dot warn"; txt.textContent = DEMO ? "IA iniciando, aguarde…" : "IA desligada · abra o Ollama"; }
+    else { st.className = "dot ok"; txt.textContent = `Pronto · ${d.modelo}`; }
+    return d;
+  } catch { st.className = "dot no"; txt.textContent = "Tutor desligado"; return null; }
 }
 
-/* ───────── CHAT ───────── */
-const historico = [];
-function viewChat(){
+// Versão online: um identificador por navegador, guardado no próprio navegador
+function sessaoDoNavegador(){
+  const novo = "v-" + (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36));
+  try {
+    let id = localStorage.getItem("tutor-sessao");
+    if (!id){ id = novo; localStorage.setItem("tutor-sessao", id); }
+    return id;
+  } catch { return novo; }
+}
+
+/* ───────── TIRAR DÚVIDAS ───────── */
+const historico = [];          // mensagens já desenhadas (HTML), para trocar de aba sem perder a conversa
+let historicoCarregado = false; // a conversa salva no banco é buscada uma vez, ao abrir
+const SUGESTOES = [
+  ["Armazenamento", "Qual a diferença entre ZRS e GRS?"],
+  ["Rede", "Para que serve o Gateway de VPN?"],
+  ["Infraestrutura", "Zonas de disponibilidade ou pares de regiões?"],
+  ["Custos", "Calculadora de preços ou Cost Management?"],
+];
+
+function htmlResposta(texto, fontes, meta){
+  let h = `<div class="quem">Tutor</div>` + md(texto);
+  if (fontes?.length) h += `<div class="fontes"><span class="label">Fontes oficiais</span>${fontes.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener"><b>${f.numero}</b><span>${esc(f.titulo)}</span></a>`).join("")}</div>`;
+  if (meta) h += `<div class="meta">${meta}</div>`;
+  return h;
+}
+const htmlEu = t => `<div class="msg eu">${esc(t)}</div>`;
+
+async function carregarHistorico(){
+  historicoCarregado = true;
+  try {
+    const msgs = await (await fetch(`/chat/historico/${SESSAO}`)).json();
+    for (const m of msgs) historico.push(m.papel === "user" ? htmlEu(m.texto)
+      : `<div class="msg ia">${htmlResposta(m.texto, m.extra?.fontes)}</div>`);
+  } catch {}
+}
+
+async function novaConversa(){
+  await fetch(`/chat/historico/${SESSAO}`, {method:"DELETE"}).catch(()=>{});
+  historico.length = 0; viewChat();
+}
+
+async function viewChat(){
+  if (!historicoCarregado) await carregarHistorico();
+  const vazio = !historico.length;
   main.innerHTML = `
   <div class="chat">
     <div class="view">
-      <h1>Tirar dúvidas</h1>
-      <p class="sub">Respostas com base na documentação oficial da Microsoft, com as fontes. O modelo roda no seu computador, então pode levar alguns segundos.</p>
-      <div class="sugs" id="sugs">${["Qual a diferença entre ZRS e GRS?","Para que serve o Gateway de VPN?","Zonas de disponibilidade ou pares de regiões?","Calculadora de preços ou Cost Management?"].map(s=>`<button class="sug">${esc(s)}</button>`).join("")}</div>
+      <div class="chathead">
+        <div>
+          <p class="eyebrow">Tirar dúvidas</p>
+          <h1>${vazio ? "O que vamos <em>estudar</em> hoje?" : "Sua conversa"}</h1>
+        </div>
+        ${vazio ? "" : `<button class="btn ghost" id="nova-conv" title="Apaga esta conversa. Seu progresso continua salvo.">Nova conversa</button>`}
+      </div>
+      <p class="lead">Respostas baseadas na documentação oficial da Microsoft, sempre com as fontes.</p>
+      ${vazio ? `<div class="sugs">${SUGESTOES.map(([t,s])=>`<button class="sug"><span class="label">${esc(t)}</span><span>${esc(s)}</span></button>`).join("")}</div>` : ""}
       <div class="msgs" id="msgs"></div>
     </div>
-    <div class="composer"><form id="f"><input id="txt" placeholder="Pergunte sobre Azure ou o exame AZ-900…" autocomplete="off" aria-label="Sua pergunta"><button class="btn primary" id="send">Enviar</button></form></div>
+    <div class="composer">
+      <form id="f"><input id="txt" placeholder="Pergunte sobre Azure ou sobre o exame…" autocomplete="off" aria-label="Sua pergunta"><button class="send" id="send" aria-label="Enviar">${ICONE_ENVIAR}</button></form>
+      <div class="dica">${DEMO ? "Versão de demonstração num servidor gratuito: cada resposta pode levar até 1 minuto." : "O modelo roda no seu computador, então a resposta pode levar alguns segundos."}</div>
+    </div>
   </div>`;
   const msgs = document.getElementById("msgs");
   historico.forEach(h => msgs.insertAdjacentHTML("beforeend", h));
-  document.querySelectorAll(".sug").forEach(b => b.onclick = () => enviar(b.textContent));
+  document.getElementById("nova-conv")?.addEventListener("click", novaConversa);
+  if (historico.length) msgs.lastElementChild.scrollIntoView({block:"end"});
+  document.querySelectorAll(".sug").forEach(b => b.onclick = () => enviar(b.lastElementChild.textContent));
   document.getElementById("f").onsubmit = e => { e.preventDefault(); const t = document.getElementById("txt").value.trim(); if (t) enviar(t); };
   document.getElementById("txt").focus();
 }
 
 async function enviar(texto){
+  if (!historico.length){ historico.push(htmlEu(texto)); viewChat(); historico.pop(); }  // sai da tela inicial
   const msgs = document.getElementById("msgs"), input = document.getElementById("txt"), send = document.getElementById("send");
   input.value = ""; send.disabled = true;
-  const eu = `<div class="msg eu">${esc(texto)}</div>`; historico.push(eu); msgs.insertAdjacentHTML("beforeend", eu);
-  const box = document.createElement("div"); box.className = "msg"; box.innerHTML = `<span class="typing">Pensando…</span>`; msgs.appendChild(box);
+  const eu = htmlEu(texto); historico.push(eu);
+  if (!msgs.lastElementChild || msgs.lastElementChild.outerHTML !== eu) msgs.insertAdjacentHTML("beforeend", eu);
+  const box = document.createElement("div"); box.className = "msg ia"; box.innerHTML = `<div class="quem">Tutor</div><span class="typing">consultando a documentação…</span>`; msgs.appendChild(box);
   box.scrollIntoView({block:"end"});
   let texto_resp = "";
   try {
@@ -189,112 +342,167 @@ async function enviar(texto){
         const linha = buf.slice(0,i).replace(/^data:\s*/,""); buf = buf.slice(i+2);
         if (!linha) continue;
         const ev = JSON.parse(linha);
-        if (ev.evento === "texto"){ texto_resp += ev.conteudo; box.innerHTML = md(texto_resp); }
-        else if (ev.evento === "fim"){
-          box.innerHTML = md(ev.resposta || texto_resp);
-          if (ev.fontes?.length) box.insertAdjacentHTML("beforeend", `<div class="fontes"><span class="label">Fontes oficiais</span>${ev.fontes.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener">[${f.numero}] ${esc(f.titulo)}</a>`).join("")}</div>`);
-          box.insertAdjacentHTML("beforeend", `<div class="meta">${ev.tokens_entrada + ev.tokens_saida} tokens · ${ev.segundos}s · custo US$ 0,00</div>`);
-        }
+        if (ev.evento === "texto"){ texto_resp += ev.conteudo; box.innerHTML = `<div class="quem">Tutor</div>` + md(texto_resp); }
+        else if (ev.evento === "fim") box.innerHTML = htmlResposta(ev.resposta || texto_resp, ev.fontes, `${ev.tokens_entrada + ev.tokens_saida} tokens · ${ev.segundos}s · custo US$ 0,00`);
+        else if (ev.evento === "erro") throw new Error(ev.erro);
       }
       box.scrollIntoView({block:"end"});
     }
   } catch(e){
-    box.innerHTML = `<div class="erro">Não consegui falar com o tutor: ${esc(e.message)}. Verifique se o Ollama está aberto (a lhama perto do relógio).</div>`;
+    // TypeError = a requisição nem chegou (API desligada); os outros erros já vêm com a explicação da API
+    const motivo = e instanceof TypeError ? "O tutor parece desligado. Abra de novo pelo atalho Iniciar AZ-900 Tutor." : e.message;
+    box.innerHTML = `<div class="erro">Não consegui responder. ${esc(motivo)}</div>`;
+    status();
   }
   historico.push(box.outerHTML); send.disabled = false; input.focus();
+  if (!document.getElementById("nova-conv")){  // primeira mensagem: mostra o botão "Nova conversa"
+    document.querySelector(".chathead h1").textContent = "Sua conversa";
+    document.querySelector(".chathead").insertAdjacentHTML("beforeend", `<button class="btn ghost" id="nova-conv" title="Apaga esta conversa. Seu progresso continua salvo.">Nova conversa</button>`);
+    document.getElementById("nova-conv").onclick = novaConversa;
+  }
 }
 
 /* ───────── SIMULADO ───────── */
-let sim = null;
+let sim = null;                          // simulado em andamento
+let simCfg = {area:"", qtd:10};          // última escolha do aluno
+
 function viewSim(){
   if (sim && sim.pos < sim.qs.length) return renderQ();
+  if (sim && sim.pos >= sim.qs.length) return fimSim();
+  const opcoes = [{nome:"", titulo:"Todas as áreas", detalhe:"Mistura das três áreas, como na prova"}, ...AREAS.map(a=>({nome:a.nome, titulo:a.nome, detalhe:`Peso no exame: ${a.peso}`}))];
   main.innerHTML = `
   <div class="view">
-    <h1>Simulado</h1>
-    <p class="sub">Perguntas revisadas, com correção na hora e a fonte oficial. Cada resposta entra no seu progresso.</p>
-    <div class="card">
-      <div class="cfg">
-        <label for="area">Área do exame<select id="area"><option value="">Todas as áreas</option>${AREAS.map(a=>`<option>${esc(a)}</option>`).join("")}</select></label>
-        <label for="qtd">Questões<select id="qtd"><option>5</option><option selected>10</option><option>15</option></select></label>
-        <button class="btn primary" id="ini">Começar</button>
-      </div>
-      <div id="simerr"></div>
-    </div>
+    <p class="eyebrow">Simulado</p>
+    <h1>Treine como no <em>dia da prova</em></h1>
+    <p class="lead">Perguntas revisadas, com correção na hora e a fonte oficial de cada resposta. Tudo entra no seu progresso.</p>
+    <p class="step-t">1. Escolha a área</p>
+    <div class="areas-pick">${opcoes.map(o=>`<button class="pick ${o.nome===simCfg.area?"on":""}" data-area="${esc(o.nome)}"><b>${esc(o.titulo)}</b><small>${esc(o.detalhe)}</small></button>`).join("")}</div>
+    <p class="step-t">2. Quantas questões?</p>
+    <div class="qtds">${[5,10,15].map(n=>`<button class="qtd ${n===simCfg.qtd?"on":""}" data-q="${n}">${n}</button>`).join("")}</div>
+    <div class="start-row"><button class="btn primary" id="ini">Começar simulado</button><span class="hint">Meta da Microsoft para a prova: 80% ou mais.</span></div>
+    <div id="simerr"></div>
   </div>`;
-  document.getElementById("ini").onclick = async () => {
-    const area = document.getElementById("area").value, qtd = document.getElementById("qtd").value;
-    try {
-      const r = await fetch(`/simulado/perguntas?sessao_id=${SESSAO}&quantidade=${qtd}&area=${encodeURIComponent(area)}`);
-      const qs = await r.json();
-      if (!qs.length) throw new Error("O banco ainda não tem perguntas aprovadas. Rode uma vez: python importar_perguntas.py");
-      sim = {qs, pos:0, acertos:0, respondida:null}; renderQ();
-    } catch(e){ document.getElementById("simerr").innerHTML = `<div class="erro">${esc(e.message)}</div>`; }
-  };
+  document.querySelectorAll(".pick").forEach(b => b.onclick = () => { simCfg.area = b.dataset.area; document.querySelectorAll(".pick").forEach(x=>x.classList.toggle("on", x===b)); });
+  document.querySelectorAll(".qtd").forEach(b => b.onclick = () => { simCfg.qtd = +b.dataset.q; document.querySelectorAll(".qtd").forEach(x=>x.classList.toggle("on", x===b)); });
+  document.getElementById("ini").onclick = iniciarSim;
+}
+
+async function iniciarSim(){
+  try {
+    const r = await fetch(`/simulado/perguntas?sessao_id=${SESSAO}&quantidade=${simCfg.qtd}&area=${encodeURIComponent(simCfg.area)}`);
+    const qs = await r.json();
+    if (!qs.length) throw new Error("O banco ainda não tem perguntas aprovadas. Rode uma vez: python importar_perguntas.py");
+    sim = {qs, pos:0, respostas:[], respondida:null}; renderQ();
+  } catch(e){ document.getElementById("simerr").innerHTML = `<p class="erro" style="margin-top:20px">${esc(e.message)}</p>`; }
 }
 
 function renderQ(){
-  const q = sim.qs[sim.pos], n = sim.qs.length, r = sim.respondida;
+  const q = sim.qs[sim.pos], n = sim.qs.length, r = sim.respondida, ultima = sim.pos + 1 === n;
+  const acertos = sim.respostas.filter(x=>x.acertou).length;
   main.innerHTML = `
   <div class="view">
-    <div class="qtop"><span class="label">${esc(q.area)}</span><span class="label">Questão ${sim.pos+1} de ${n}</span></div>
-    <div class="bar"><span style="width:${(sim.pos/n)*100}%"></span></div>
-    <div class="card">
-      <p class="qtext">${esc(q.enunciado)}</p>
-      <div class="opts">${Object.entries(q.alternativas).map(([l,t])=>{
-        let c = ""; if (r){ if (l===r.correta) c="certa"; else if (l===r.escolha) c="errada"; }
-        return `<button class="opt ${c}" data-l="${l}" ${r?"disabled":""}><b>${l}</b><span>${esc(t)}</span></button>`;}).join("")}</div>
-      ${r ? `<div class="feedback ${r.acertou?"ok":"no"}">
-        <p><b>${r.acertou?"Correto!":`Não foi dessa vez. A resposta certa é ${r.correta}.`}</b></p>
+    <div class="qhead"><span class="label">${esc(q.area)}</span><span class="qcount">${sim.pos+1} <i>de ${n}</i></span></div>
+    <div class="track"><span style="width:${((sim.pos + (r?1:0))/n)*100}%"></span></div>
+    <p class="qtext">${esc(q.enunciado)}</p>
+    <div class="opts">${Object.entries(q.alternativas).map(([l,t])=>{
+      let c = ""; if (r){ c = l===r.correta ? "certa" : l===r.escolha ? "errada" : "apagada"; }
+      return `<button class="opt ${c}" data-l="${l}" ${r?"disabled":""}><span class="l">${l}</span><span>${esc(t)}</span></button>`;}).join("")}</div>
+    ${r ? `<div class="feedback ${r.acertou?"ok":"no"}">
+        <p class="veredito">${r.acertou ? "Correto." : `Não foi dessa vez. A resposta é ${r.correta}.`}</p>
         <p>${esc(r.explicacao)}</p>
-        <p><a href="${esc(r.fonte.url)}" target="_blank" rel="noopener">Fonte: ${esc(r.fonte.titulo)}</a></p></div>
-        <div class="row"><button class="btn primary" id="prox">${sim.pos+1<n?"Próxima":"Ver resultado"}</button></div>` : ""}
+        <a class="fonte" href="${esc(r.fonte.url)}" target="_blank" rel="noopener">Fonte: ${esc(r.fonte.titulo)} ↗</a>
+      </div>` : ""}
+    <div class="qfoot">
+      <span class="hint">${r ? `<kbd>Enter</kbd> para continuar` : `Responda clicando ou com as teclas <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd>`} · ${acertos} ${acertos===1?"acerto":"acertos"} até aqui</span>
+      ${r ? `<button class="btn primary" id="prox">${ultima ? "Ver resultado" : "Próxima questão"}</button>` : `<button class="btn ghost" id="sair">Encerrar</button>`}
     </div>
   </div>`;
-  if (!r) document.querySelectorAll(".opt").forEach(b => b.onclick = async () => {
-    document.querySelectorAll(".opt").forEach(x => x.disabled = true);
-    const res = await fetch("/simulado/responder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessao_id:SESSAO,pergunta_id:q.id,resposta:b.dataset.l})}).then(x=>x.json());
-    if (res.acertou) sim.acertos++;
-    sim.respondida = {...res, escolha:b.dataset.l}; renderQ();
-  });
-  else document.getElementById("prox").onclick = () => { sim.pos++; sim.respondida = null; sim.pos < n ? renderQ() : fimSim(); };
+  if (!r) document.querySelectorAll(".opt").forEach(b => b.onclick = () => responder(b.dataset.l));
+  else document.getElementById("prox").onclick = proxima;
+  document.getElementById("sair")?.addEventListener("click", () => { if (sim.respostas.length){ sim.qs = sim.qs.slice(0, sim.respostas.length); sim.pos = sim.qs.length; fimSim(); } else { sim = null; viewSim(); } });
 }
 
+async function responder(letra){
+  if (!sim || sim.respondida || sim.enviando) return;
+  sim.enviando = true;
+  document.querySelectorAll(".opt").forEach(x => x.disabled = true);
+  const q = sim.qs[sim.pos];
+  try {
+    const res = await fetch("/simulado/responder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessao_id:SESSAO,pergunta_id:q.id,resposta:letra})}).then(x=>x.json());
+    sim.respondida = {...res, escolha:letra};
+    sim.respostas.push({...res, escolha:letra, area:q.area, enunciado:q.enunciado, alternativas:q.alternativas});
+  } catch { document.querySelectorAll(".opt").forEach(x => x.disabled = false); }
+  sim.enviando = false; renderQ();
+}
+
+function proxima(){ sim.pos++; sim.respondida = null; sim.pos < sim.qs.length ? renderQ() : fimSim(); }
+
+// Teclado: A–D responde, Enter avança (só na tela do simulado)
+document.addEventListener("keydown", e => {
+  if (!sim || !document.querySelector(".opts") || e.target.tagName === "INPUT") return;
+  const l = e.key.toUpperCase();
+  if (!sim.respondida && "ABCD".includes(l) && l.length === 1) responder(l);
+  else if (sim.respondida && e.key === "Enter"){ e.preventDefault(); proxima(); }
+});
+
+function corPct(p){ return p==null ? "var(--line)" : p>=80 ? "var(--good)" : p>=70 ? "var(--warn)" : "var(--bad)"; }
+
 function fimSim(){
-  const n = sim.qs.length, pct = Math.round(100*sim.acertos/n);
+  const rs = sim.respostas, n = rs.length, ac = rs.filter(x=>x.acertou).length, pct = n ? Math.round(100*ac/n) : 0;
+  const C = 2*Math.PI*70, cor = corPct(pct);
+  const porArea = AREAS.map(a => { const da = rs.filter(x=>x.area===a.nome); return {nome:a.nome, n:da.length, ac:da.filter(x=>x.acertou).length}; }).filter(a=>a.n);
+  const erradas = rs.filter(x=>!x.acertou);
   main.innerHTML = `
   <div class="view">
-    <h1>Resultado</h1>
-    <div class="card">
-      <div class="big">${sim.acertos}/${n} · ${pct}%</div>
-      <p class="sub" style="margin:6px 0 16px">${pct>=80?"Acima da meta de 80% recomendada pela Microsoft.":"Abaixo da meta de 80%. Revise as explicações e tente de novo."}</p>
-      <div class="row" style="justify-content:flex-start"><button class="btn primary" id="nova">Novo simulado</button><button class="btn" id="vp">Ver meu progresso</button></div>
+    <p class="eyebrow">Resultado do simulado</p>
+    <div class="result">
+      <div class="ring" role="img" aria-label="${pct}% de acertos">
+        <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="var(--line)" stroke-width="6"/>
+        <circle cx="80" cy="80" r="70" fill="none" stroke="${cor}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/></svg>
+        <div class="v"><div><b>${pct}%</b><small>${ac} de ${n}</small></div></div>
+      </div>
+      <div>
+        <h1>${pct>=80 ? "Acima da <em>meta</em>." : pct>=70 ? "Quase lá." : "Bora revisar."}</h1>
+        <p class="lead" style="margin:0">${pct>=80 ? "Você passou dos 80% recomendados pela Microsoft. Mantenha o ritmo." : "A meta para a prova é 80%. Revise as questões abaixo e tente de novo."}</p>
+      </div>
     </div>
+    ${porArea.length > 1 ? `<p class="step-t">Por área</p><div class="porarea">${porArea.map(a=>{ const p = Math.round(100*a.ac/a.n); return `
+      <div><div class="pa-top"><span>${esc(a.nome)}</span><b>${a.ac}/${a.n} · ${p}%</b></div>
+      <div class="bar"><span style="width:${p}%;background:${corPct(p)}"></span></div></div>`;}).join("")}</div>` : ""}
+    ${erradas.length ? `<p class="step-t">Para revisar (${erradas.length})</p>
+      <div class="revisar">${erradas.map(x=>`<div class="card rev">
+        <p class="q">${esc(x.enunciado)}</p>
+        <p class="r">Você marcou ${x.escolha} · correta: <b>${x.correta}) ${esc(x.alternativas[x.correta])}</b></p>
+        <a href="${esc(x.fonte.url)}" target="_blank" rel="noopener">${esc(x.fonte.titulo)} ↗</a>
+      </div>`).join("")}</div>`
+      : `<p class="parabens">Nenhum erro nesta rodada.</p>`}
+    <div class="start-row" style="margin-top:36px"><button class="btn primary" id="nova">Novo simulado</button><button class="btn" id="vp">Ver meu progresso</button></div>
   </div>`;
-  sim = null;
-  document.getElementById("nova").onclick = viewSim;
-  document.getElementById("vp").onclick = () => ir("prog");
+  document.getElementById("nova").onclick = () => { sim = null; viewSim(); };
+  document.getElementById("vp").onclick = () => { sim = null; ir("prog"); };
 }
 
 /* ───────── PROGRESSO ───────── */
 async function viewProg(){
-  main.innerHTML = `<div class="view"><h1>Meu progresso</h1><p class="sub">Desempenho por área do exame, com os pesos oficiais.</p><div class="card" id="pc"><span class="empty">Carregando…</span></div></div>`;
+  main.innerHTML = `<div class="view"><p class="eyebrow">Meu progresso</p><h1>Como você está <em>indo</em></h1><p class="lead">Desempenho por área do exame, com os pesos oficiais da Microsoft.</p><div id="pc"><p class="empty">Carregando…</p></div></div>`;
+  const pc = document.getElementById("pc");
   try {
     const p = await fetch(`/progresso/${SESSAO}`).then(r=>r.json());
-    const pc = document.getElementById("pc");
-    if (!p.respostas){ pc.innerHTML = `<p class="empty">Ainda não há respostas. Faça um simulado para começar a medir seu progresso.</p><button class="btn primary" id="gs">Fazer simulado</button>`; document.getElementById("gs").onclick = () => ir("sim"); return; }
-    const cor = a => a.percentual==null ? "var(--line)" : a.percentual>=80 ? "var(--good)" : a.percentual>=70 ? "var(--warn)" : "var(--bad)";
+    if (!p.respostas){ pc.innerHTML = `<p class="empty">Ainda não há respostas. Faça um simulado para começar a medir seu progresso.</p><button class="btn primary" id="gs" style="margin-top:12px">Fazer um simulado</button>`; document.getElementById("gs").onclick = () => ir("sim"); return; }
     pc.innerHTML = `
-      <div class="big">${p.percentual_geral}%</div>
-      <p class="sub" style="margin:4px 0 0">${p.acertos} de ${p.respostas} acertos · meta ${p.meta}%</p>
-      <div class="areas">${p.areas.map(a=>`
+      <div class="prog-top">
+        <div class="big">${p.percentual_geral}<small>%</small></div>
+        <div class="meta-line">${p.acertos} acertos em ${p.respostas} respostas · meta ${p.meta}%</div>
+      </div>
+      ${p.areas.map(a=>`
         <div class="area">
-          <div class="top"><span>${esc(a.area)} <small>· peso ${esc(a.peso_no_exame)}</small></span><b>${a.percentual==null?"—":a.percentual+"%"}</b></div>
-          <div class="track"><span style="width:${a.percentual??0}%;background:${cor(a)}"></span></div>
-          <small>${a.acertos}/${a.respostas} · ${esc(a.situacao)}</small>
-          ${a.revisar.map(r=>`<div><a href="${esc(r.url)}" target="_blank" rel="noopener">Revisar: ${esc(r.titulo)}</a></div>`).join("")}
-        </div>`).join("")}</div>
-      <div class="rec"><span class="label">Próximo passo</span><p style="margin:4px 0 0">${esc(p.recomendacao)}</p></div>`;
-  } catch(e){ document.getElementById("pc").innerHTML = `<div class="erro">Não consegui carregar o progresso.</div>`; }
+          <div class="top"><span class="nome">${esc(a.area)}</span><span class="pct" style="color:${corPct(a.percentual)}">${a.percentual==null ? "—" : a.percentual+"%"}</span></div>
+          <small>Peso no exame ${esc(a.peso_no_exame)} · ${a.acertos}/${a.respostas} · ${esc(a.situacao)}</small>
+          <div class="bar"><span style="width:${a.percentual??0}%;background:${corPct(a.percentual)}"></span></div>
+          ${a.revisar.length ? `<div class="links">${a.revisar.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">Revisar: ${esc(r.titulo)} ↗</a>`).join("")}</div>` : ""}
+        </div>`).join("")}
+      <div class="rec"><span class="label">Próximo passo</span><p>${esc(p.recomendacao)}</p></div>`;
+  } catch { pc.innerHTML = `<p class="erro">Não consegui carregar o progresso.</p>`; }
 }
 
 /* ───────── navegação ───────── */
@@ -304,7 +512,13 @@ function ir(v){
   VIEWS[v]();
 }
 document.querySelectorAll(".nav").forEach(b => b.onclick = () => ir(b.dataset.v));
-ir("chat"); status();
+async function iniciar(){
+  const d = await status();
+  if (d?.modo_demo){ DEMO = true; SESSAO = sessaoDoNavegador(); document.getElementById("demo").hidden = false; }
+  ir("chat");
+  setInterval(status, 30000);
+}
+iniciar();
 </script>
 </body>
 </html>

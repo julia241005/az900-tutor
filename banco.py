@@ -5,6 +5,7 @@ Tabelas:
   respostas  → cada resposta do aluno no simulado (base do painel de progresso)
   perguntas  → banco de perguntas, com status de revisão humana:
                pendente → aprovada / rejeitada   (human-in-the-loop)
+  mensagens  → histórico do chat (a conversa continua mesmo depois de fechar o tutor)
 
 O arquivo fica em data/tutor.db (fora do Git). SQLite já vem com o Python: nada a instalar.
 """
@@ -38,6 +39,15 @@ CREATE TABLE IF NOT EXISTS perguntas (
     status      TEXT NOT NULL DEFAULT 'pendente',   -- pendente | aprovada | rejeitada
     criada_em   TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS mensagens (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    sessao_id   TEXT NOT NULL,
+    papel       TEXT NOT NULL,             -- user | assistant
+    texto       TEXT NOT NULL,
+    extra       TEXT,                      -- JSON: fontes, tipo (para redesenhar o chat)
+    criada_em   TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_mensagens_sessao ON mensagens (sessao_id, id);
 """
 
 
@@ -134,3 +144,28 @@ def resumo_banco() -> dict:
         for l in linhas:
             resumo.setdefault(l["area"], {})[l["status"]] = l["n"]
         return resumo
+
+
+# ── Histórico do chat ───────────────────────────────────────────────────────
+def salvar_mensagem(sessao_id: str, papel: str, texto: str, extra: dict | None = None):
+    with conectar() as con:
+        con.execute(
+            "INSERT INTO mensagens (sessao_id, papel, texto, extra, criada_em) VALUES (?, ?, ?, ?, ?)",
+            (sessao_id, papel, texto, json.dumps(extra, ensure_ascii=False) if extra else None, _agora()),
+        )
+
+
+def mensagens_da_sessao(sessao_id: str, limite: int = 50) -> list[dict]:
+    """Últimas mensagens da conversa, da mais antiga para a mais nova."""
+    with conectar() as con:
+        linhas = con.execute(
+            "SELECT papel, texto, extra, criada_em FROM mensagens WHERE sessao_id = ? ORDER BY id DESC LIMIT ?",
+            (sessao_id, limite),
+        ).fetchall()
+    return [{"papel": l["papel"], "texto": l["texto"], "extra": json.loads(l["extra"]) if l["extra"] else {},
+             "criada_em": l["criada_em"]} for l in reversed(linhas)]
+
+
+def apagar_mensagens(sessao_id: str):
+    with conectar() as con:
+        con.execute("DELETE FROM mensagens WHERE sessao_id = ?", (sessao_id,))

@@ -8,25 +8,27 @@ Teste: abra http://localhost:8000/docs no navegador
 """
 import json
 from dataclasses import asdict
-
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from openai import APIConnectionError
 from pydantic import BaseModel, Field
 
 import banco
 import progresso
+import seguranca
 from agente import ResultadoAgente, conversar, conversar_stream
-from config import LLM_MODELO
-from rag import Resultado, responder, responder_stream
+from config import LLM_MODELO, MODO_BUSCA, MODO_DEMO, ROTEAMENTO
+from observabilidade import registrar
+from rag import Resultado, cliente, responder, responder_stream
+from sessao import nova_conversa
 
 app = FastAPI(
     title="AZ-900 Tutor API",
     description="Tutor de IA para o exame AZ-900, com respostas baseadas na documentação oficial da Microsoft.",
-    version="0.5.0",
+    version="0.6.0",
 )
 
 # Permite que o frontend (Next.js, na porta 3000) chame esta API
@@ -38,10 +40,32 @@ app.add_middleware(
 )
 
 
+ERRO_IA = "Modelo de IA indisponível. Verifique se o Ollama está aberto."
+ROTAS_COM_LIMITE = {"/chat", "/chat/stream", "/perguntar", "/perguntar/stream"}
+limitador = seguranca.LimitadorDeTaxa()
+
+
+@app.middleware("http")
+async def protecao(request: Request, chamar_proxima):
+    """Senha (se TUTOR_SENHA estiver definida) e limite de mensagens por minuto."""
+    if request.url.path != "/saude" and not seguranca.senha_ok(request.headers.get("authorization")):
+        return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="AZ-900 Tutor"'})
+    if request.method == "POST" and request.url.path in ROTAS_COM_LIMITE:
+        # Atrás de um proxy (ex.: Hugging Face), o IP real do visitante vem no cabeçalho X-Forwarded-For
+        encaminhado = request.headers.get("x-forwarded-for", "")
+        ip = encaminhado.split(",")[0].strip() or (request.client.host if request.client else "desconhecido")
+        if not limitador.permitir(ip):
+            registrar("api", rota=request.url.path, erro="limite_de_mensagens")
+            return JSONResponse(status_code=429, headers={"Retry-After": "60"},
+                                content={"erro": "Muitas mensagens em pouco tempo. Espere um minuto e tente de novo."})
+    return await chamar_proxima(request)
+
+
 @app.exception_handler(APIConnectionError)
-def llm_fora_do_ar(_request, _erro):
+def llm_fora_do_ar(request, _erro):
     """Se o Ollama estiver fechado, devolve um erro claro em vez de uma falha genérica."""
-    return JSONResponse(status_code=503, content={"erro": "Modelo de IA indisponível. Verifique se o Ollama está aberto."})
+    registrar("api", rota=request.url.path, erro="ia_indisponivel")
+    return JSONResponse(status_code=503, content={"erro": ERRO_IA})
 
 
 class Pergunta(BaseModel):
@@ -94,16 +118,29 @@ def simulado_responder(dados: Resposta):
     return {"acertou": acertou, "correta": p["correta"], "explicacao": p["explicacao"], "fonte": p["fonte"]}
 
 
+def _ia_disponivel() -> bool:
+    """Pergunta ao provedor do LLM (Ollama) se ele está respondendo. Espera no máximo 2 segundos."""
+    try:
+        cliente.with_options(timeout=2, max_retries=0).models.list()
+        return True
+    except Exception:
+        return False
+
+
 @app.get("/saude", tags=["Status"])
 def saude():
-    """Verifica se a API está no ar."""
-    return {"status": "ok", "modelo": LLM_MODELO}
+    """Verifica se a API está no ar e se o modelo de IA (Ollama) está respondendo."""
+    return {"status": "ok", "modelo": LLM_MODELO, "ia_disponivel": _ia_disponivel(), "modo_busca": MODO_BUSCA,
+            "roteamento": ROTEAMENTO, "modo_demo": MODO_DEMO}
 
 
 @app.post("/perguntar", tags=["Tutor"])
 def perguntar(dados: Pergunta):
     """Responde a pergunta de uma vez (espera a resposta completa)."""
-    return asdict(responder(dados.pergunta))
+    r = responder(dados.pergunta)
+    registrar("rag", pergunta=dados.pergunta, tipo="resposta", fontes=len(r.fontes), tokens_entrada=r.tokens_entrada,
+              tokens_saida=r.tokens_saida, segundos=r.segundos, modelo=r.modelo)
+    return asdict(r)
 
 
 @app.post("/perguntar/stream", tags=["Tutor"])
@@ -112,12 +149,18 @@ def perguntar_stream(dados: Pergunta):
     Eventos: {"evento": "texto", ...} durante a resposta e {"evento": "fim", ...} com fontes e métricas."""
 
     def eventos():
-        for parte in responder_stream(dados.pergunta):
-            if isinstance(parte, Resultado):
-                dados_fim = {"evento": "fim", **asdict(parte)}
-                yield f"data: {json.dumps(dados_fim, ensure_ascii=False)}\n\n"
-            else:
-                yield f"data: {json.dumps({'evento': 'texto', 'conteudo': parte}, ensure_ascii=False)}\n\n"
+        try:
+            for parte in responder_stream(dados.pergunta):
+                if isinstance(parte, Resultado):
+                    registrar("rag", pergunta=dados.pergunta, tipo="resposta", fontes=len(parte.fontes),
+                              tokens_entrada=parte.tokens_entrada, tokens_saida=parte.tokens_saida,
+                              segundos=parte.segundos, modelo=parte.modelo)
+                    yield _sse({"evento": "fim", **asdict(parte)})
+                else:
+                    yield _sse({"evento": "texto", "conteudo": parte})
+        except APIConnectionError:
+            registrar("rag", pergunta=dados.pergunta, erro="ia_indisponivel")
+            yield _sse({"evento": "erro", "erro": ERRO_IA})
 
     return StreamingResponse(eventos(), media_type="text/event-stream")
 
@@ -146,10 +189,27 @@ def chat_stream(dados: Mensagem):
     """Mesmo que /chat, em streaming (Server-Sent Events)."""
 
     def eventos():
-        for parte in conversar_stream(dados.sessao_id, dados.mensagem):
-            if isinstance(parte, ResultadoAgente):
-                yield _sse({"evento": "fim", **asdict(parte)})
-            else:
-                yield _sse({"evento": "texto", "conteudo": parte})
+        try:
+            for parte in conversar_stream(dados.sessao_id, dados.mensagem):
+                if isinstance(parte, ResultadoAgente):
+                    yield _sse({"evento": "fim", **asdict(parte)})
+                else:
+                    yield _sse({"evento": "texto", "conteudo": parte})
+        except APIConnectionError:  # no streaming o erro acontece depois do início da resposta
+            registrar("agente", sessao=dados.sessao_id, pergunta=dados.mensagem, erro="ia_indisponivel")
+            yield _sse({"evento": "erro", "erro": ERRO_IA})
 
     return StreamingResponse(eventos(), media_type="text/event-stream")
+
+
+@app.get("/chat/historico/{sessao_id}", tags=["Agente"])
+def chat_historico(sessao_id: str, limite: int = Query(50, ge=1, le=200)):
+    """Mensagens salvas da conversa (para a interface mostrar a conversa ao reabrir)."""
+    return banco.mensagens_da_sessao(sessao_id, limite)
+
+
+@app.delete("/chat/historico/{sessao_id}", tags=["Agente"])
+def chat_nova_conversa(sessao_id: str):
+    """Começa uma conversa nova (apaga o histórico do chat; o progresso continua)."""
+    nova_conversa(sessao_id)
+    return {"ok": True}

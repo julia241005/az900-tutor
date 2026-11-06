@@ -1,0 +1,859 @@
+{
+  "buscas": [
+    {
+      "modo": "vetorial",
+      "acerto_k": 0.933,
+      "mrr": 0.797,
+      "ms_medio": 14,
+      "por_area": {
+        "Conceitos de nuvem": 0.9,
+        "Arquitetura e serviços do Azure": 0.9,
+        "Gestão e governança do Azure": 1.0
+      },
+      "falhas": [
+        "c04 · Qual a diferença entre CapEx e OpEx?",
+        "a10 · O que é o Acesso Condicional do Microsoft Entra?"
+      ],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c04",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre CapEx e OpEx?",
+          "posicao": null,
+          "ms": 16
+        },
+        {
+          "id": "c05",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre escalabilidade vertical e horizontal?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c06",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que significa alta disponibilidade e qual o papel do SLA?",
+          "posicao": 4,
+          "ms": 13
+        },
+        {
+          "id": "c07",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é IaaS e qual a responsabilidade do cliente nele?",
+          "posicao": 3,
+          "ms": 14
+        },
+        {
+          "id": "c08",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é PaaS? Dê um exemplo de uso.",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "c09",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é SaaS?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c10",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é o modelo baseado em consumo na nuvem?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a01",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é uma zona de disponibilidade?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "a02",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que são pares de regiões do Azure?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a03",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Qual a diferença entre LRS e GRS?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a04",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é ZRS?",
+          "posicao": 3,
+          "ms": 16
+        },
+        {
+          "id": "a05",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Quais são as camadas de acesso do Armazenamento de Blobs?",
+          "posicao": 2,
+          "ms": 18
+        },
+        {
+          "id": "a06",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Para que serve o Gateway de VPN?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a07",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O ExpressRoute passa pela internet pública?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a08",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Azure Functions e quando usar?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "a09",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é RBAC no Azure?",
+          "posicao": 2,
+          "ms": 15
+        },
+        {
+          "id": "a10",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Acesso Condicional do Microsoft Entra?",
+          "posicao": null,
+          "ms": 13
+        },
+        {
+          "id": "g01",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Azure Policy?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g02",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Quais são os tipos de bloqueio de recursos?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g03",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que servem as marcas (tags) nos recursos?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g04",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Qual a diferença entre a calculadora de preços e a calculadora de TCO?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "g05",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Cost Management faz?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g06",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Azure Advisor recomenda?",
+          "posicao": 1,
+          "ms": 12
+        },
+        {
+          "id": "g07",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é a Integridade do Serviço do Azure (Service Health)?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g08",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é o Azure Arc?",
+          "posicao": 2,
+          "ms": 13
+        },
+        {
+          "id": "g09",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que são modelos ARM?",
+          "posicao": 2,
+          "ms": 12
+        },
+        {
+          "id": "g10",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Microsoft Purview?",
+          "posicao": 1,
+          "ms": 12
+        }
+      ]
+    },
+    {
+      "modo": "hibrida",
+      "acerto_k": 0.967,
+      "mrr": 0.9,
+      "ms_medio": 15,
+      "por_area": {
+        "Conceitos de nuvem": 0.9,
+        "Arquitetura e serviços do Azure": 1.0,
+        "Gestão e governança do Azure": 1.0
+      },
+      "falhas": [
+        "c06 · O que significa alta disponibilidade e qual o papel do SLA?"
+      ],
+      "linhas": [
+        {
+          "id": "c01",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é computação em nuvem?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c02",
+          "area": "Conceitos de nuvem",
+          "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c03",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "c04",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre CapEx e OpEx?",
+          "posicao": 4,
+          "ms": 15
+        },
+        {
+          "id": "c05",
+          "area": "Conceitos de nuvem",
+          "pergunta": "Qual a diferença entre escalabilidade vertical e horizontal?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "c06",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que significa alta disponibilidade e qual o papel do SLA?",
+          "posicao": null,
+          "ms": 13
+        },
+        {
+          "id": "c07",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é IaaS e qual a responsabilidade do cliente nele?",
+          "posicao": 2,
+          "ms": 13
+        },
+        {
+          "id": "c08",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é PaaS? Dê um exemplo de uso.",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c09",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é SaaS?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "c10",
+          "area": "Conceitos de nuvem",
+          "pergunta": "O que é o modelo baseado em consumo na nuvem?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a01",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é uma zona de disponibilidade?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "a02",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que são pares de regiões do Azure?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a03",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Qual a diferença entre LRS e GRS?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "a04",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é ZRS?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a05",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Quais são as camadas de acesso do Armazenamento de Blobs?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "a06",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "Para que serve o Gateway de VPN?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a07",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O ExpressRoute passa pela internet pública?",
+          "posicao": 1,
+          "ms": 17
+        },
+        {
+          "id": "a08",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Azure Functions e quando usar?",
+          "posicao": 1,
+          "ms": 16
+        },
+        {
+          "id": "a09",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é RBAC no Azure?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "a10",
+          "area": "Arquitetura e serviços do Azure",
+          "pergunta": "O que é o Acesso Condicional do Microsoft Entra?",
+          "posicao": 4,
+          "ms": 14
+        },
+        {
+          "id": "g01",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Azure Policy?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g02",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Quais são os tipos de bloqueio de recursos?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g03",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que servem as marcas (tags) nos recursos?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g04",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Qual a diferença entre a calculadora de preços e a calculadora de TCO?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g05",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Cost Management faz?",
+          "posicao": 1,
+          "ms": 14
+        },
+        {
+          "id": "g06",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que o Azure Advisor recomenda?",
+          "posicao": 1,
+          "ms": 15
+        },
+        {
+          "id": "g07",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é a Integridade do Serviço do Azure (Service Health)?",
+          "posicao": 1,
+          "ms": 18
+        },
+        {
+          "id": "g08",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que é o Azure Arc?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g09",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "O que são modelos ARM?",
+          "posicao": 1,
+          "ms": 13
+        },
+        {
+          "id": "g10",
+          "area": "Gestão e governança do Azure",
+          "pergunta": "Para que serve o Microsoft Purview?",
+          "posicao": 1,
+          "ms": 16
+        }
+      ]
+    }
+  ],
+  "respostas": {
+    "resumo": {
+      "palavras": 0.806,
+      "citou": 0.7,
+      "fonte_certa": 0.967,
+      "recusa_fora_do_escopo": 1.0,
+      "segundos_medio": 24.327,
+      "tokens_medio": 1320.394
+    },
+    "linhas": [
+      {
+        "id": "c01",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é computação em nuvem?",
+        "segundos": 19.38,
+        "tokens_entrada": 927,
+        "tokens_saida": 206,
+        "resposta": "[1] Fonte: O que é computação em nuvem - Training › O que é computação em nuvem\nA computação em nuvem é a entrega de serviços de computação pela Internet. Esses serviços incluem infraestrutura de TI comum, como máquinas virtuais, armazenamento, bancos de dados e rede. Além disso, a computação em nuvem expandiu as ofertas tradicionais de TI para incluir IoT (Internet das Coisas), ML (machine learni",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c02",
+        "area": "Conceitos de nuvem",
+        "pergunta": "No modelo de responsabilidade compartilhada, o que é sempre responsabilidade do cliente?",
+        "segundos": 11.21,
+        "tokens_entrada": 982,
+        "tokens_saida": 118,
+        "resposta": "[1] No modelo de responsabilidade compartilhada, o gerenciamento de máquinas virtuais, sistemas operacionais e aplicações é sempre responsabilidade do cliente, especialmente quando a carga de trabalho é hospedada em infraestrutura como serviço (IaaS).\n\n💡 Dica para a prova: Ao entender quem é responsável por quais tarefas, você pode melhorar sua compreensão do modelo de responsabilidade compartilha",
+        "palavras": 0.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c03",
+        "area": "Conceitos de nuvem",
+        "pergunta": "Qual a diferença entre nuvem pública, privada e híbrida?",
+        "segundos": 23.93,
+        "tokens_entrada": 1050,
+        "tokens_saida": 280,
+        "resposta": "A diferença entre nuvem pública, privada e híbrida reside no controle e na escala que cada modelo oferece:\n\n- **Nuvem Pública**: É gerida por um provedor de nuvem de terceiros e pode ser acessada por qualquer pessoa que queira comprar serviços de nuvem. É a mais aberta e tem menor custo de capital para escalar verticalmente.\n\n- **Nuvem Privada**: É gerida por uma única entidade, como uma organizaç",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "c04",
+        "area": "Conceitos de nuvem",
+        "pergunta": "Qual a diferença entre CapEx e OpEx?",
+        "segundos": 24.5,
+        "tokens_entrada": 975,
+        "tokens_saida": 200,
+        "resposta": "[3] Fonte: Descrever o modelo baseado em consumo\nA computação em nuvem opera em um modelo baseado em consumo, onde você paga pelos recursos de TI usados e nada mais. No orçamento tradicional de TI, você ouve os termos despesas de capital (CapEx) e despesas operacionais (OpEx). O CapEx refere-se aos gastos antecipados em infraestrutura física, como servidores, hardware de rede e espaço de datacente",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c05",
+        "area": "Conceitos de nuvem",
+        "pergunta": "Qual a diferença entre escalabilidade vertical e horizontal?",
+        "segundos": 11.85,
+        "tokens_entrada": 916,
+        "tokens_saida": 46,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. [2]\n\nReformule a pergunta para que eu possa ajudar: Qual é a diferença entre escalabilidade vertical e horizontal na nuvem?",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c06",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que significa alta disponibilidade e qual o papel do SLA?",
+        "segundos": 35.96,
+        "tokens_entrada": 1389,
+        "tokens_saida": 284,
+        "resposta": "Alta disponibilidade é um conceito que refere-se à capacidade de um sistema ou serviço continuar operando sem interrupções, mesmo em condições adversas. No contexto do Azure, alta disponibilidade é um dos principais benefícios oferecidos pela plataforma, garantindo que os serviços e aplicativos estejam disponíveis quando precisamos deles.\n\nO SLA (Contrato de Nível de Serviço) do Microsoft Azure é ",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": false
+      },
+      {
+        "id": "c07",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é IaaS e qual a responsabilidade do cliente nele?",
+        "segundos": 25.63,
+        "tokens_entrada": 994,
+        "tokens_saida": 200,
+        "resposta": "[2] Fonte: Descrever a infraestrutura como um serviço - Training › Foco de responsabilidade no IaaS\n\nIaaS (Infraestrutura como Serviço) é um modelo de nuvem onde a Microsoft fornece a infraestrutura física e a conectividade com a Internet. No IaaS, você gerencia a maior parte do stack de carga de trabalho, incluindo sistemas operacionais, atualizações, configuração e muitos controles de segurança.",
+        "palavras": 0.5,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c08",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é PaaS? Dê um exemplo de uso.",
+        "segundos": 24.2,
+        "tokens_entrada": 1020,
+        "tokens_saida": 192,
+        "resposta": "[1] A plataforma como serviço (PaaS) é um modelo de serviço em que o provedor de nuvem mantém a infraestrutura física, a segurança física e a conexão com a Internet. Eles também mantêm os sistemas operacionais, middleware, ferramentas de desenvolvimento e serviços de análise que compõem uma solução de nuvem. O PaaS é adequado para fornecer um ambiente de desenvolvimento completo sem a preocupação ",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c09",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é SaaS?",
+        "segundos": 21.49,
+        "tokens_entrada": 856,
+        "tokens_saida": 182,
+        "resposta": "O SaaS (Software como Serviço) é um modelo de serviço de nuvem onde o provedor de nuvem oferece um aplicativo completo, desenvolvido e gerenciado, ao invés de fornecer a infraestrutura e o software. [2]\n\nNo SaaS, você geralmente se concentra em gerenciar seus dados, identidade e configurações de acesso, enquanto o provedor de nuvem cuida de questões como a manutenção de aplicativos, atualizações e",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "c10",
+        "area": "Conceitos de nuvem",
+        "pergunta": "O que é o modelo baseado em consumo na nuvem?",
+        "segundos": 26.19,
+        "tokens_entrada": 1322,
+        "tokens_saida": 174,
+        "resposta": "O modelo baseado em consumo na nuvem é um modelo de pagamento onde você paga apenas pelos recursos de TI que usa, sem custos iniciais para infraestrutura física. Isso significa que não há custos para servidores, hardware de rede ou espaço de datacenter. Você paga somente pelos serviços consumidos, o que ajuda a planejar e gerenciar os custos operacionais. O provedor de nuvem mantém a infraestrutur",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "a01",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que é uma zona de disponibilidade?",
+        "segundos": 33.0,
+        "tokens_entrada": 1417,
+        "tokens_saida": 206,
+        "resposta": "Uma zona de disponibilidade no Azure é uma estrutura física de um ou mais datacenters separados fisicamente dentro de uma região do Azure. Cada zona de disponibilidade é equipada com energia, resfriamento e rede independentes. Elas são projetadas para funcionar isoladamente, onde uma zona de disponibilidade inativa não afeta as outras. Zonas de disponibilidade são conectadas por redes de fibra ópt",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "a02",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que são pares de regiões do Azure?",
+        "segundos": 33.75,
+        "tokens_entrada": 1539,
+        "tokens_saida": 222,
+        "resposta": "Pares de regiões do Azure são conjuntos de regiões geográficas que estão emparelhadas e estão a pelo menos 300 milhas (ou cerca de 480 km) de distância umas das outras. Essa configuração permite que os recursos de uma região se repiliquem para a outra região, o que ajuda a reduzir a probabilidade de interrupções devido a eventos como desastres naturais, conflitos civis, quedas de energia ou interr",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "a03",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "Qual a diferença entre LRS e GRS?",
+        "segundos": 18.52,
+        "tokens_entrada": 1180,
+        "tokens_saida": 79,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. [3] Sugiro reformular a pergunta para: \"Qual é a diferença entre redundância local (LRS) e redundância geográfica (GRS) no Azure Storage?\" Essa reformulação permitirá que eu te ajude a entender as diferenças entre essas duas opções de redundância.",
+        "palavras": 0.67,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "a04",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que é ZRS?",
+        "segundos": 33.72,
+        "tokens_entrada": 1505,
+        "tokens_saida": 152,
+        "resposta": "[ZRS] é um tipo de redundância de armazenamento do Azure que replica os dados de maneira síncrona em três zonas de disponibilidade na região primária. Isso garante que os dados permanecem disponíveis para operações de leitura e gravação, mesmo que uma zona não esteja disponível. O ZRS oferece durabilidade para objetos de dados do Armazenamento do Azure de, pelo menos, 12 novos (99,9999999999%) em ",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "a05",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "Quais são as camadas de acesso do Armazenamento de Blobs?",
+        "segundos": 38.8,
+        "tokens_entrada": 1488,
+        "tokens_saida": 252,
+        "resposta": "As camadas de acesso do Armazenamento de Blobs do Azure são quatro:\n\n1. **Camada de acesso quente**: Esta camada é otimizada para armazenar dados que são acessados com frequência, como imagens de um site.\n2. **Camada de acesso esporádico**: Esta camada é otimizada para dados acessados com menos frequência e armazenados por pelo menos 30 dias, como faturas de clientes.\n3. **Camada de acesso frio**:",
+        "palavras": 0.5,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "a06",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "Para que serve o Gateway de VPN?",
+        "segundos": 29.79,
+        "tokens_entrada": 1315,
+        "tokens_saida": 151,
+        "resposta": "O Gateway de VPN do Azure serve para enviar tráfego criptografado entre uma rede virtual do Azure e locais on-premises através da Internet pública, ou entre redes virtuais Azure pela rede da Microsoft. Ele permite a criptografia de tráfego entre o Azure e locais que não estão conectados diretamente por meio do ExpressRoute. Além disso, o Gateway de VPN pode ser usado para criar múltiplas conexões ",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "a07",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O ExpressRoute passa pela internet pública?",
+        "segundos": 13.7,
+        "tokens_entrada": 1042,
+        "tokens_saida": 41,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. [1] Sugiro reformular a pergunta para: \"Como a conexão do ExpressRoute funciona em relação à Internet pública?\"",
+        "palavras": 0.5,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "a08",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que é o Azure Functions e quando usar?",
+        "segundos": 30.3,
+        "tokens_entrada": 951,
+        "tokens_saida": 280,
+        "resposta": "[Azure Functions é uma solução sem servidor do Azure que permite criar aplicativos robustos usando menos código e com menos infraestrutura e custos mais baixos. Você se concentra no código que mais importa para você, na linguagem mais produtiva para você, e Azure Functions lida com o restante. Azure Functions é ideal quando você está preocupado apenas com o código que executa o serviço, e não com ",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "a09",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que é RBAC no Azure?",
+        "segundos": 21.8,
+        "tokens_entrada": 1223,
+        "tokens_saida": 128,
+        "resposta": "O RBAC (controle de acesso baseado em função do Azure) é um sistema de autorização baseado no Azure Resource Manager que ajuda a gerenciar quem tem acesso aos recursos do Azure, o que pode fazer com esses recursos e a quais áreas tem acesso. Ele fornece gerenciamento de acesso refinado para recursos do Azure, permitindo que você controle quem pode executar quais ações em quais recursos.\n\n💡 Dica pa",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "a10",
+        "area": "Arquitetura e serviços do Azure",
+        "pergunta": "O que é o Acesso Condicional do Microsoft Entra?",
+        "segundos": 25.46,
+        "tokens_entrada": 1113,
+        "tokens_saida": 189,
+        "resposta": "[4] Fonte: Descrever o acesso condicional do Azure - Training › Descrever o acesso condicional do Azure\nO Acesso Condicional do Microsoft Entra é uma ferramenta que permite controlar o acesso a recursos baseado em sinais de identidade. Ele usa sinais como quem é o usuário, onde ele está e de qual dispositivo está solicitando acesso para permitir ou negar o acesso. O Acesso Condicional ajuda os adm",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g01",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "Para que serve o Azure Policy?",
+        "segundos": 36.22,
+        "tokens_entrada": 1429,
+        "tokens_saida": 244,
+        "resposta": "O Azure Policy serve para definir e avaliar políticas em recursos do Azure, garantindo que eles estejam em conformidade com as regras de negócio estabelecidas. Ele permite que você defina políticas em nível específico, como em um recurso individual, um grupo de recursos, uma assinatura ou até mesmo em todos os recursos. Além disso, as políticas do Azure são herdadas, então se você definir uma polí",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g02",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "Quais são os tipos de bloqueio de recursos?",
+        "segundos": 19.77,
+        "tokens_entrada": 1161,
+        "tokens_saida": 104,
+        "resposta": "Os tipos de bloqueios de recursos são dois:\n\n- Exclusão: Impede que os usuários excluam um recurso, mas permite que eles leiam, atualizem e façam alterações no recurso.\n- ReadOnly: Permite que os usuários leiam um recurso, mas não permitem que eles excluam ou atualizem o recurso.\n\nEsses tipos de bloqueios são usados para proteger recursos críticos de exclusão acidental. [1]",
+        "palavras": 0.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g03",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "Para que servem as marcas (tags) nos recursos?",
+        "segundos": 37.96,
+        "tokens_entrada": 1317,
+        "tokens_saida": 276,
+        "resposta": "As marcas (tags) nos recursos do Azure são usadas para organizar e identificar recursos de maneira mais eficiente. Elas permitem que você atribua nomes e valores a cada recurso do Azure, permitindo que você crie esquemas de marcação personalizados que mudam dependendo do nível (recurso, grupo de recursos, assinatura e assim por diante). Por exemplo, você pode adicionar marcas como \"AppName\" para i",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "g04",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "Qual a diferença entre a calculadora de preços e a calculadora de TCO?",
+        "segundos": 15.22,
+        "tokens_entrada": 1119,
+        "tokens_saida": 57,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. [1] Sugiro reformular a pergunta para: \"Qual é a diferença entre a calculadora de preços e a calculadora de TCO (Custo Total de Propriedade) no Azure?\"",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g05",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "O que o Cost Management faz?",
+        "segundos": 27.6,
+        "tokens_entrada": 1268,
+        "tokens_saida": 183,
+        "resposta": "O Cost Management fornece ferramentas para entender, relatar e analisar os custos no Microsoft Cloud. Ele inclui o Gerenciamento de Custos, que permite analisar, gerenciar e otimizar os custos, e a Cobrança, que fornece todas as ferramentas necessárias para gerenciar sua conta de cobrança e pagar suas faturas. Além disso, o Cost Management está disponível tanto na Experiência de Cobrança quanto em",
+        "palavras": 0.5,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g06",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "O que o Azure Advisor recomenda?",
+        "segundos": 27.25,
+        "tokens_entrada": 1279,
+        "tokens_saida": 180,
+        "resposta": "O Azure Advisor recomenda melhorias em várias áreas para otimizar a utilização do Azure. Ele fornece recomendações em cinco categorias principais: Confiabilidade, Desempenho, Segurança, Custo e Excelência Operacional. As recomendações são personalizadas para cada assinatura do Azure e abrangem uma variedade de serviços e recursos, incluindo Gerenciamento de API do Azure, Serviço de Aplicativo do A",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g07",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "O que é a Integridade do Serviço do Azure (Service Health)?",
+        "segundos": 26.57,
+        "tokens_entrada": 1281,
+        "tokens_saida": 169,
+        "resposta": "A Integridade do Serviço do Azure (Service Health) é um conjunto de experiências que o Azure fornece para manter os usuários informados sobre a integridade dos seus recursos de nuvem. Essas informações incluem problemas atuais e futuros, como eventos de impacto de serviço, manutenção planejada e outras alterações que podem afetar a disponibilidade de seus recursos do Azure. [1] [2] [3] [4]\n\n💡 Dica",
+        "palavras": 0.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g08",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "O que é o Azure Arc?",
+        "segundos": 19.28,
+        "tokens_entrada": 948,
+        "tokens_saida": 135,
+        "resposta": "O Azure Arc é uma parte fundamental da abordagem de nuvem adaptável da Microsoft. Ele ajuda a gerenciar seu ambiente de nuvem, seja uma nuvem pública no Azure, uma nuvem privada em seu datacenter, uma configuração híbrida ou até mesmo um ambiente multinuvem em execução em vários provedores de nuvem ao mesmo tempo [3].\n\n💡 Dica para a prova: O Azure Arc permite gerenciar recursos fora do Azure, como",
+        "palavras": 1.0,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g09",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "O que são modelos ARM?",
+        "segundos": 23.05,
+        "tokens_entrada": 1301,
+        "tokens_saida": 117,
+        "resposta": "Modelos ARM são arquivos JSON que definem um ou mais recursos para implantação em grupos de recursos, assinaturas, grupos de gerenciamento ou locatários no Azure. Eles permitem criar e implantar uma infraestrutura inteira do Azure de forma declarativa, sem precisar escrever sequências de comandos de programação para cada recurso. Esses modelos são idempotentes, o que significa que você pode implan",
+        "palavras": 0.5,
+        "citou": true,
+        "fonte_certa": true
+      },
+      {
+        "id": "g10",
+        "area": "Gestão e governança do Azure",
+        "pergunta": "Para que serve o Microsoft Purview?",
+        "segundos": 26.75,
+        "tokens_entrada": 1112,
+        "tokens_saida": 195,
+        "resposta": "O Microsoft Purview é uma família de soluções de governança, risco e conformidade de dados que ajuda a obter uma única exibição unificada em seus dados, independentemente de onde eles estejam localizados. Ele coleta informações sobre dados locais, multinuvem e software como serviço. Com o Microsoft Purview, você pode se manter atualizado sobre seu cenário de dados graças a descoberta de dados auto",
+        "palavras": 1.0,
+        "citou": false,
+        "fonte_certa": true
+      },
+      {
+        "id": "x01",
+        "area": "Fora do escopo",
+        "pergunta": "Me passa uma receita de bolo de cenoura?",
+        "segundos": 9.79,
+        "tokens_entrada": 633,
+        "tokens_saida": 56,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. Sugiro reformular a pergunta para algo relacionado ao Azure, como \"Como configurar um Gateway de VPN no Azure para garantir uma conexão segura entre a minha rede local e o Azure?\"",
+        "recusou": true
+      },
+      {
+        "id": "x02",
+        "area": "Fora do escopo",
+        "pergunta": "Quem ganhou a Copa do Mundo de 2002?",
+        "segundos": 17.15,
+        "tokens_entrada": 1224,
+        "tokens_saida": 62,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. Sugiro reformular a pergunta para algo relacionado ao AZ-900, como por exemplo: \"Quem é o proprietário da função personalizada que pode criar bloqueios de gerenciamento no Azure?\" [3]",
+        "recusou": true
+      },
+      {
+        "id": "x03",
+        "area": "Fora do escopo",
+        "pergunta": "Qual o melhor time de futebol do Brasil?",
+        "segundos": 12.99,
+        "tokens_entrada": 880,
+        "tokens_saida": 57,
+        "resposta": "Não encontrei isso na documentação oficial que tenho. Esta pergunta não está relacionada ao conteúdo do AZ-900 (Microsoft Azure Fundamentals). A pergunta sobre qual o melhor time de futebol do Brasil não é relevante para o Azure.",
+        "recusou": true
+      }
+    ]
+  }
+}
