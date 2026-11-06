@@ -1,96 +1,222 @@
-# ☁️ AZ-900 Tutor
+☁️ AZ-900 Tutor
+Um assistente de estudo com IA para a certificação Microsoft Azure Fundamentals (AZ-900). Ele responde dúvidas consultando a documentação oficial da Microsoft, mostra de onde tirou cada informação, aplica simulados e acompanha o seu desempenho por área do exame.
 
-> 💸 **100% gratuito:** LLM local (Ollama), embeddings locais e nenhuma API paga.
+💸 Custo zero. A IA roda no seu próprio computador. Nenhuma API paga, nenhuma assinatura.
 
-Agente de IA que ajuda estudantes a se preparar para o exame **Microsoft Azure Fundamentals (AZ-900)**: explica conceitos com base na documentação oficial (com citação de fontes), gera simulados e acompanha o desempenho por área do exame.
 
-## Arquitetura
+Em 30 segundos
+Você pergunta "Qual a diferença entre ZRS e GRS?". Antes de responder, o tutor procura nas páginas oficiais da Microsoft os trechos que falam disso, lê esses trechos e explica em português, citando as fontes [1], [2] com o link para conferir.
 
-```
-┌───────────────────────────┐        ┌──────────────────────────────────────┐
-│  FRONTEND                 │  API   │  BACKEND (Python)                    │
-│  Next.js + Tailwind       │ ◄────► │  FastAPI · Agente · RAG · LLM        │
-│  shadcn/ui + Framer Motion│        │  ChromaDB (banco vetorial)           │
-└───────────────────────────┘        └──────────────────────────────────────┘
-                                                      ▲
-                                                      │ alimentação (pipeline)
-                                     Microsoft Learn ─┘ coletar → fragmentar → indexar
-```
+Se ele não encontrar a resposta na documentação, ele diz que não encontrou, em vez de inventar.
 
-## Progresso
 
-| Fase | Entrega | Status |
-|---|---|---|
-| 1 · Alimentação | Coleta, limpeza, chunking, embeddings, busca | ✅ Concluída |
-| 2 · RAG + API | LLM local (Ollama) responde com fontes, via FastAPI com streaming | ✅ Concluída |
-| 3 · Agente | Decide a ação: buscar docs, gerar simulado, corrigir · memória de conversa | ✅ Concluída |
-| 4 · Progresso | Desempenho por área (pesos oficiais) + recomendação + banco curado de perguntas | ✅ Concluída |
-| 5 · Interface | Interface web: chat com streaming e fontes, simulado e painel de progresso | ✅ v1 (HTML servido pela API) |
-| 6 · Qualidade e custo | Avaliação automática + tokens/custo por pergunta | ⏳ |
-| 7 · Publicação | Deploy em planos gratuitos e demo | ⏳ |
+Por que eu fiz
+Eu estava estudando para o AZ-900 e senti falta de duas coisas:
 
-Passo a passo completo: [ROADMAP.md](ROADMAP.md)
+Respostas confiáveis. Chats de IA genéricos às vezes respondem com segurança algo que está errado ou desatualizado. Para estudar para uma prova, preciso saber de onde veio a informação.
+Saber onde estou fraca. O simulado oficial dá uma nota, mas eu queria acompanhar a evolução por área do exame e saber o que revisar.
 
-## Documentação dos processos
+Ao mesmo tempo, eu queria aprender na prática como se constrói um produto com IA de verdade: alimentar a IA com dados, fazer ela buscar informação, medir se ela acerta e quanto custa.
 
-| # | Processo | Status |
-|---|---|---|
-| 01 | [Fontes de dados](docs/01-fontes-de-dados.md) | ✅ |
-| 02 | [Ingestão e limpeza](docs/02-ingestao-e-limpeza.md) | ✅ |
-| 03 | [Fragmentação (chunking)](docs/03-fragmentacao.md) | ✅ |
-| 04 | [Embeddings e indexação](docs/04-embeddings-e-indexacao.md) | ✅ |
-| 05 | [Recuperação e RAG](docs/05-recuperacao-e-rag.md) | ✅ |
-| 06 | [Agente e ferramentas](docs/06-agente-e-ferramentas.md) | ✅ |
-| 07 | [Progresso e banco de perguntas](docs/07-progresso-e-banco-de-perguntas.md) | ✅ |
-| 08 | Atualização da base | ⏳ Fase 6 |
-| 09 | Avaliação de qualidade | ⏳ Fase 6 |
-| 10 | Custo e tokens | ⏳ Fase 6 |
-| 11 | Segurança e ética | ⏳ Fase 7 |
 
-## Como usar (interface gráfica)
+O que ele faz
+Função
+Como funciona
+💬 Tirar dúvidas
+Responde com base na documentação oficial, sempre com as fontes. Entende continuação ("e o ZRS?")
+📝 Simulado
+Questões por área do exame, correção na hora, explicação e link oficial. Dá para responder pelo teclado (A, B, C, D)
+📊 Meu progresso
+Desempenho por área, com os pesos oficiais do exame, e recomendação do que estudar
+🔁 Lembra a conversa
+O histórico fica salvo, mesmo depois de fechar
+🚫 Recusa o que não sabe
+Perguntas fora do AZ-900 ou sem resposta na documentação são recusadas
 
-1. Abra o Ollama (modelo `qwen2.5:3b` baixado).
-2. Dê dois cliques em **`Iniciar AZ-900 Tutor.bat`**. O navegador abre em `http://localhost:8000`.
-3. Use as abas **Tirar dúvidas**, **Simulado** e **Meu progresso**. Para desligar, feche a janela preta.
 
-## Como rodar (Fase 1)
 
-```bash
+O que ele não faz (limitações)
+Prefiro ser transparente. Estes são os pontos fracos conhecidos:
+
+Limitação
+Por quê
+Só AZ-900
+Ele foi feito para responder só sobre essa prova. Outros assuntos são recusados de propósito
+É lento
+A IA roda no processador do computador, sem placa de vídeo. Uma resposta leva em média 24 segundos. O simulado e o progresso são instantâneos, porque não usam IA
+Erra às vezes
+O modelo é pequeno (3 bilhões de parâmetros) para caber num computador comum. Na avaliação, ele trouxe a fonte certa em 97% das perguntas, mas em alguns casos leu errado o trecho. Por isso as fontes estão sempre visíveis: confira
+Banco de questões pequeno
+São 30 questões revisadas por mim, com fonte oficial. A IA até consegue gerar questões, mas nos testes nenhuma passou na minha revisão, então essa função fica desligada
+Conteúdo é uma "foto"
+A documentação foi baixada numa data. Quando a Microsoft muda algo, é preciso rodar a atualização (atualizar_base.py)
+Uso individual e local
+Feito para rodar no seu computador, para uma pessoa. Não é um site público com várias contas
+Não substitui a prova oficial
+É material de apoio. Use também os simulados oficiais do Microsoft Learn
+
+
+
+Como funciona (explicado de forma simples)
+Imagine um professor que, antes de responder qualquer pergunta, abre a apostila oficial, procura as páginas certas e lê. É isso que o tutor faz. Essa técnica se chama RAG (geração aumentada por recuperação).
+
+1. PREPARAR (feito uma vez)
+   Páginas oficiais do Microsoft Learn ──► texto limpo ──► pedaços de ~1.200 letras
+   ──► cada pedaço vira uma "impressão digital" numérica (embedding) ──► guardado num banco
+
+2. RESPONDER (a cada pergunta)
+   Sua pergunta ──► busca os 4 trechos mais parecidos (pelo significado E pela palavra exata)
+                ──► a IA lê só esses trechos ──► responde citando [1] [2] [3]
+
+Por que buscar pelo significado e pela palavra exata? A busca por significado entende sinônimos, mas se confunde com siglas como LRS, GRS e ZRS. A busca por palavra exata resolve isso. Juntando as duas, a fonte certa passou a vir em 97% das perguntas (antes, 93%).
+
+E o simulado? Ele não usa IA: as questões vêm de um banco revisado e a correção é feita por código. Por isso é instantâneo e nunca erra o gabarito.
+
+
+Tecnologias (e por que cada uma)
+O quê
+Tecnologia
+Por que essa
+Linguagem
+Python
+a linguagem mais usada em IA
+IA que escreve as respostas
+Ollama + Qwen 2.5 (3B)
+roda no próprio computador, de graça
+"Impressão digital" do texto
+sentence-transformers (modelo multilíngue)
+entende português e roda localmente
+Banco de busca
+ChromaDB
+banco vetorial simples, num arquivo
+Busca por palavra exata
+BM25 (feito no projeto)
+resolve siglas como LRS, GRS
+API
+FastAPI
+rápida e já gera a documentação da API
+Interface
+HTML, CSS e JavaScript
+leve, servida pela própria API, sem instalar nada a mais
+Histórico e progresso
+SQLite
+banco de dados num arquivo, já vem com o Python
+Testes
+pytest
+27 testes automáticos
+
+
+
+Resultados medidos
+Eu não queria dizer só "funciona". Criei um conjunto de 30 perguntas do exame + 3 fora do assunto e medi (detalhes):
+
+O que foi medido
+Resultado
+A fonte certa veio entre os trechos (busca híbrida)
+97%
+A fonte certa veio em 1º lugar com mais frequência (MRR)
+0,80 → 0,90
+Recusou perguntas fora do assunto (bolo, futebol)
+100%
+Fonte certa entre as citadas na resposta
+97%
+Tempo médio por resposta
+24 s
+Custo real
+US$ 0,00
+
+
+A avaliação também mostrou um problema: em 13% das perguntas ele dizia "não encontrei" mesmo com a resposta nos trechos, principalmente em comparações (ex.: LRS x GRS). Ajustei as instruções da IA para juntar informações de trechos diferentes. Esse ciclo de medir → achar a causa → ajustar → medir de novo está documentado no doc 09.
+
+
+Como usar
+O que você precisa
+Python 3.10 ou mais novo
+Ollama instalado
+Git
+Uns 3 GB livres (modelo de IA + documentação)
+Instalação (uma vez só)
+git clone https://github.com/julia241005/az900-tutor.git
+cd az900-tutor
+
 python -m venv venv
-source venv/Scripts/activate        # Git Bash no Windows
+source venv/Scripts/activate        # Git Bash no Windows (no Linux/Mac: source venv/bin/activate)
 pip install -r requirements.txt
 
-python -m ingestao.coletar          # 1. baixa as páginas oficiais
-python -m ingestao.fragmentar       # 2. quebra em pedaços
-python -m ingestao.indexar          # 3. gera embeddings e indexa
-python buscar.py "O que é uma zona de disponibilidade?"   # 4. testa a busca
-```
+ollama pull qwen2.5:3b              # baixa o modelo de IA (~2 GB)
 
-## Como rodar (Fase 2)
+python -m ingestao.coletar          # baixa as páginas oficiais
+python -m ingestao.fragmentar       # divide em pedaços
+python -m ingestao.indexar          # cria o banco de busca
+python importar_perguntas.py        # carrega as questões do simulado
+Dia a dia
+Abra o Ollama.
+Dê dois cliques em Iniciar AZ-900 Tutor.bat (Windows), ou rode python -m uvicorn api:app --port 8000.
+Acesse http://127.0.0.1:8000 e use as abas Tirar dúvidas, Simulado e Meu progresso.
+Comandos úteis
+python -m pytest -q          # roda os testes automáticos
+python avaliar.py            # mede a qualidade da busca
+python avaliar.py --completo # mede a qualidade das respostas (Ollama aberto, ~15 min)
+python relatorio.py          # uso, tempo, tokens e quanto custaria numa API paga
+python atualizar_base.py     # baixa a documentação de novo e reindexa se algo mudou
 
-Pré-requisito: [Ollama](https://ollama.com) instalado e o modelo baixado:
-```bash
-ollama pull qwen2.5:3b
-```
 
-```bash
-python rag.py "Qual a diferença entre LRS e GRS?"   # tutor no terminal
-uvicorn api:app --reload                            # API → abra http://localhost:8000/docs
-```
+Estrutura do projeto
+az900-tutor/
+├── ingestao/              ← baixa, limpa, divide e indexa a documentação
+├── buscar.py              ← busca híbrida (significado + palavra exata)
+├── rag.py                 ← monta a resposta com as fontes
+├── agente.py              ← decide o que fazer: responder, simulado ou progresso
+├── api.py                 ← API (FastAPI) e interface
+├── web/index.html         ← interface
+├── banco.py · sessao.py   ← histórico, progresso e banco de questões (SQLite)
+├── avaliar.py             ← avaliação automática
+├── relatorio.py           ← uso e custo
+├── tests/                 ← testes automáticos
+├── docs/                  ← documentação de cada etapa (01 a 11)
+└── avaliacao/             ← perguntas de teste e resultados
 
-## Como rodar (Fase 3 · agente)
 
-```bash
-python chat.py      # converse: tire dúvidas, peça "um simulado de governança" e responda com A/B/C/D
-```
+Documentação de cada etapa
+#
+Etapa
+01
+Fontes de dados
+02
+Ingestão e limpeza
+03
+Fragmentação (chunking)
+04
+Embeddings, indexação e busca híbrida
+05
+Recuperação e RAG
+06
+Agente e ferramentas
+07
+Progresso e banco de perguntas
+08
+Atualização da base
+09
+Avaliação de qualidade
+10
+Custo, tokens e observabilidade
+11
+Segurança e ética
 
-## Como rodar (Fase 4 · progresso)
 
-```bash
-python importar_perguntas.py   # carrega o banco curado (30 perguntas, 10 por área)
-python progresso.py            # seu desempenho por área do exame
-python revisar_perguntas.py    # revisão humana: aprovar ou rejeitar perguntas
-python gerar_banco.py 3        # (experimental) a IA gera perguntas para revisão
-```
+O passo a passo completo do desenvolvimento está no ROADMAP.
 
-> Conteúdo de origem: Microsoft Learn, sempre citado. O texto coletado não é publicado neste repositório. Projeto de estudo, sem vínculo com a Microsoft.
+
+Próximos passos
+Respostas mais rápidas (pular a etapa de decisão quando a pergunta é claramente uma dúvida)
+Modo prova real: cronômetro e nota só no final, como no dia do exame
+Revisar meus erros: refazer só as questões erradas até acertar
+Flashcards com repetição espaçada
+Outras certificações (AZ-104, AI-900) usando a mesma estrutura
+Demonstração em vídeo
+
+
+Aviso
+Projeto pessoal de estudo, sem vínculo com a Microsoft. O conteúdo vem do Microsoft Learn e é sempre citado com link. O texto baixado não é publicado neste repositório: cada pessoa baixa a própria cópia com o passo de instalação.
+
+Feito por Julia Duarte Silva.
