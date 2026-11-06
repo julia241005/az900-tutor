@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AZ-900 Tutor · demonstração</title>
+<meta name="description" content="Assistente de estudo com IA para a certificação AZ-900. Faça o simulado online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Identidade visual: clara e elegante. Papel quente, tinta azul-marinho, um toque dourado.
+   Títulos em serifa (Instrument Serif), interface em sans (Instrument Sans). */
+:root{
+  --bg:#f6f3ec; --surface:#fffdf9; --surface-2:#f0ebe1; --ink:#1d2129; --muted:#6c6f76; --faint:#9a9ca1;
+  --line:#e4ddcf; --line-strong:#d3cab8;
+  --accent:#1f3a5f; --accent-ink:#fffdf9; --accent-soft:#e8edf3; --gold:#a8844a;
+  --good:#2f6b4f; --good-soft:#e7f0ea; --bad:#a23b2a; --bad-soft:#f6e6e2; --warn:#9a6a1c;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --radius:14px; --shadow:0 1px 2px rgba(29,33,41,.04),0 8px 24px rgba(29,33,41,.05);
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#16171a; --surface:#1d1f23; --surface-2:#24262b; --ink:#ece8df; --muted:#a3a29c; --faint:#77777a;
+  --line:#2f3137; --line-strong:#3c3f46;
+  --accent:#9db7d8; --accent-ink:#16171a; --accent-soft:#232c38; --gold:#c9a76c;
+  --good:#7fc29d; --good-soft:#1d2a23; --bad:#e59482; --bad-soft:#2e1f1c; --warn:#d9a94f;
+  --shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.serif{font-family:var(--serif);font-weight:400}
+
+/* ── Estrutura ── */
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);height:100%}
+.side{display:flex;flex-direction:column;padding:28px 22px;border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+.mark{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;font-family:var(--serif);font-size:22px;color:var(--accent);background:var(--surface);flex:none}
+.brand b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.1}
+.brand span{display:block;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.nav{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 4px;text-align:left;color:var(--muted);font-weight:500;border-bottom:1px solid transparent}
+.nav svg{width:18px;height:18px;flex:none;stroke-width:1.6}
+.nav:hover{color:var(--ink)}
+.nav.on{color:var(--ink)}
+.nav.on .num{color:var(--gold)}
+.nav .num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--faint);width:18px}
+.side .foot{margin-top:auto;font-size:12px;color:var(--muted);line-height:1.5}
+.side .foot .row{display:flex;align-items:center;gap:8px}
+.demo{margin:0 0 14px;padding:10px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none}
+.dot.ok{background:var(--good)} .dot.no{background:var(--bad)} .dot.warn{background:var(--warn)}
+main{min-width:0;overflow:auto}
+.view{max-width:780px;margin:0 auto;padding:48px 32px 56px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 10px}
+h1{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
+h1 em{color:var(--accent)}
+.lead{color:var(--muted);margin:0 0 32px;max-width:56ch}
+.btn{border:1px solid var(--line-strong);background:var(--surface);padding:10px 18px;border-radius:999px;font-weight:500;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.label{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+kbd{font-family:var(--sans);font-size:11px;border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--muted)}
+.erro{background:var(--bad-soft);border:1px solid var(--bad);border-radius:10px;padding:12px 14px;color:var(--ink)}
+
+/* ── Chat ── */
+.chat{display:flex;flex-direction:column;min-height:100%}
+.chat .view{flex:1;width:100%}
+.chathead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:8px}
+.sug{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;transition:border-color .15s,transform .15s}
+.sug:hover{border-color:var(--accent);transform:translateY(-1px)}
+.sug .label{display:block;margin-bottom:6px;color:var(--gold)}
+.sug span:last-child{font-family:var(--serif);font-size:19px;line-height:1.25}
+.msgs{display:flex;flex-direction:column;gap:28px;margin-top:8px}
+.msg.eu{align-self:flex-end;max-width:80%;background:var(--accent);color:var(--accent-ink);padding:12px 18px;border-radius:18px 18px 4px 18px}
+.msg.ia{max-width:100%;padding-left:20px;border-left:1px solid var(--gold)}
+.msg.ia .quem{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px;margin-bottom:4px}
+.msg p{margin:0 0 10px} .msg p:last-child{margin:0}
+.msg ul,.msg ol{margin:4px 0 12px;padding-left:22px}
+.msg li{margin:2px 0}
+.fontes{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line-strong);display:grid;gap:6px}
+.fontes a{font-size:13.5px;text-decoration:none;color:var(--ink)}
+.fontes a b{font-family:var(--serif);font-weight:400;color:var(--gold);margin-right:6px}
+.fontes a:hover span{text-decoration:underline}
+.meta{font-size:12px;color:var(--faint);margin-top:10px;font-variant-numeric:tabular-nums}
+.typing{color:var(--muted);font-style:italic;font-family:var(--serif);font-size:17px}
+.composer{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,transparent);padding:20px 32px 28px}
+.composer form{max-width:780px;margin:0 auto;display:flex;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 6px 6px 22px;box-shadow:var(--shadow)}
+.composer form:focus-within{border-color:var(--accent)}
+.composer input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;color:var(--ink);padding:8px 0}
+.composer .send{width:42px;height:42px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.composer .send svg{width:18px;height:18px}
+.composer .send[disabled]{opacity:.4}
+.dica{max-width:780px;margin:8px auto 0;font-size:12px;color:var(--faint);text-align:center}
+
+/* ── Simulado: configuração ── */
+.step-t{font-family:var(--serif);font-size:22px;margin:0 0 14px}
+.areas-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:32px}
+.pick{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;transition:border-color .15s}
+.pick:hover{border-color:var(--line-strong)}
+.pick.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.pick b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2;margin-bottom:4px}
+.pick small{color:var(--muted)}
+.qtds{display:flex;gap:10px;margin-bottom:36px}
+.qtd{min-width:72px;padding:12px 0;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);font-weight:600}
+.qtd.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.start-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.start-row .hint{color:var(--muted);font-size:13px}
+
+/* ── Simulado: questão ── */
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+.qcount{font-family:var(--serif);font-size:20px}
+.qcount i{color:var(--faint)}
+.track{height:2px;background:var(--line);border-radius:2px;margin-bottom:40px;overflow:hidden}
+.track span{display:block;height:100%;background:var(--gold);transition:width .3s ease}
+.qtext{font-family:var(--serif);font-size:30px;line-height:1.25;margin:0 0 32px;text-wrap:pretty}
+.opts{display:grid;gap:12px}
+.opt{display:flex;gap:16px;align-items:center;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .l{width:32px;height:32px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;font-family:var(--serif);font-size:18px;flex:none;color:var(--muted)}
+.opt[disabled]{cursor:default}
+.opt.certa{border-color:var(--good);background:var(--good-soft)}
+.opt.certa .l{background:var(--good);border-color:var(--good);color:#fff}
+.opt.errada{border-color:var(--bad);background:var(--bad-soft)}
+.opt.errada .l{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.apagada{opacity:.55}
+.feedback{margin-top:28px;padding:22px 24px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line)}
+.feedback .veredito{font-family:var(--serif);font-size:24px;margin:0 0 8px}
+.feedback.ok .veredito{color:var(--good)} .feedback.no .veredito{color:var(--bad)}
+.feedback p{margin:0 0 10px}
+.feedback .fonte{font-size:13.5px}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:12px;flex-wrap:wrap}
+.qfoot .hint{font-size:12.5px;color:var(--faint)}
+
+/* ── Simulado: resultado ── */
+.result{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;margin-bottom:40px}
+.ring{position:relative;width:168px;height:168px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .v b{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1}
+.ring .v small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.porarea{display:grid;gap:14px;margin:0 0 40px}
+.pa-top{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.pa-top b{font-weight:600;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.bar span{display:block;height:100%;border-radius:6px}
+.revisar{display:grid;gap:12px}
+.rev{padding:18px 20px}
+.rev .q{font-family:var(--serif);font-size:19px;line-height:1.3;margin:0 0 8px}
+.rev .r{font-size:14px;color:var(--muted);margin:0 0 6px}
+.rev .r b{color:var(--good);font-weight:600}
+.rev a{font-size:13.5px}
+.parabens{font-family:var(--serif);font-size:22px;color:var(--good)}
+
+/* ── Progresso ── */
+.big{font-family:var(--serif);font-size:76px;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:28px;color:var(--muted)}
+.prog-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:36px}
+.meta-line{color:var(--muted)}
+.area{padding:22px 0;border-top:1px solid var(--line)}
+.area:last-child{border-bottom:1px solid var(--line)}
+.area .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.area .nome{font-family:var(--serif);font-size:22px}
+.area .pct{font-family:var(--serif);font-size:26px;font-variant-numeric:tabular-nums}
+.area small{color:var(--muted)}
+.area .links{margin-top:8px;display:flex;flex-direction:column;gap:2px}
+.area .links a{font-size:13.5px}
+.rec{margin-top:32px;padding:22px 24px;border-left:2px solid var(--gold);background:var(--surface)}
+.rec p{margin:6px 0 0;font-family:var(--serif);font-size:20px;line-height:1.35}
+.empty{color:var(--muted)}
+
+@media (max-width:760px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .side{flex-direction:row;align-items:center;gap:4px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .brand{margin:0 10px 0 0} .brand div{display:none} .side .foot{display:none}
+  .nav{width:auto;padding:8px 10px;white-space:nowrap} .nav .num{display:none}
+  .view{padding:28px 16px 40px}
+  h1{font-size:34px}
+  .sugs,.areas-pick{grid-template-columns:1fr}
+  .qtext{font-size:24px}
+  .result{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .composer{padding:12px 16px 16px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* ── Demo online (GitHub Pages) ── */
+.faixa{background:var(--accent);color:var(--accent-ink);font-size:13px;padding:9px 16px;text-align:center}
+.faixa a{color:inherit;font-weight:600}
+.app{height:calc(100% - 38px)}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 44px}
+.cta-row a.btn{text-decoration:none;color:var(--ink)}
+.cta-row a.btn.primary{color:var(--accent-ink)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:40px}
+.box{padding:22px}
+.box h3{font-family:var(--serif);font-weight:400;font-size:24px;margin:0 0 10px}
+.box ul{margin:0;padding-left:18px;color:var(--ink)} .box li{margin:4px 0}
+.box.nao h3{color:var(--bad)} .box.sim h3{color:var(--good)}
+.passos{counter-reset:p;display:grid;gap:12px;margin:0 0 40px;padding:0;list-style:none}
+.passos li{counter-increment:p;display:flex;gap:16px;align-items:flex-start}
+.passos li::before{content:counter(p);font-family:var(--serif);font-size:22px;color:var(--gold);width:28px;flex:none;line-height:1.2}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:44px}
+.num-card{padding:20px}
+.num-card b{display:block;font-family:var(--serif);font-weight:400;font-size:42px;line-height:1;color:var(--accent)}
+.num-card span{font-size:13.5px;color:var(--muted)}
+.exemplo{padding:24px;margin-bottom:24px}
+.exemplo .pergunta{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:18px 18px 4px 18px;margin-bottom:18px}
+.nota{font-size:13px;color:var(--muted)}
+.shot{width:100%;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:24px}
+pre.cmd{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:13px}
+@media (max-width:760px){.grid2,.nums{grid-template-columns:1fr}.app{height:auto;min-height:calc(100% - 38px)}}
+</style>
+</head>
+<body>
+<div class="faixa">Demonstração online · o simulado funciona aqui no navegador · o tutor com IA roda no computador · <a href="https://github.com/julia241005/az900-tutor" target="_blank" rel="noopener">ver o código no GitHub ↗</a></div>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="mark">A</div><div><b>AZ-900 Tutor</b><span>Microsoft Azure Fundamentals</span></div></div>
+    <button class="nav on" data-v="sobre"><span class="num">i.</span>O projeto</button>
+    <button class="nav" data-v="sim"><span class="num">ii.</span>Simulado</button>
+    <button class="nav" data-v="prog"><span class="num">iii.</span>Meu progresso</button>
+    <button class="nav" data-v="chat"><span class="num">iv.</span>Tirar dúvidas</button>
+    <div class="foot"><p class="demo">Seu progresso fica salvo só neste navegador.</p><div class="row"><span class="dot ok"></span><span>Feito por Julia Duarte Silva</span></div></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script>
+const PERGUNTAS = [{"area": "Conceitos de nuvem", "enunciado": "No modelo de responsabilidade compartilhada, quem é responsável pelo sistema operacional de uma máquina virtual hospedada como IaaS?", "alternativas": {"A": "O provedor de nuvem", "B": "O cliente", "C": "A responsabilidade é dividida igualmente", "D": "Ninguém, o sistema operacional é gerenciado automaticamente"}, "correta": "B", "explicacao": "Em IaaS, o provedor cuida da infraestrutura física (datacenter, rede física e hosts). O sistema operacional, as aplicações e os dados ficam sob responsabilidade do cliente.", "fonte": {"titulo": "Descrever o modelo de responsabilidade compartilhada", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/4-describe-shared-responsibility-model"}}, {"area": "Conceitos de nuvem", "enunciado": "Qual item é SEMPRE responsabilidade do cliente, independentemente do tipo de serviço de nuvem (IaaS, PaaS ou SaaS)?", "alternativas": {"A": "O datacenter físico", "B": "A rede física", "C": "As informações e os dados", "D": "Os hosts físicos"}, "correta": "C", "explicacao": "Informações e dados, dispositivos e contas/identidades são sempre do cliente. Datacenter, rede física e hosts físicos são sempre do provedor.", "fonte": {"titulo": "Descrever o modelo de responsabilidade compartilhada", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/4-describe-shared-responsibility-model"}}, {"area": "Conceitos de nuvem", "enunciado": "Uma empresa mantém alguns sistemas em seu próprio datacenter e outros em uma nuvem pública, com as duas partes trabalhando juntas. Qual modelo de nuvem é esse?", "alternativas": {"A": "Nuvem híbrida", "B": "Nuvem privada", "C": "Nuvem pública", "D": "Nuvem comunitária"}, "correta": "A", "explicacao": "A nuvem híbrida combina nuvem pública e nuvem privada (ou ambiente local), permitindo que as cargas de trabalho usem os dois ambientes.", "fonte": {"titulo": "Definir modelos de nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/5-define-cloud-models"}}, {"area": "Conceitos de nuvem", "enunciado": "No modelo baseado em consumo da nuvem, pagar apenas pelos recursos utilizados, sem grande investimento inicial, é um exemplo de:", "alternativas": {"A": "Despesa de capital (CapEx)", "B": "Despesa operacional (OpEx)", "C": "Depreciação de ativos", "D": "Custo fixo de infraestrutura"}, "correta": "B", "explicacao": "Na nuvem, os gastos são despesas operacionais (OpEx): você paga conforme usa. CapEx é o investimento inicial em infraestrutura física, como comprar servidores.", "fonte": {"titulo": "Descrever o modelo baseado em consumo", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/6-describe-consumption-based-model"}}, {"area": "Conceitos de nuvem", "enunciado": "Durante uma promoção, uma loja on-line adiciona mais máquinas virtuais para atender ao aumento de acessos. Esse é um exemplo de:", "alternativas": {"A": "Escalar verticalmente", "B": "Alta disponibilidade", "C": "Escalar horizontalmente", "D": "Recuperação de desastres"}, "correta": "C", "explicacao": "Escalar horizontalmente é adicionar ou remover instâncias (mais máquinas). Escalar verticalmente é aumentar ou diminuir a capacidade de uma mesma máquina, como CPU e memória.", "fonte": {"titulo": "Descrever os benefícios da alta disponibilidade e da escalabilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"}}, {"area": "Conceitos de nuvem", "enunciado": "Qual benefício da nuvem descreve garantir o máximo de tempo de atividade de um serviço, mesmo quando ocorrem interrupções ou falhas?", "alternativas": {"A": "Alta disponibilidade", "B": "Escalabilidade", "C": "Governança", "D": "Gerenciabilidade"}, "correta": "A", "explicacao": "Alta disponibilidade significa manter o serviço disponível o máximo possível, apesar de interrupções. Os provedores expressam isso em SLAs (contratos de nível de serviço).", "fonte": {"titulo": "Descrever os benefícios da alta disponibilidade e da escalabilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"}}, {"area": "Conceitos de nuvem", "enunciado": "A capacidade de um sistema se recuperar de falhas e continuar funcionando é chamada de:", "alternativas": {"A": "Elasticidade", "B": "Previsibilidade", "C": "Escalabilidade", "D": "Confiabilidade"}, "correta": "D", "explicacao": "Confiabilidade é a capacidade de se recuperar de falhas e continuar funcionando. A nuvem favorece isso com recursos distribuídos em várias regiões do mundo.", "fonte": {"titulo": "Descrever os benefícios da confiabilidade e da previsibilidade na nuvem", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-benefits-use-cloud-services/3-reliability-predictability-cloud"}}, {"area": "Conceitos de nuvem", "enunciado": "Uma empresa quer migrar suas aplicações para a nuvem do jeito que estão (lift-and-shift), mantendo controle sobre o sistema operacional. Qual tipo de serviço é o mais indicado?", "alternativas": {"A": "SaaS", "B": "PaaS", "C": "IaaS", "D": "Serverless"}, "correta": "C", "explicacao": "Na migração lift-and-shift, os recursos da nuvem são configurados de forma parecida com o datacenter local e as cargas de trabalho são movidas para a infraestrutura IaaS, com o cliente gerenciando o sistema operacional.", "fonte": {"titulo": "Descrever a infraestrutura como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/2-describe-infrastructure-service"}}, {"area": "Conceitos de nuvem", "enunciado": "Uma equipe de desenvolvimento quer publicar sua aplicação sem precisar gerenciar sistema operacional, patches ou servidores, mas mantendo o controle do código. Qual tipo de serviço atende melhor?", "alternativas": {"A": "PaaS", "B": "IaaS", "C": "SaaS", "D": "Nuvem privada"}, "correta": "A", "explicacao": "Em PaaS, o provedor gerencia a infraestrutura e o sistema operacional, e a equipe foca na aplicação e nos dados.", "fonte": {"titulo": "Descrever a plataforma como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/3-describe-platform-service"}}, {"area": "Conceitos de nuvem", "enunciado": "Usar um serviço de e-mail corporativo pronto, como o do Microsoft 365, em que o cliente apenas configura e usa o software, é um exemplo de:", "alternativas": {"A": "IaaS", "B": "SaaS", "C": "PaaS", "D": "Nuvem híbrida"}, "correta": "B", "explicacao": "SaaS é um software completo entregue pela nuvem. O provedor gerencia quase tudo; o cliente cuida principalmente dos dados, dispositivos e contas.", "fonte": {"titulo": "Descrever o software como serviço", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-service-types/4-describe-software-service"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "O que são zonas de disponibilidade no Azure?", "alternativas": {"A": "Regiões em continentes diferentes", "B": "Datacenters fisicamente separados dentro de uma mesma região do Azure", "C": "Cópias de backup armazenadas em outra região", "D": "Grupos de assinaturas de uma mesma empresa"}, "correta": "B", "explicacao": "Zonas de disponibilidade são datacenters fisicamente separados dentro de uma região, com energia, refrigeração e rede independentes. Se uma zona falhar, as outras continuam funcionando.", "fonte": {"titulo": "Descrever a infraestrutura física do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/5-describe-azure-physical-infrastructure"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Qual é o principal objetivo dos pares de regiões do Azure?", "alternativas": {"A": "Reduzir o custo das máquinas virtuais", "B": "Aumentar a velocidade da internet", "C": "Permitir a recuperação em caso de desastre que afete uma região inteira", "D": "Separar recursos de produção e de teste"}, "correta": "C", "explicacao": "A maioria das regiões é emparelhada com outra da mesma geografia, a pelo menos 300 milhas de distância quando possível, para replicação e recuperação caso uma região inteira seja afetada.", "fonte": {"titulo": "Descrever a infraestrutura física do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/5-describe-azure-physical-infrastructure"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Em quantos grupos de recursos um mesmo recurso do Azure pode estar ao mesmo tempo?", "alternativas": {"A": "Em apenas um", "B": "Em até dois", "C": "Em quantos forem necessários", "D": "Em nenhum; recursos ficam diretamente na assinatura"}, "correta": "A", "explicacao": "Todo recurso pertence a exatamente um grupo de recursos. Ele pode ser movido para outro grupo, mas não pode estar em dois ao mesmo tempo.", "fonte": {"titulo": "Descrever a infraestrutura de gerenciamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/6-describe-azure-management-infrastructure"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "O que acontece com os recursos quando um grupo de recursos é excluído?", "alternativas": {"A": "São movidos automaticamente para outro grupo", "B": "Continuam funcionando sem grupo", "C": "São movidos para a assinatura", "D": "Também são excluídos"}, "correta": "D", "explicacao": "Excluir um grupo de recursos exclui todos os recursos que estão dentro dele. Por isso é comum agrupar recursos com o mesmo ciclo de vida, como os de um ambiente de teste.", "fonte": {"titulo": "Descrever a infraestrutura de gerenciamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-core-architectural-components-of-azure/6-describe-azure-management-infrastructure"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Qual opção de redundância do Armazenamento do Azure mantém três cópias dos dados em um único datacenter da região primária?", "alternativas": {"A": "GRS", "B": "ZRS", "C": "LRS", "D": "GZRS"}, "correta": "C", "explicacao": "O LRS (armazenamento com redundância local) replica os dados três vezes em um único datacenter da região primária. É a opção de menor custo, mas não protege contra um desastre nesse datacenter.", "fonte": {"titulo": "Descrever a redundância do armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/3-redundancy"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Uma empresa precisa que seus dados de armazenamento continuem protegidos mesmo se uma região inteira do Azure ficar indisponível. Qual opção atende a esse requisito?", "alternativas": {"A": "GRS", "B": "LRS", "C": "ZRS", "D": "Nenhuma opção de redundância protege contra isso"}, "correta": "A", "explicacao": "O GRS (armazenamento com redundância geográfica) copia os dados para uma região secundária distante da primária. LRS e ZRS mantêm as cópias apenas dentro da região primária.", "fonte": {"titulo": "Descrever a redundância do armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/3-redundancy"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Qual camada de acesso do Armazenamento de Blobs é indicada para dados raramente acessados, que podem tolerar uma latência de várias horas para leitura, com o menor custo de armazenamento?", "alternativas": {"A": "Frequente (Hot)", "B": "Esporádica (Cool)", "C": "Fria (Cold)", "D": "Arquivo (Archive)"}, "correta": "D", "explicacao": "A camada de arquivo tem o menor custo de armazenamento, mas os dados ficam offline e a recuperação pode levar horas. É indicada para backups antigos e dados guardados por exigência legal.", "fonte": {"titulo": "Descrever os serviços de Armazenamento do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-storage-services/4-describe-azure-storage-services"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Qual serviço oferece uma conexão privada e dedicada entre a rede local da empresa e o Azure, sem passar pela internet pública?", "alternativas": {"A": "Gateway de VPN do Azure", "B": "Azure ExpressRoute", "C": "DNS do Azure", "D": "Emparelhamento de redes virtuais"}, "correta": "B", "explicacao": "O ExpressRoute cria conexões privadas que não passam pela internet pública. O Gateway de VPN também conecta a rede local ao Azure, mas o tráfego criptografado passa pela internet pública.", "fonte": {"titulo": "Descrever o Azure ExpressRoute", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-networking-services/4-expressroute"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Uma equipe quer executar um trecho de código sempre que um arquivo for enviado para o armazenamento, sem gerenciar servidores e pagando só pelo tempo de execução. Qual serviço é o mais indicado?", "alternativas": {"A": "Azure Functions", "B": "Máquinas Virtuais do Azure", "C": "Serviço de Kubernetes do Azure (AKS)", "D": "Área de Trabalho Virtual do Azure"}, "correta": "A", "explicacao": "O Azure Functions é um serviço sem servidor (serverless) que executa código em resposta a eventos, sem gerenciar infraestrutura, e cobra conforme a execução.", "fonte": {"titulo": "Descrever o Azure Functions", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-compute-networking-services/6-functions"}}, {"area": "Arquitetura e serviços do Azure", "enunciado": "Exigir que o usuário confirme o login com a senha e também com um código no celular é um exemplo de:", "alternativas": {"A": "Logon único (SSO)", "B": "Controle de acesso baseado em função (RBAC)", "C": "Autenticação multifator (MFA)", "D": "Identidades externas"}, "correta": "C", "explicacao": "A autenticação multifator exige dois ou mais elementos de verificação, como algo que você sabe (senha) e algo que você tem (celular).", "fonte": {"titulo": "Descrever métodos de autenticação do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-azure-identity-access-security/3-authentication-methods"}}, {"area": "Gestão e governança do Azure", "enunciado": "Uma empresa quer garantir que novos recursos só possam ser criados em regiões do Brasil. Qual serviço do Azure permite impor essa regra?", "alternativas": {"A": "Azure Advisor", "B": "Integridade do Serviço do Azure", "C": "Bloqueios de recurso", "D": "Azure Policy"}, "correta": "D", "explicacao": "O Azure Policy cria e aplica regras de conformidade, como regiões permitidas, e pode impedir a criação de recursos que não as cumpram.", "fonte": {"titulo": "Descrever a finalidade do Azure Policy", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/3-describe-purpose-azure-policy"}}, {"area": "Gestão e governança do Azure", "enunciado": "Qual tipo de bloqueio de recurso impede a exclusão acidental, mas ainda permite que usuários autorizados leiam e modifiquem o recurso?", "alternativas": {"A": "Bloqueio de exclusão (Excluir)", "B": "Bloqueio somente leitura (ReadOnly)", "C": "Azure Policy", "D": "Tag de proteção"}, "correta": "A", "explicacao": "O bloqueio de exclusão impede apagar o recurso, mas permite ler e modificar. O bloqueio somente leitura impede exclusões e também alterações.", "fonte": {"titulo": "Descrever a finalidade dos bloqueios de recurso", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/4-describe-purpose-resource-locks"}}, {"area": "Gestão e governança do Azure", "enunciado": "Um usuário com a função de Proprietário tenta excluir um recurso que tem um bloqueio de exclusão. O que acontece?", "alternativas": {"A": "A exclusão funciona, porque o Proprietário tem todas as permissões", "B": "A exclusão falha até que o bloqueio seja removido", "C": "O recurso é movido para a lixeira", "D": "O bloqueio é removido automaticamente"}, "correta": "B", "explicacao": "Os bloqueios valem independentemente das permissões RBAC. Mesmo um Proprietário precisa remover o bloqueio antes de excluir o recurso.", "fonte": {"titulo": "Descrever a finalidade dos bloqueios de recurso", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-azure-for-governance-compliance/4-describe-purpose-resource-locks"}}, {"area": "Gestão e governança do Azure", "enunciado": "A equipe financeira quer saber quanto cada departamento gasta no Azure. O que pode ser aplicado aos recursos para identificar o departamento responsável?", "alternativas": {"A": "Bloqueios de recurso", "B": "Zonas de disponibilidade", "C": "Tags (marcas)", "D": "Pares de regiões"}, "correta": "C", "explicacao": "Tags são pares de nome e valor aplicados aos recursos, como departamento=financeiro. Elas ajudam a organizar recursos e a acompanhar e atribuir custos.", "fonte": {"titulo": "Descrever a finalidade das marcas", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/7-describe-purpose-of-tags"}}, {"area": "Gestão e governança do Azure", "enunciado": "Uma empresa quer comparar o custo de manter seu datacenter local com o custo de executar a mesma infraestrutura no Azure. Qual ferramenta é a mais indicada?", "alternativas": {"A": "Calculadora de TCO (custo total de propriedade)", "B": "Calculadora de preços", "C": "Azure Advisor", "D": "Azure Monitor"}, "correta": "A", "explicacao": "A calculadora de TCO compara custos da infraestrutura local com os do Azure. A calculadora de preços estima o custo de recursos que você pretende provisionar no Azure.", "fonte": {"titulo": "Comparar as calculadoras de preços e de custo total de propriedade", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/3-compare-pricing-total-cost-of-ownership-calculators"}}, {"area": "Gestão e governança do Azure", "enunciado": "Antes de criar recursos, uma equipe quer estimar quanto vai pagar por mês por duas máquinas virtuais e uma conta de armazenamento no Azure. Qual ferramenta deve usar?", "alternativas": {"A": "Calculadora de TCO", "B": "Calculadora de preços", "C": "Integridade do Serviço do Azure", "D": "Microsoft Purview"}, "correta": "B", "explicacao": "A calculadora de preços estima o custo de provisionar recursos no Azure. A calculadora de TCO é para comparar o ambiente local com o Azure.", "fonte": {"titulo": "Comparar as calculadoras de preços e de custo total de propriedade", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/3-compare-pricing-total-cost-of-ownership-calculators"}}, {"area": "Gestão e governança do Azure", "enunciado": "Uma empresa quer receber um alerta quando os gastos de uma assinatura chegarem a 80% do valor planejado para o mês. Qual recurso deve ser configurado?", "alternativas": {"A": "Um bloqueio de recurso", "B": "Uma política do Azure Policy", "C": "Um orçamento no Gerenciamento de Custos", "D": "Uma zona de disponibilidade"}, "correta": "C", "explicacao": "No Gerenciamento de Custos, os orçamentos definem um limite de gastos e podem disparar alertas quando um percentual é atingido.", "fonte": {"titulo": "Descrever a ferramenta Gerenciamento de Custos", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-cost-management-azure/6-describe-azure-tool"}}, {"area": "Gestão e governança do Azure", "enunciado": "Qual serviço analisa os recursos implantados e faz recomendações personalizadas para melhorar custo, segurança, confiabilidade, desempenho e excelência operacional?", "alternativas": {"A": "Integridade do Serviço do Azure", "B": "Azure Arc", "C": "Azure Policy", "D": "Azure Advisor"}, "correta": "D", "explicacao": "O Azure Advisor avalia seus recursos e faz recomendações em cinco categorias: confiabilidade, segurança, desempenho, excelência operacional e custo.", "fonte": {"titulo": "Descrever a finalidade do Azure Advisor", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-monitoring-tools-azure/2-describe-purpose-of-azure-advisor"}}, {"area": "Gestão e governança do Azure", "enunciado": "Qual serviço informa sobre incidentes e manutenções planejadas do Azure que podem afetar os recursos da sua empresa?", "alternativas": {"A": "Integridade do Serviço do Azure", "B": "Azure Advisor", "C": "Calculadora de preços", "D": "Microsoft Defender para Nuvem"}, "correta": "A", "explicacao": "A Integridade do Serviço do Azure mostra o status dos serviços e regiões do Azure, incluindo incidentes e manutenções planejadas que afetam os seus recursos.", "fonte": {"titulo": "Descrever a Integridade do Serviço do Azure", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-monitoring-tools-azure/3-describe-azure-service-health"}}, {"area": "Gestão e governança do Azure", "enunciado": "Uma empresa tem servidores no próprio datacenter e em outra nuvem e quer gerenciá-los pelo portal do Azure, aplicando as mesmas políticas. Qual serviço permite isso?", "alternativas": {"A": "Azure Advisor", "B": "Azure Arc", "C": "Azure ExpressRoute", "D": "Azure Functions"}, "correta": "B", "explicacao": "O Azure Arc estende o gerenciamento do Azure a recursos fora dele (locais, outras nuvens e borda), permitindo usar recursos como Azure Policy e tags nesses ambientes.", "fonte": {"titulo": "Descrever a finalidade do Azure Arc", "url": "https://learn.microsoft.com/pt-br/training/modules/describe-features-tools-manage-deploy-azure-resources/3-describe-purpose-of-azure-arc"}}];
+const GITHUB = "https://github.com/julia241005/az900-tutor";
+const AREAS = [
+  {nome:"Conceitos de nuvem", peso:"25–30%", meio:27.5},
+  {nome:"Arquitetura e serviços do Azure", peso:"35–40%", meio:37.5},
+  {nome:"Gestão e governança do Azure", peso:"30–35%", meio:32.5},
+];
+const main = document.getElementById("main");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const corPct = p => p==null ? "var(--line)" : p>=80 ? "var(--good)" : p>=70 ? "var(--warn)" : "var(--bad)";
+
+/* Progresso salvo no navegador (se o navegador bloquear, funciona só durante a visita) */
+let memoria = [];
+function lerRespostas(){ try { return JSON.parse(localStorage.getItem("az900-respostas") || "[]"); } catch { return memoria; } }
+function salvarResposta(r){ const t = lerRespostas(); t.push(r); memoria = t; try { localStorage.setItem("az900-respostas", JSON.stringify(t)); } catch {} }
+
+/* ───────── O PROJETO ───────── */
+function viewSobre(){
+  main.innerHTML = `
+  <div class="view">
+    <p class="eyebrow">Projeto de portfólio · IA aplicada</p>
+    <h1>Um tutor de IA que <em>mostra a fonte</em> de cada resposta.</h1>
+    <p class="lead">Assistente de estudo para a certificação Microsoft Azure Fundamentals (AZ-900). Ele consulta a documentação oficial da Microsoft antes de responder, cita as fontes, aplica simulados e acompanha o desempenho por área do exame. Custo zero: a IA roda no próprio computador.</p>
+    <div class="cta-row">
+      <button class="btn primary" id="go-sim">Fazer o simulado agora</button>
+      <a class="btn" href="${GITHUB}" target="_blank" rel="noopener">Ver o código no GitHub ↗</a>
+    </div>
+
+    <div class="nums">
+      <div class="card num-card"><b>97%</b><span>das perguntas tiveram a fonte oficial certa encontrada</span></div>
+      <div class="card num-card"><b>100%</b><span>das perguntas fora do assunto foram recusadas, sem inventar</span></div>
+      <div class="card num-card"><b>US$ 0</b><span>de custo: IA, busca e banco rodam localmente</span></div>
+    </div>
+
+    <p class="step-t">Como funciona</p>
+    <p class="lead" style="margin-bottom:18px">Como um professor que, antes de responder, abre a apostila oficial e procura as páginas certas. Essa técnica se chama RAG.</p>
+    <ol class="passos">
+      <li><span>As páginas oficiais do Microsoft Learn são baixadas, limpas e divididas em pedaços.</span></li>
+      <li><span>Cada pedaço vira uma "impressão digital" numérica para a busca por significado.</span></li>
+      <li><span>A cada pergunta, o tutor busca os trechos mais relevantes, pelo significado e pela palavra exata (para siglas como LRS, GRS e ZRS).</span></li>
+      <li><span>Uma IA local (Qwen 2.5, 3B, via Ollama) lê só esses trechos e responde citando as fontes.</span></li>
+    </ol>
+
+    <div class="grid2">
+      <div class="card box sim"><h3>O que ele faz</h3><ul>
+        <li>Tira dúvidas com base na documentação oficial, sempre com as fontes</li>
+        <li>Aplica simulados por área do exame, com correção e explicação</li>
+        <li>Mostra o desempenho por área, com os pesos oficiais</li>
+        <li>Lembra a conversa e entende perguntas de continuação</li>
+      </ul></div>
+      <div class="card box nao"><h3>O que ele não faz</h3><ul>
+        <li>Só responde sobre o AZ-900 (outros assuntos são recusados de propósito)</li>
+        <li>É lento: a IA roda no processador, sem placa de vídeo</li>
+        <li>Às vezes erra, por usar um modelo pequeno. Por isso as fontes ficam visíveis</li>
+        <li>Não substitui os simulados oficiais da Microsoft</li>
+      </ul></div>
+    </div>
+
+    <p class="step-t">Tecnologias</p>
+    <p class="lead">Python · Ollama (Qwen 2.5 3B) · sentence-transformers · ChromaDB · BM25 · FastAPI · SQLite · HTML/CSS/JS · pytest</p>
+    <p class="nota">Projeto pessoal de estudo, sem vínculo com a Microsoft. O conteúdo vem do Microsoft Learn e é sempre citado com link.</p>
+  </div>`;
+  document.getElementById("go-sim").onclick = () => ir("sim");
+}
+
+/* ───────── SIMULADO (roda no navegador) ───────── */
+let sim = null, simCfg = {area:"", qtd:10};
+function embaralhar(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function viewSim(){
+  if (sim && sim.pos < sim.qs.length) return renderQ();
+  if (sim) return fimSim();
+  const opcoes = [{nome:"", titulo:"Todas as áreas", detalhe:"Mistura das três áreas, como na prova"}, ...AREAS.map(a=>({nome:a.nome, titulo:a.nome, detalhe:`Peso no exame: ${a.peso}`}))];
+  main.innerHTML = `
+  <div class="view">
+    <p class="eyebrow">Simulado</p>
+    <h1>Treine como no <em>dia da prova</em></h1>
+    <p class="lead">${PERGUNTAS.length} questões revisadas, cada uma com explicação e a fonte oficial da Microsoft.</p>
+    <p class="step-t">1. Escolha a área</p>
+    <div class="areas-pick">${opcoes.map(o=>`<button class="pick ${o.nome===simCfg.area?"on":""}" data-area="${esc(o.nome)}"><b>${esc(o.titulo)}</b><small>${esc(o.detalhe)}</small></button>`).join("")}</div>
+    <p class="step-t">2. Quantas questões?</p>
+    <div class="qtds">${[5,10,15].map(n=>`<button class="qtd ${n===simCfg.qtd?"on":""}" data-q="${n}">${n}</button>`).join("")}</div>
+    <div class="start-row"><button class="btn primary" id="ini">Começar simulado</button><span class="hint">Meta da Microsoft para a prova: 80% ou mais.</span></div>
+  </div>`;
+  document.querySelectorAll(".pick").forEach(b => b.onclick = () => { simCfg.area = b.dataset.area; document.querySelectorAll(".pick").forEach(x=>x.classList.toggle("on", x===b)); });
+  document.querySelectorAll(".qtd").forEach(b => b.onclick = () => { simCfg.qtd = +b.dataset.q; document.querySelectorAll(".qtd").forEach(x=>x.classList.toggle("on", x===b)); });
+  document.getElementById("ini").onclick = () => {
+    const base = PERGUNTAS.filter(p => !simCfg.area || p.area === simCfg.area);
+    sim = {qs: embaralhar(base).slice(0, simCfg.qtd), pos:0, respostas:[], respondida:null};
+    renderQ();
+  };
+}
+
+function renderQ(){
+  const q = sim.qs[sim.pos], n = sim.qs.length, r = sim.respondida, ultima = sim.pos + 1 === n;
+  const acertos = sim.respostas.filter(x=>x.acertou).length;
+  main.innerHTML = `
+  <div class="view">
+    <div class="qhead"><span class="label">${esc(q.area)}</span><span class="qcount">${sim.pos+1} <i>de ${n}</i></span></div>
+    <div class="track"><span style="width:${((sim.pos + (r?1:0))/n)*100}%"></span></div>
+    <p class="qtext">${esc(q.enunciado)}</p>
+    <div class="opts">${Object.entries(q.alternativas).map(([l,t])=>{
+      let c = ""; if (r){ c = l===q.correta ? "certa" : l===r.escolha ? "errada" : "apagada"; }
+      return `<button class="opt ${c}" data-l="${l}" ${r?"disabled":""}><span class="l">${l}</span><span>${esc(t)}</span></button>`;}).join("")}</div>
+    ${r ? `<div class="feedback ${r.acertou?"ok":"no"}">
+        <p class="veredito">${r.acertou ? "Correto." : `Não foi dessa vez. A resposta é ${q.correta}.`}</p>
+        <p>${esc(q.explicacao)}</p>
+        <a class="fonte" href="${esc(q.fonte.url)}" target="_blank" rel="noopener">Fonte: ${esc(q.fonte.titulo)} ↗</a>
+      </div>` : ""}
+    <div class="qfoot">
+      <span class="hint">${r ? `<kbd>Enter</kbd> para continuar` : `Responda clicando ou com as teclas <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd>`} · ${acertos} ${acertos===1?"acerto":"acertos"} até aqui</span>
+      ${r ? `<button class="btn primary" id="prox">${ultima ? "Ver resultado" : "Próxima questão"}</button>` : `<button class="btn ghost" id="sair">Encerrar</button>`}
+    </div>
+  </div>`;
+  if (!r) document.querySelectorAll(".opt").forEach(b => b.onclick = () => responder(b.dataset.l));
+  else document.getElementById("prox").onclick = proxima;
+  document.getElementById("sair")?.addEventListener("click", () => { if (sim.respostas.length){ sim.qs = sim.qs.slice(0, sim.respostas.length); sim.pos = sim.qs.length; fimSim(); } else { sim = null; viewSim(); } });
+}
+
+function responder(letra){
+  if (!sim || sim.respondida) return;
+  const q = sim.qs[sim.pos], acertou = letra === q.correta;
+  sim.respondida = {escolha:letra, acertou};
+  sim.respostas.push({...q, escolha:letra, acertou});
+  salvarResposta({area:q.area, acertou, enunciado:q.enunciado, fonte:q.fonte});
+  renderQ();
+}
+function proxima(){ sim.pos++; sim.respondida = null; sim.pos < sim.qs.length ? renderQ() : fimSim(); }
+document.addEventListener("keydown", e => {
+  if (!sim || !document.querySelector(".opts")) return;
+  const l = e.key.toUpperCase();
+  if (!sim.respondida && l.length === 1 && "ABCD".includes(l)) responder(l);
+  else if (sim.respondida && e.key === "Enter"){ e.preventDefault(); proxima(); }
+});
+
+function fimSim(){
+  const rs = sim.respostas, n = rs.length, ac = rs.filter(x=>x.acertou).length, pct = n ? Math.round(100*ac/n) : 0;
+  const C = 2*Math.PI*70, cor = corPct(pct);
+  const porArea = AREAS.map(a => { const da = rs.filter(x=>x.area===a.nome); return {nome:a.nome, n:da.length, ac:da.filter(x=>x.acertou).length}; }).filter(a=>a.n);
+  const erradas = rs.filter(x=>!x.acertou);
+  main.innerHTML = `
+  <div class="view">
+    <p class="eyebrow">Resultado do simulado</p>
+    <div class="result">
+      <div class="ring" role="img" aria-label="${pct}% de acertos">
+        <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="var(--line)" stroke-width="6"/>
+        <circle cx="80" cy="80" r="70" fill="none" stroke="${cor}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/></svg>
+        <div class="v"><div><b>${pct}%</b><small>${ac} de ${n}</small></div></div>
+      </div>
+      <div>
+        <h1>${pct>=80 ? "Acima da <em>meta</em>." : pct>=70 ? "Quase lá." : "Bora revisar."}</h1>
+        <p class="lead" style="margin:0">${pct>=80 ? "Você passou dos 80% recomendados pela Microsoft." : "A meta para a prova é 80%. Revise as questões abaixo e tente de novo."}</p>
+      </div>
+    </div>
+    ${porArea.length > 1 ? `<p class="step-t">Por área</p><div class="porarea">${porArea.map(a=>{ const p = Math.round(100*a.ac/a.n); return `
+      <div><div class="pa-top"><span>${esc(a.nome)}</span><b>${a.ac}/${a.n} · ${p}%</b></div>
+      <div class="bar"><span style="width:${p}%;background:${corPct(p)}"></span></div></div>`;}).join("")}</div>` : ""}
+    ${erradas.length ? `<p class="step-t">Para revisar (${erradas.length})</p>
+      <div class="revisar">${erradas.map(x=>`<div class="card rev">
+        <p class="q">${esc(x.enunciado)}</p>
+        <p class="r">Você marcou ${x.escolha} · correta: <b>${x.correta}) ${esc(x.alternativas[x.correta])}</b></p>
+        <a href="${esc(x.fonte.url)}" target="_blank" rel="noopener">${esc(x.fonte.titulo)} ↗</a>
+      </div>`).join("")}</div>` : `<p class="parabens">Nenhum erro nesta rodada.</p>`}
+    <div class="start-row" style="margin-top:36px"><button class="btn primary" id="nova">Novo simulado</button><button class="btn" id="vp">Ver meu progresso</button></div>
+  </div>`;
+  document.getElementById("nova").onclick = () => { sim = null; viewSim(); };
+  document.getElementById("vp").onclick = () => { sim = null; ir("prog"); };
+}
+
+/* ───────── PROGRESSO (calculado no navegador) ───────── */
+function viewProg(){
+  const rs = lerRespostas();
+  let corpo;
+  if (!rs.length){
+    corpo = `<p class="empty">Ainda não há respostas. Faça um simulado para começar a medir seu progresso.</p><button class="btn primary" id="gs" style="margin-top:12px">Fazer um simulado</button>`;
+  } else {
+    const ac = rs.filter(r=>r.acertou).length, geral = Math.round(100*ac/rs.length);
+    const areas = AREAS.map(a => { const da = rs.filter(r=>r.area===a.nome), aa = da.filter(r=>r.acertou).length;
+      const p = da.length ? Math.round(100*aa/da.length) : null;
+      const revisar = [...new Map(da.filter(r=>!r.acertou).map(r=>[r.fonte.url, r.fonte])).values()].slice(0,3);
+      return {...a, n:da.length, ac:aa, p, revisar}; });
+    const fraca = areas.filter(a=>a.p==null || a.p<80).sort((x,y)=>((x.p??0)-(y.p??0)) || (y.meio-x.meio))[0];
+    const rec = !fraca ? "Você está acima de 80% em todas as áreas. Faça simulados completos para manter o ritmo e agende a prova."
+      : fraca.p==null ? `Comece a praticar "${fraca.nome}": ainda não há respostas nessa área, e ela vale ${fraca.peso} da prova.`
+      : `Foque em "${fraca.nome}" (${fraca.p}%). Ela vale ${fraca.peso} da prova. Revise os links abaixo e refaça um simulado só dessa área.`;
+    corpo = `
+      <div class="prog-top"><div class="big">${geral}<small>%</small></div><div class="meta-line">${ac} acertos em ${rs.length} respostas · meta 80%</div></div>
+      ${areas.map(a=>`
+        <div class="area">
+          <div class="top"><span class="nome">${esc(a.nome)}</span><span class="pct" style="color:${corPct(a.p)}">${a.p==null ? "—" : a.p+"%"}</span></div>
+          <small>Peso no exame ${a.peso} · ${a.ac}/${a.n}</small>
+          <div class="bar"><span style="width:${a.p??0}%;background:${corPct(a.p)}"></span></div>
+          ${a.revisar.length ? `<div class="links">${a.revisar.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">Revisar: ${esc(r.titulo)} ↗</a>`).join("")}</div>` : ""}
+        </div>`).join("")}
+      <div class="rec"><span class="label">Próximo passo</span><p>${esc(rec)}</p></div>
+      <p class="nota" style="margin-top:24px"><button class="btn ghost" id="zerar">Apagar meu progresso</button></p>`;
+  }
+  main.innerHTML = `<div class="view"><p class="eyebrow">Meu progresso</p><h1>Como você está <em>indo</em></h1><p class="lead">Desempenho por área do exame, com os pesos oficiais da Microsoft. Fica salvo só neste navegador.</p>${corpo}</div>`;
+  document.getElementById("gs")?.addEventListener("click", () => ir("sim"));
+  document.getElementById("zerar")?.addEventListener("click", () => { memoria = []; try { localStorage.removeItem("az900-respostas"); } catch {} viewProg(); });
+}
+
+/* ───────── TIRAR DÚVIDAS (a IA roda no computador) ───────── */
+function viewChat(){
+  main.innerHTML = `
+  <div class="view">
+    <p class="eyebrow">Tirar dúvidas</p>
+    <h1>O chat com IA roda <em>no seu computador</em></h1>
+    <p class="lead">Para manter o projeto com custo zero, a IA não fica num servidor: ela roda localmente com o Ollama. Por isso, aqui na demonstração online, você vê como o chat funciona.</p>
+    <img class="shot" src="assets/chat.png" alt="Tela do chat do AZ-900 Tutor respondendo com as fontes oficiais" onerror="this.remove()">
+    <div class="card exemplo">
+      <span class="label">Exemplo real de resposta gerada pelo tutor na avaliação</span>
+      <div style="margin-top:14px"><span class="pergunta">Para que serve o Gateway de VPN?</span></div>
+      <div class="msg ia"><div class="quem">Tutor</div><p>O Gateway de VPN do Azure serve para enviar tráfego criptografado entre uma rede virtual do Azure e locais on-premises através da Internet pública, ou entre redes virtuais Azure pela rede da Microsoft. Ele permite a criptografia de tráfego entre o Azure e locais que não estão conectados diretamente por meio do ExpressRoute. […]</p></div>
+      <p class="nota" style="margin-top:14px">Na versão completa, cada resposta traz a lista de fontes oficiais com link.</p>
+    </div>
+    <p class="step-t">Rodar no seu computador</p>
+    <p class="lead" style="margin-bottom:12px">Precisa de Python 3.10+, Ollama e Git. O passo a passo completo está no README.</p>
+    <pre class="cmd">git clone ${GITHUB}.git
+cd az900-tutor
+pip install -r requirements.txt
+ollama pull qwen2.5:3b
+python -m ingestao.coletar && python -m ingestao.fragmentar && python -m ingestao.indexar
+python importar_perguntas.py
+python -m uvicorn api:app --port 8000</pre>
+    <div class="cta-row"><a class="btn primary" href="${GITHUB}#como-usar" target="_blank" rel="noopener">Ver instruções completas ↗</a></div>
+  </div>`;
+}
+
+/* ───────── navegação ───────── */
+const VIEWS = {sobre:viewSobre, sim:viewSim, prog:viewProg, chat:viewChat};
+function ir(v){ document.querySelectorAll(".nav").forEach(b => b.classList.toggle("on", b.dataset.v === v)); VIEWS[v](); window.scrollTo(0,0); main.scrollTop = 0; }
+document.querySelectorAll(".nav").forEach(b => b.onclick = () => ir(b.dataset.v));
+ir("sobre");
+</script>
+</body>
+</html>

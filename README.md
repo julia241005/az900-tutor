@@ -5,6 +5,10 @@ Ele responde dúvidas consultando a documentação oficial da Microsoft, mostra 
 
 > 💸 **Custo zero.** A IA roda no seu próprio computador. Nenhuma API paga, nenhuma assinatura.
 
+### 🔗 [Experimente o simulado online](https://julia241005.github.io/az900-tutor/)
+
+A demonstração online roda direto no navegador: simulado, resultado e progresso funcionam de verdade. O chat com IA roda no computador (veja [Como usar](#como-usar)).
+
 ---
 
 ## Em 30 segundos
@@ -189,7 +193,7 @@ az900-tutor/
 | 09 | [Avaliação de qualidade](docs/09-avaliacao.md) |
 | 10 | [Custo, tokens e observabilidade](docs/10-custo.md) |
 | 11 | [Segurança e ética](docs/11-seguranca-e-etica.md) |
-| 12 | [Publicação gratuita (Hugging Face)](docs/12-publicacao.md) |
+| 12 | [Publicação](docs/12-publicacao.md) |
 
 O passo a passo completo do desenvolvimento está no [ROADMAP](ROADMAP.md).
 
@@ -198,7 +202,8 @@ O passo a passo completo do desenvolvimento está no [ROADMAP](ROADMAP.md).
 ## Próximos passos
 
 - [x] Respostas mais rápidas: a IA passou a ser chamada 1 vez por pergunta, em vez de 2
-- [x] Versão online gratuita no Hugging Face ([como foi publicado](docs/12-publicacao.md))
+- [x] Demonstração online gratuita no GitHub Pages (simulado e progresso no navegador)
+- [ ] Versão online completa, com o chat de IA (hospedagens gratuitas com memória suficiente passaram a exigir plano pago)
 - [ ] **Modo prova real:** cronômetro e nota só no final, como no dia do exame
 - [ ] **Revisar meus erros:** refazer só as questões erradas até acertar
 - [ ] Flashcards com repetição espaçada

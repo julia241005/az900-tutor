@@ -126,13 +126,14 @@ Ao final de **cada fase**: `git add .` → `git commit -m "..."` → `git tag fa
 
 - [x] Respostas mais rápidas: roteamento por regras, 1 chamada à IA por pergunta (`roteador.py`)
 - [x] Sessão por navegador na versão online (`MODO_DEMO=1`)
-- [x] Dockerfile para o Hugging Face Spaces com Ollama dentro (`deploy/huggingface/`)
+- [x] Dockerfile para o Hugging Face Spaces com Ollama dentro (`deploy/huggingface/`), pronto para quando houver opção gratuita
+- [x] Demonstração online no GitHub Pages: simulado e progresso no navegador (`docs/index.html`)
 - [x] Variáveis de ambiente e segredos (nunca no código): `.env.example`
 - [x] Proteções: senha opcional e limite de mensagens por minuto (`seguranca.py`)
 - [x] Documentar: `docs/11-seguranca-e-etica.md`, `docs/12-publicacao.md`
 - [x] README reescrito: o que faz, o que não faz, como funciona e resultados
-- [ ] Repositório público no GitHub
-- [ ] Space criado no Hugging Face e funcionando
+- [x] Repositório público no GitHub
+- [ ] GitHub Pages ativado (Settings → Pages → main /docs)
 - [ ] Prints e vídeo curto da interface
 - [ ] Post no LinkedIn contando a jornada
 - [ ] Tag `v1.0` 🎉
