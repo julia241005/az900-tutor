@@ -19,17 +19,24 @@ from pydantic import BaseModel, Field
 import banco
 import progresso
 import seguranca
+import sessao as sessao_mod
+import trilhas
 from agente import ResultadoAgente, conversar, conversar_stream
-from config import LLM_MODELO, MODO_BUSCA, MODO_DEMO, ROTEAMENTO
+from config import LLM_MODELO, MODO_BUSCA, MODO_DEMO, ROTEAMENTO, TRILHA_PADRAO
 from observabilidade import registrar
 from rag import Resultado, cliente, responder, responder_stream
 from sessao import nova_conversa
 
 app = FastAPI(
-    title="AZ-900 Tutor API",
-    description="Tutor de IA para o exame AZ-900, com respostas baseadas na documentação oficial da Microsoft.",
-    version="0.6.0",
+    title="Tutor de Certificações",
+    description="Tutor de IA multi-certificação, com respostas baseadas na documentação oficial de cada exame.",
+    version="0.7.0",
 )
+
+
+def _trilha(valor: str | None) -> str:
+    """Valida o id da trilha recebido; se for inválido, cai na trilha padrão."""
+    return valor if valor and trilhas.existe(valor) else TRILHA_PADRAO
 
 # Permite que o frontend (Next.js, na porta 3000) chame esta API
 app.add_middleware(
@@ -49,7 +56,7 @@ limitador = seguranca.LimitadorDeTaxa()
 async def protecao(request: Request, chamar_proxima):
     """Senha (se TUTOR_SENHA estiver definida) e limite de mensagens por minuto."""
     if request.url.path != "/saude" and not seguranca.senha_ok(request.headers.get("authorization")):
-        return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="AZ-900 Tutor"'})
+        return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="Tutor de Certificacoes"'})
     if request.method == "POST" and request.url.path in ROTAS_COM_LIMITE:
         # Atrás de um proxy (ex.: Hugging Face), o IP real do visitante vem no cabeçalho X-Forwarded-For
         encaminhado = request.headers.get("x-forwarded-for", "")
@@ -71,12 +78,14 @@ def llm_fora_do_ar(request, _erro):
 class Pergunta(BaseModel):
     pergunta: str = Field(..., min_length=3, max_length=500,
                           examples=["Qual a diferença entre LRS e GRS?"])
+    trilha: str = Field(default=TRILHA_PADRAO, max_length=48, examples=[TRILHA_PADRAO])
 
 
 class Mensagem(BaseModel):
     sessao_id: str = Field(..., min_length=1, max_length=64, examples=["aluno-1"])
     mensagem: str = Field(..., min_length=1, max_length=500,
                           examples=["Me faz um simulado de governança com 2 perguntas"])
+    trilha: str = Field(default=TRILHA_PADRAO, max_length=48, examples=[TRILHA_PADRAO])
 
 
 def _sse(dados: dict) -> str:
@@ -92,29 +101,45 @@ def interface():
     return FileResponse(PAGINA)
 
 
+@app.get("/trilhas", tags=["Trilhas"])
+def listar_trilhas():
+    """Catálogo de certificações, agrupado por área de foco (para o seletor da interface)."""
+    return {
+        "padrao": TRILHA_PADRAO,
+        "grupos": [
+            {"foco": foco, "trilhas": [trilhas.resumo(t) for t in ts]}
+            for foco, ts in trilhas.por_foco()
+        ],
+    }
+
+
 class Resposta(BaseModel):
     sessao_id: str = Field(..., min_length=1, max_length=64)
     pergunta_id: int
     resposta: str = Field(..., pattern="^[ABCD]$")
+    trilha: str = Field(default=TRILHA_PADRAO, max_length=48)
 
 
 @app.get("/simulado/perguntas", tags=["Simulado"])
-def simulado_perguntas(sessao_id: str, area: str | None = None, quantidade: int = Query(5, ge=1, le=30)):
+def simulado_perguntas(sessao_id: str, area: str | None = None, quantidade: int = Query(5, ge=1, le=30),
+                       trilha: str = TRILHA_PADRAO):
     """Sorteia perguntas APROVADAS do banco (sem gabarito), evitando as que o aluno já respondeu.
     Não usa IA: é instantâneo."""
-    ja = {r["enunciado"] for r in banco.respostas_do_aluno(sessao_id)}
-    perguntas = banco.perguntas_aprovadas(area or None, quantidade, evitar=ja)
+    trilha = _trilha(trilha)
+    ja = {r["enunciado"] for r in banco.respostas_do_aluno(sessao_id, trilha)}
+    perguntas = banco.perguntas_aprovadas(area or None, quantidade, evitar=ja, trilha=trilha)
     return [{k: p[k] for k in ("id", "area", "enunciado", "alternativas")} for p in perguntas]
 
 
 @app.post("/simulado/responder", tags=["Simulado"])
 def simulado_responder(dados: Resposta):
     """Corrige por código (sem IA), registra no progresso e devolve a explicação com a fonte."""
-    p = banco.obter_pergunta(dados.pergunta_id)
+    trilha = _trilha(dados.trilha)
+    p = banco.obter_pergunta(dados.pergunta_id, trilha)
     if not p:
         raise HTTPException(404, "Pergunta não encontrada")
     acertou = dados.resposta == p["correta"]
-    banco.registrar_resposta(dados.sessao_id, p, acertou)
+    banco.registrar_resposta(dados.sessao_id, p, acertou, trilha=trilha)
     return {"acertou": acertou, "correta": p["correta"], "explicacao": p["explicacao"], "fonte": p["fonte"]}
 
 
@@ -131,13 +156,13 @@ def _ia_disponivel() -> bool:
 def saude():
     """Verifica se a API está no ar e se o modelo de IA (Ollama) está respondendo."""
     return {"status": "ok", "modelo": LLM_MODELO, "ia_disponivel": _ia_disponivel(), "modo_busca": MODO_BUSCA,
-            "roteamento": ROTEAMENTO, "modo_demo": MODO_DEMO}
+            "roteamento": ROTEAMENTO, "modo_demo": MODO_DEMO, "trilha_padrao": TRILHA_PADRAO}
 
 
 @app.post("/perguntar", tags=["Tutor"])
 def perguntar(dados: Pergunta):
     """Responde a pergunta de uma vez (espera a resposta completa)."""
-    r = responder(dados.pergunta)
+    r = responder(dados.pergunta, _trilha(dados.trilha))
     registrar("rag", pergunta=dados.pergunta, tipo="resposta", fontes=len(r.fontes), tokens_entrada=r.tokens_entrada,
               tokens_saida=r.tokens_saida, segundos=r.segundos, modelo=r.modelo)
     return asdict(r)
@@ -150,7 +175,7 @@ def perguntar_stream(dados: Pergunta):
 
     def eventos():
         try:
-            for parte in responder_stream(dados.pergunta):
+            for parte in responder_stream(dados.pergunta, _trilha(dados.trilha)):
                 if isinstance(parte, Resultado):
                     registrar("rag", pergunta=dados.pergunta, tipo="resposta", fontes=len(parte.fontes),
                               tokens_entrada=parte.tokens_entrada, tokens_saida=parte.tokens_saida,
@@ -166,27 +191,29 @@ def perguntar_stream(dados: Pergunta):
 
 
 @app.get("/progresso/{sessao_id}", tags=["Progresso"])
-def ver_progresso(sessao_id: str):
+def ver_progresso(sessao_id: str, trilha: str = TRILHA_PADRAO):
     """Desempenho do aluno por área do exame (com pesos oficiais) e recomendação de estudo."""
-    return progresso.calcular(sessao_id)
+    return progresso.calcular(sessao_id, _trilha(trilha))
 
 
 @app.get("/banco/resumo", tags=["Progresso"])
-def resumo_banco():
+def resumo_banco(trilha: str = TRILHA_PADRAO):
     """Quantidade de perguntas no banco por área e status (pendente, aprovada, rejeitada)."""
-    return banco.resumo_banco()
+    return banco.resumo_banco(_trilha(trilha))
 
 
 @app.post("/chat", tags=["Agente"])
 def chat(dados: Mensagem):
     """Conversa com o agente (com memória por sessão). Ele decide se busca na documentação,
     gera um simulado ou corrige uma resposta (envie só a letra: A, B, C ou D)."""
+    sessao_mod.obter_sessao(dados.sessao_id, _trilha(dados.trilha))  # fixa a trilha desta conversa
     return asdict(conversar(dados.sessao_id, dados.mensagem))
 
 
 @app.post("/chat/stream", tags=["Agente"])
 def chat_stream(dados: Mensagem):
     """Mesmo que /chat, em streaming (Server-Sent Events)."""
+    sessao_mod.obter_sessao(dados.sessao_id, _trilha(dados.trilha))  # fixa a trilha desta conversa
 
     def eventos():
         try:
@@ -203,13 +230,13 @@ def chat_stream(dados: Mensagem):
 
 
 @app.get("/chat/historico/{sessao_id}", tags=["Agente"])
-def chat_historico(sessao_id: str, limite: int = Query(50, ge=1, le=200)):
+def chat_historico(sessao_id: str, limite: int = Query(50, ge=1, le=200), trilha: str = TRILHA_PADRAO):
     """Mensagens salvas da conversa (para a interface mostrar a conversa ao reabrir)."""
-    return banco.mensagens_da_sessao(sessao_id, limite)
+    return banco.mensagens_da_sessao(sessao_id, limite, trilha=_trilha(trilha))
 
 
 @app.delete("/chat/historico/{sessao_id}", tags=["Agente"])
-def chat_nova_conversa(sessao_id: str):
+def chat_nova_conversa(sessao_id: str, trilha: str = TRILHA_PADRAO):
     """Começa uma conversa nova (apaga o histórico do chat; o progresso continua)."""
-    nova_conversa(sessao_id)
+    nova_conversa(sessao_id, _trilha(trilha))
     return {"ok": True}

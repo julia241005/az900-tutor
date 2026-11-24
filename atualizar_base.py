@@ -13,32 +13,35 @@ Depois de rodar:
 Sugestão: rodar uma vez por mês ou quando a Microsoft anunciar mudanças no exame.
 Detalhes: docs/08-atualizacao.md
 """
+import argparse
 import hashlib
 import json
 import time
 
-from config import PASTA_BRUTOS
+import config
 
 
-def fotografia() -> dict[str, str]:
+def fotografia(pasta_brutos) -> dict[str, str]:
     """url → impressão digital (hash) do texto de cada página já baixada."""
     paginas = {}
-    for arq in PASTA_BRUTOS.glob("*.json"):
+    for arq in pasta_brutos.glob("*.json"):
         doc = json.loads(arq.read_text(encoding="utf-8"))
         paginas[doc["url"]] = hashlib.sha256(doc["texto"].encode("utf-8")).hexdigest()
     return paginas
 
 
-def main():
+def main(trilha_id: str = None):
+    trilha_id = trilha_id or config.TRILHA_PADRAO
+    pasta_brutos = config.pasta_brutos(trilha_id)
     inicio = time.time()
-    antes = fotografia() if PASTA_BRUTOS.exists() else {}
-    print(f"\n🔄 Atualizando a base · {len(antes)} páginas antes\n")
+    antes = fotografia(pasta_brutos) if pasta_brutos.exists() else {}
+    print(f"\n🔄 Atualizando a base ({trilha_id}) · {len(antes)} páginas antes\n")
 
     from ingestao import coletar, fragmentar, indexar  # importa aqui: carregar o modelo demora
 
     print("1/3 · Coletando páginas oficiais...")
-    coletar.main()
-    depois = fotografia()
+    coletar.main(trilha_id)
+    depois = fotografia(pasta_brutos)
 
     novas = sorted(set(depois) - set(antes))
     alteradas = sorted(u for u in set(antes) & set(depois) if antes[u] != depois[u])
@@ -53,12 +56,14 @@ def main():
         print("\n✅ Nada mudou na documentação. O índice atual continua valendo.")
     else:
         print("\n2/3 · Fragmentando...")
-        fragmentar.main()
+        fragmentar.main(trilha_id)
         print("\n3/3 · Gerando embeddings e indexando...")
-        indexar.main()
+        indexar.main(trilha_id)
         print("\n✅ Base atualizada. Feche e abra o tutor e rode:  python avaliar.py")
     print(f"⏱️  {time.time() - inicio:.0f} s\n")
 
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser(description="Atualiza a base de conhecimento de uma trilha.")
+    ap.add_argument("--trilha", default=None, help="id da trilha (padrão: trilha ativa).")
+    main(ap.parse_args().trilha)

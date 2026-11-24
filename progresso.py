@@ -10,22 +10,19 @@ import sys
 from collections import Counter
 
 import banco
-from ingestao.fontes import AREA_ARQUITETURA, AREA_CONCEITOS, AREA_GOVERNANCA
+import trilhas
+from config import TRILHA_PADRAO
 
-# Pesos oficiais do exame (guia de estudo AZ-900). Conferir periodicamente no guia.
-PESOS = {
-    AREA_CONCEITOS: "25–30%",
-    AREA_ARQUITETURA: "35–40%",
-    AREA_GOVERNANCA: "30–35%",
-}
-META = 80  # % recomendado pela Microsoft nos simulados oficiais
+META = 80  # % recomendado como meta nos simulados
 MINIMO_PARA_AVALIAR = 3  # respostas por área para considerar o resultado confiável
 
 
-def calcular(sessao_id: str) -> dict:
-    respostas = banco.respostas_do_aluno(sessao_id)
+def calcular(sessao_id: str, trilha: str = TRILHA_PADRAO) -> dict:
+    t = trilhas.obter(trilha)
+    pesos = {a.nome: a.peso_label for a in t.areas}       # pesos oficiais de cada área da certificação
+    respostas = banco.respostas_do_aluno(sessao_id, trilha)
     areas = []
-    for area, peso in PESOS.items():
+    for area, peso in pesos.items():
         da_area = [r for r in respostas if r["area"] == area]
         acertos = sum(r["correta"] for r in da_area)
         total = len(da_area)
@@ -46,14 +43,15 @@ def calcular(sessao_id: str) -> dict:
     return {
         "sessao_id": sessao_id, "respostas": total, "acertos": acertos,
         "percentual_geral": geral, "meta": META, "areas": areas,
-        "recomendacao": recomendar(areas),
+        "recomendacao": recomendar(areas, t),
     }
 
 
-def recomendar(areas: list[dict]) -> str:
+def recomendar(areas: list[dict], trilha=None) -> str:
+    maior = trilha.area_maior_peso().nome if trilha else areas[0]["area"]
     sem_dados = [a for a in areas if a["respostas"] < MINIMO_PARA_AVALIAR]
     if len(sem_dados) == len(areas):
-        return "Faça alguns simulados para eu conseguir medir seu desempenho. Comece pela área de maior peso: Arquitetura e serviços do Azure."
+        return f"Faça alguns simulados para eu conseguir medir seu desempenho. Comece pela área de maior peso: {maior}."
     if sem_dados:
         return f"Pratique mais a área \"{sem_dados[0]['area']}\": ainda tenho poucas respostas suas nela."
     pior = min(areas, key=lambda a: a["percentual"])

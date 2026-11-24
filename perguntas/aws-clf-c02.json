@@ -1,0 +1,61 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo AWS Certified Cloud Practitioner (CLF-C02), em português, com base na documentação oficial da AWS. Conteúdo original (não são perguntas do exame).",
+  "perguntas": [
+    {
+      "area": "Segurança e Conformidade",
+      "enunciado": "No modelo de responsabilidade compartilhada da AWS, de quem é a responsabilidade pela segurança DO sistema operacional convidado e dos patches em uma instância EC2?",
+      "alternativas": {"A": "Da AWS", "B": "Do cliente", "C": "É sempre dividida igualmente", "D": "De ninguém, é automático"},
+      "correta": "B",
+      "explicacao": "A AWS é responsável pela segurança DA nuvem (infraestrutura física, hardware). O cliente é responsável pela segurança NA nuvem, o que inclui o sistema operacional convidado, patches, aplicações e dados em uma instância EC2.",
+      "fonte": {"titulo": "Shared Responsibility Model", "url": "https://aws.amazon.com/compliance/shared-responsibility-model/"}
+    },
+    {
+      "area": "Segurança e Conformidade",
+      "enunciado": "Qual serviço da AWS é usado para criar e gerenciar usuários, grupos e permissões de acesso aos recursos da conta?",
+      "alternativas": {"A": "Amazon Cognito", "B": "AWS WAF", "C": "AWS IAM", "D": "Amazon Macie"},
+      "correta": "C",
+      "explicacao": "O AWS IAM (Identity and Access Management) controla a autenticação e autorização dentro da conta AWS. O Cognito cuida de usuários de aplicações; o WAF protege aplicações web; o Macie encontra dados sensíveis.",
+      "fonte": {"titulo": "What is IAM?", "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html"}
+    },
+    {
+      "area": "Tecnologia e Serviços de Nuvem",
+      "enunciado": "Uma empresa precisa de um armazenamento de objetos altamente durável para guardar backups e arquivos estáticos. Qual serviço atende melhor?",
+      "alternativas": {"A": "Amazon EBS", "B": "Amazon S3", "C": "Amazon RDS", "D": "AWS Lambda"},
+      "correta": "B",
+      "explicacao": "O Amazon S3 é o serviço de armazenamento de objetos da AWS, indicado para backups, arquivos estáticos e dados não estruturados, com alta durabilidade. O EBS é armazenamento em bloco para EC2; o RDS é banco de dados relacional.",
+      "fonte": {"titulo": "What is Amazon S3?", "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"}
+    },
+    {
+      "area": "Tecnologia e Serviços de Nuvem",
+      "enunciado": "Qual modelo de compra de instâncias EC2 oferece o MAIOR desconto, mas pode ser interrompido pela AWS com um aviso curto, sendo ideal para cargas tolerantes a falhas?",
+      "alternativas": {"A": "Instâncias sob demanda (On-Demand)", "B": "Instâncias reservadas (Reserved)", "C": "Instâncias Spot", "D": "Hosts dedicados"},
+      "correta": "C",
+      "explicacao": "As instâncias Spot usam capacidade ociosa da AWS com descontos de até 90%, mas podem ser encerradas quando a AWS precisar da capacidade. São ideais para cargas tolerantes a interrupção, como processamento em lote.",
+      "fonte": {"titulo": "Amazon EC2 Instance Purchasing Options", "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html"}
+    },
+    {
+      "area": "Conceitos de Nuvem",
+      "enunciado": "Qual pilar do AWS Well-Architected Framework trata de executar e monitorar sistemas para entregar valor ao negócio e melhorar processos continuamente?",
+      "alternativas": {"A": "Excelência operacional", "B": "Segurança", "C": "Eficiência de desempenho", "D": "Otimização de custos"},
+      "correta": "A",
+      "explicacao": "O pilar de Excelência operacional (Operational Excellence) foca em executar, monitorar e melhorar continuamente os sistemas e processos para entregar valor ao negócio.",
+      "fonte": {"titulo": "AWS Well-Architected Framework", "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"}
+    },
+    {
+      "area": "Cobrança, Preços e Suporte",
+      "enunciado": "Qual ferramenta permite VISUALIZAR e analisar graficamente os custos e o uso da AWS ao longo do tempo, ajudando a identificar tendências de gastos?",
+      "alternativas": {"A": "AWS Budgets", "B": "AWS Cost Explorer", "C": "AWS Pricing Calculator", "D": "AWS Trusted Advisor"},
+      "correta": "B",
+      "explicacao": "O AWS Cost Explorer mostra e analisa custos e uso ao longo do tempo. O Budgets cria orçamentos e alertas; o Pricing Calculator estima custos antes de usar; o Trusted Advisor dá recomendações gerais.",
+      "fonte": {"titulo": "AWS Cost Explorer", "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"}
+    },
+    {
+      "area": "Cobrança, Preços e Suporte",
+      "enunciado": "Uma empresa precisa de um gerente técnico de contas (TAM) dedicado e suporte com resposta mais rápida para cargas de produção críticas. Qual plano de suporte oferece um TAM?",
+      "alternativas": {"A": "Basic", "B": "Developer", "C": "Business", "D": "Enterprise"},
+      "correta": "D",
+      "explicacao": "O plano Enterprise (e o Enterprise On-Ramp) inclui um Technical Account Manager (TAM) dedicado. O Basic é gratuito e sem suporte técnico; Developer e Business não incluem TAM dedicado.",
+      "fonte": {"titulo": "AWS Support Plans", "url": "https://aws.amazon.com/premiumsupport/plans/"}
+    }
+  ]
+}

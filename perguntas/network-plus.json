@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo CompTIA Network+ (N10-009), em português. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Conceitos de rede",
+      "enunciado": "Qual porta padrão é usada pelo protocolo HTTPS?",
+      "alternativas": {"A": "80", "B": "22", "C": "443", "D": "53"},
+      "correta": "C",
+      "explicacao": "O HTTPS usa a porta 443 por padrão. A 80 é do HTTP, a 22 do SSH e a 53 do DNS.",
+      "fonte": {"titulo": "What is a computer port?", "url": "https://www.cloudflare.com/learning/network-layer/what-is-a-computer-port/"}
+    },
+    {
+      "area": "Segurança de rede",
+      "enunciado": "Qual tecnologia cria um túnel criptografado para acesso seguro a uma rede privada pela internet?",
+      "alternativas": {"A": "VLAN", "B": "VPN", "C": "DNS", "D": "NAT"},
+      "correta": "B",
+      "explicacao": "Uma VPN (Virtual Private Network) cria um túnel criptografado sobre a internet, permitindo acesso seguro a recursos de uma rede privada. VLAN segmenta a rede; NAT traduz endereços.",
+      "fonte": {"titulo": "What is a VPN?", "url": "https://www.cloudflare.com/learning/access-management/what-is-a-vpn/"}
+    },
+    {
+      "area": "Solução de problemas",
+      "enunciado": "Qual utilitário de linha de comando testa a conectividade básica com um host enviando pacotes ICMP de echo?",
+      "alternativas": {"A": "ping", "B": "nslookup", "C": "ipconfig", "D": "netstat"},
+      "correta": "A",
+      "explicacao": "O comando ping envia pacotes ICMP echo request e mede a resposta, testando conectividade e latência. O nslookup consulta DNS; o netstat mostra conexões; o ipconfig exibe a configuração IP.",
+      "fonte": {"titulo": "What is ICMP?", "url": "https://www.cloudflare.com/learning/ddos/glossary/internet-control-message-protocol-icmp/"}
+    }
+  ]
+}

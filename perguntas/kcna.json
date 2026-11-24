@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo KCNA (Kubernetes and Cloud Native Associate), em português, com base na documentação oficial do Kubernetes. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Fundamentos do Kubernetes",
+      "enunciado": "Qual é a menor unidade implantável no Kubernetes, que pode conter um ou mais contêineres que compartilham rede e armazenamento?",
+      "alternativas": {"A": "Node", "B": "Pod", "C": "Cluster", "D": "Deployment"},
+      "correta": "B",
+      "explicacao": "O Pod é a menor unidade implantável no Kubernetes. Ele agrupa um ou mais contêineres que compartilham o mesmo IP de rede e volumes. Um Node é uma máquina; um Deployment gerencia Pods.",
+      "fonte": {"titulo": "Pods", "url": "https://kubernetes.io/docs/concepts/workloads/pods/"}
+    },
+    {
+      "area": "Fundamentos do Kubernetes",
+      "enunciado": "Qual componente do plano de controle expõe a API do Kubernetes e é o ponto central de comunicação do cluster?",
+      "alternativas": {"A": "kubelet", "B": "etcd", "C": "kube-apiserver", "D": "kube-proxy"},
+      "correta": "C",
+      "explicacao": "O kube-apiserver expõe a API do Kubernetes e é o front-end do plano de controle. O etcd guarda o estado; o kubelet roda nos nós; o kube-proxy cuida da rede dos serviços.",
+      "fonte": {"titulo": "Kubernetes Components", "url": "https://kubernetes.io/docs/concepts/overview/components/"}
+    },
+    {
+      "area": "Orquestração de contêineres",
+      "enunciado": "O que é um contêiner?",
+      "alternativas": {"A": "Uma máquina virtual completa com seu próprio sistema operacional", "B": "Um pacote leve e isolado de uma aplicação com suas dependências, que compartilha o kernel do host", "C": "Um servidor físico", "D": "Um endereço de rede"},
+      "correta": "B",
+      "explicacao": "Um contêiner empacota a aplicação e suas dependências de forma leve e isolada, compartilhando o kernel do sistema operacional do host — diferente de uma VM, que inclui um SO completo.",
+      "fonte": {"titulo": "Containers", "url": "https://kubernetes.io/docs/concepts/containers/"}
+    }
+  ]
+}

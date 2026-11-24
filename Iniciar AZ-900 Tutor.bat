@@ -1,10 +1,11 @@
 @echo off
-title AZ-900 Tutor
+title Tutor de Certificacoes
 cd /d "%~dp0"
 echo.
-echo  AZ-900 Tutor
+echo  Tutor de Certificacoes (AZ-900, AWS CLF-C02 e outras)
 echo  -------------------------------------------
 echo  Iniciando... o navegador abre em alguns segundos.
+echo  Escolha a certificacao no seletor da lateral.
 echo  Para desligar o tutor, feche esta janela.
 echo.
 call venv\Scripts\activate.bat

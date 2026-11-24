@@ -7,15 +7,57 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+import trilhas
+
 load_dotenv()  # lê o arquivo .env, se existir (opcional neste projeto)
 
-# ── Pastas ────────────────────────────────────────────────────────────────
+# ── Trilha ativa ──────────────────────────────────────────────────────────
+# Cada certificação ("trilha") guarda seus dados numa pasta própria: data/<id>/...
+# Assim o progresso, os vetores e o banco de uma certificação não se misturam
+# com os de outra. A trilha padrão (ao rodar scripts no terminal) vem do .env
+# (TRILHA=...) ou é o AZ-900. Na interface web, o usuário escolhe a trilha e ela
+# é passada em cada requisição.
+TRILHA_PADRAO = os.getenv("TRILHA", trilhas.TRILHA_PADRAO)
+if not trilhas.existe(TRILHA_PADRAO):
+    TRILHA_PADRAO = trilhas.TRILHA_PADRAO
+
+# ── Pastas (por trilha) ───────────────────────────────────────────────────
 RAIZ = Path(__file__).parent
-PASTA_BRUTOS = RAIZ / "data" / "brutos"              # textos baixados (1 arquivo por página)
-ARQ_FRAGMENTOS = RAIZ / "data" / "fragmentos.jsonl"  # pedaços prontos para indexar
-PASTA_VETORES = RAIZ / "data" / "vetores"            # banco vetorial (ChromaDB)
-ARQ_BANCO = RAIZ / "data" / "tutor.db"               # banco SQLite: respostas, perguntas e histórico do chat
-ARQ_LOG = RAIZ / "data" / "logs" / "interacoes.jsonl"  # registro de cada interação (observabilidade)
+
+
+def dir_trilha(trilha_id: str | None = None) -> Path:
+    return RAIZ / "data" / (trilha_id or TRILHA_PADRAO)
+
+
+def pasta_brutos(trilha_id: str | None = None) -> Path:
+    return dir_trilha(trilha_id) / "brutos"              # textos baixados (1 arquivo por página)
+
+
+def arq_fragmentos(trilha_id: str | None = None) -> Path:
+    return dir_trilha(trilha_id) / "fragmentos.jsonl"    # pedaços prontos para indexar
+
+
+def pasta_vetores(trilha_id: str | None = None) -> Path:
+    return dir_trilha(trilha_id) / "vetores"             # banco vetorial (ChromaDB)
+
+
+def arq_banco(trilha_id: str | None = None) -> Path:
+    return dir_trilha(trilha_id) / "tutor.db"            # banco SQLite: respostas, perguntas e histórico
+
+def arq_log(trilha_id: str | None = None) -> Path:
+    return dir_trilha(trilha_id) / "logs" / "interacoes.jsonl"  # log de interações (observabilidade)
+
+
+def colecao(trilha_id: str | None = None) -> str:
+    return trilhas.obter(trilha_id or TRILHA_PADRAO).colecao
+
+
+# Constantes da trilha padrão (mantidas para os scripts e testes que não passam trilha)
+PASTA_BRUTOS = pasta_brutos()
+ARQ_FRAGMENTOS = arq_fragmentos()
+PASTA_VETORES = pasta_vetores()
+ARQ_BANCO = arq_banco()
+ARQ_LOG = arq_log()
 
 # ── Fragmentação (chunking) ──────────────────────────────────────────────
 TAMANHO_FRAGMENTO = 1200   # caracteres por pedaço (~300 tokens)
@@ -25,7 +67,7 @@ SOBREPOSICAO = 200         # caracteres repetidos entre pedaços vizinhos
 MODELO_EMBEDDING = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
 # ── Busca (Retrieval) ────────────────────────────────────────────────────
-NOME_COLECAO = "az900"
+NOME_COLECAO = colecao()  # coleção de vetores da trilha padrão
 TOP_K = int(os.getenv("TOP_K", "4"))  # quantos pedaços buscar para cada pergunta
 SIMILARIDADE_MINIMA = 0.30    # abaixo disso, o trecho é considerado irrelevante (exceto se tiver palavra exata em comum)
 MODO_BUSCA = os.getenv("MODO_BUSCA", "hibrida")  # "hibrida" (significado + palavra exata) ou "vetorial"

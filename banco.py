@@ -14,7 +14,8 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime
 
-from config import ARQ_BANCO
+import config
+from config import ARQ_BANCO, TRILHA_PADRAO
 
 ESQUEMA = """
 CREATE TABLE IF NOT EXISTS respostas (
@@ -51,10 +52,19 @@ CREATE INDEX IF NOT EXISTS idx_mensagens_sessao ON mensagens (sessao_id, id);
 """
 
 
+def _caminho(trilha: str | None) -> "object":
+    """Caminho do banco da trilha. Para a trilha padrão usa ARQ_BANCO (módulo),
+    que os testes substituem por um arquivo temporário (monkeypatch)."""
+    if trilha is None or trilha == TRILHA_PADRAO:
+        return ARQ_BANCO
+    return config.arq_banco(trilha)
+
+
 @contextmanager
-def conectar():
-    ARQ_BANCO.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(ARQ_BANCO)
+def conectar(trilha: str | None = None):
+    caminho = _caminho(trilha)
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(caminho)
     con.row_factory = sqlite3.Row
     con.executescript(ESQUEMA)
     try:
@@ -69,8 +79,8 @@ def _agora() -> str:
 
 
 # ── Respostas do aluno ──────────────────────────────────────────────────────
-def registrar_resposta(sessao_id: str, pergunta: dict, acertou: bool):
-    with conectar() as con:
+def registrar_resposta(sessao_id: str, pergunta: dict, acertou: bool, trilha: str | None = None):
+    with conectar(trilha) as con:
         con.execute(
             "INSERT INTO respostas (sessao_id, area, enunciado, correta, fonte_titulo, fonte_url, respondida_em) "
             "VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -79,8 +89,8 @@ def registrar_resposta(sessao_id: str, pergunta: dict, acertou: bool):
         )
 
 
-def respostas_do_aluno(sessao_id: str) -> list[dict]:
-    with conectar() as con:
+def respostas_do_aluno(sessao_id: str, trilha: str | None = None) -> list[dict]:
+    with conectar(trilha) as con:
         linhas = con.execute("SELECT * FROM respostas WHERE sessao_id = ? ORDER BY id", (sessao_id,))
         return [dict(l) for l in linhas]
 
@@ -95,9 +105,9 @@ def _linha_para_pergunta(l: sqlite3.Row) -> dict:
     }
 
 
-def salvar_pergunta(p: dict, status: str = "pendente") -> int | None:
+def salvar_pergunta(p: dict, status: str = "pendente", trilha: str | None = None) -> int | None:
     """Salva uma pergunta gerada pela IA. Ignora duplicadas (mesmo enunciado)."""
-    with conectar() as con:
+    with conectar(trilha) as con:
         cur = con.execute(
             "INSERT OR IGNORE INTO perguntas (area, enunciado, alternativas, correta, explicacao, "
             "fonte_titulo, fonte_url, status, criada_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -107,7 +117,8 @@ def salvar_pergunta(p: dict, status: str = "pendente") -> int | None:
         return cur.lastrowid if cur.rowcount else None
 
 
-def perguntas_aprovadas(area: str | None, quantidade: int, evitar: set[str] = frozenset()) -> list[dict]:
+def perguntas_aprovadas(area: str | None, quantidade: int, evitar: set[str] = frozenset(),
+                        trilha: str | None = None) -> list[dict]:
     """Sorteia perguntas já aprovadas por humano, evitando as que o aluno já respondeu."""
     sql = "SELECT * FROM perguntas WHERE status = 'aprovada'"
     params: list = []
@@ -115,30 +126,30 @@ def perguntas_aprovadas(area: str | None, quantidade: int, evitar: set[str] = fr
         sql += " AND area = ?"
         params.append(area)
     sql += " ORDER BY RANDOM()"
-    with conectar() as con:
+    with conectar(trilha) as con:
         todas = [_linha_para_pergunta(l) for l in con.execute(sql, params)]
     novas = [p for p in todas if p["enunciado"] not in evitar]
     return (novas or todas)[:quantidade]
 
 
-def obter_pergunta(pergunta_id: int) -> dict | None:
-    with conectar() as con:
+def obter_pergunta(pergunta_id: int, trilha: str | None = None) -> dict | None:
+    with conectar(trilha) as con:
         l = con.execute("SELECT * FROM perguntas WHERE id = ?", (pergunta_id,)).fetchone()
         return _linha_para_pergunta(l) if l else None
 
 
-def perguntas_por_status(status: str = "pendente") -> list[dict]:
-    with conectar() as con:
+def perguntas_por_status(status: str = "pendente", trilha: str | None = None) -> list[dict]:
+    with conectar(trilha) as con:
         return [_linha_para_pergunta(l) for l in con.execute("SELECT * FROM perguntas WHERE status = ? ORDER BY id", (status,))]
 
 
-def definir_status(pergunta_id: int, status: str):
-    with conectar() as con:
+def definir_status(pergunta_id: int, status: str, trilha: str | None = None):
+    with conectar(trilha) as con:
         con.execute("UPDATE perguntas SET status = ? WHERE id = ?", (status, pergunta_id))
 
 
-def resumo_banco() -> dict:
-    with conectar() as con:
+def resumo_banco(trilha: str | None = None) -> dict:
+    with conectar(trilha) as con:
         linhas = con.execute("SELECT area, status, COUNT(*) AS n FROM perguntas GROUP BY area, status")
         resumo: dict = {}
         for l in linhas:
@@ -147,17 +158,17 @@ def resumo_banco() -> dict:
 
 
 # ── Histórico do chat ───────────────────────────────────────────────────────
-def salvar_mensagem(sessao_id: str, papel: str, texto: str, extra: dict | None = None):
-    with conectar() as con:
+def salvar_mensagem(sessao_id: str, papel: str, texto: str, extra: dict | None = None, trilha: str | None = None):
+    with conectar(trilha) as con:
         con.execute(
             "INSERT INTO mensagens (sessao_id, papel, texto, extra, criada_em) VALUES (?, ?, ?, ?, ?)",
             (sessao_id, papel, texto, json.dumps(extra, ensure_ascii=False) if extra else None, _agora()),
         )
 
 
-def mensagens_da_sessao(sessao_id: str, limite: int = 50) -> list[dict]:
+def mensagens_da_sessao(sessao_id: str, limite: int = 50, trilha: str | None = None) -> list[dict]:
     """Últimas mensagens da conversa, da mais antiga para a mais nova."""
-    with conectar() as con:
+    with conectar(trilha) as con:
         linhas = con.execute(
             "SELECT papel, texto, extra, criada_em FROM mensagens WHERE sessao_id = ? ORDER BY id DESC LIMIT ?",
             (sessao_id, limite),
@@ -166,6 +177,6 @@ def mensagens_da_sessao(sessao_id: str, limite: int = 50) -> list[dict]:
              "criada_em": l["criada_em"]} for l in reversed(linhas)]
 
 
-def apagar_mensagens(sessao_id: str):
-    with conectar() as con:
+def apagar_mensagens(sessao_id: str, trilha: str | None = None):
+    with conectar(trilha) as con:
         con.execute("DELETE FROM mensagens WHERE sessao_id = ?", (sessao_id,))

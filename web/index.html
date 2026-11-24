@@ -6,16 +6,16 @@
 <title>AZ-900 Tutor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <style>
-/* Identidade visual: clara e elegante. Papel quente, tinta azul-marinho, um toque dourado.
-   Títulos em serifa (Instrument Serif), interface em sans (Instrument Sans). */
+/* Identidade visual: moderna e limpa. Papel quente, tinta azul-marinho, um toque dourado.
+   Títulos em Space Grotesk (grotesca moderna), interface em Instrument Sans. */
 :root{
   --bg:#f6f3ec; --surface:#fffdf9; --surface-2:#f0ebe1; --ink:#1d2129; --muted:#6c6f76; --faint:#9a9ca1;
   --line:#e4ddcf; --line-strong:#d3cab8;
   --accent:#1f3a5f; --accent-ink:#fffdf9; --accent-soft:#e8edf3; --gold:#a8844a;
   --good:#2f6b4f; --good-soft:#e7f0ea; --bad:#a23b2a; --bad-soft:#f6e6e2; --warn:#9a6a1c;
-  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --serif:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --radius:14px; --shadow:0 1px 2px rgba(29,33,41,.04),0 8px 24px rgba(29,33,41,.05);
 }
@@ -54,7 +54,7 @@ a{color:var(--accent)}
 main{min-width:0;overflow:auto}
 .view{max-width:780px;margin:0 auto;padding:48px 32px 56px}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 10px}
-h1{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
+h1{font-family:var(--serif);font-weight:500;font-size:42px;line-height:1.08;margin:0 0 12px;letter-spacing:-.02em;text-wrap:balance}
 h1 em{color:var(--accent)}
 .lead{color:var(--muted);margin:0 0 32px;max-width:56ch}
 .btn{border:1px solid var(--line-strong);background:var(--surface);padding:10px 18px;border-radius:999px;font-weight:500;transition:border-color .15s,background .15s}
@@ -188,13 +188,22 @@ kbd{font-family:var(--sans);font-size:11px;border:1px solid var(--line-strong);b
   .result{grid-template-columns:1fr;justify-items:center;text-align:center}
   .composer{padding:12px 16px 16px}
 }
+.trilha-box{margin:4px 0 18px;display:flex;flex-direction:column;gap:5px}
+.trilha-box label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.6}
+.trilha-box select{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line,#2a2f3a);
+  background:var(--card,rgba(255,255,255,.04));color:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.trilha-box select:focus{outline:2px solid var(--brand,#0078d4);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><div class="mark" id="mark">A</div><div><b id="nome-marca">AZ-900 Tutor</b><span id="sub-marca">Microsoft Azure Fundamentals</span></div></div>
+    <div class="brand"><div class="mark" id="mark">A</div><div><b id="nome-marca">Tutor</b><span id="sub-marca"></span></div></div>
+    <div class="trilha-box">
+      <label for="sel-trilha">Certificação</label>
+      <select id="sel-trilha" aria-label="Escolher certificação"></select>
+    </div>
     <button class="nav on" data-v="chat"><span class="num">i.</span>Tirar dúvidas</button>
     <button class="nav" data-v="sim"><span class="num">ii.</span>Simulado</button>
     <button class="nav" data-v="prog"><span class="num">iii.</span>Meu progresso</button>
@@ -204,24 +213,36 @@ kbd{font-family:var(--sans);font-size:11px;border:1px solid var(--line-strong);b
 </div>
 
 <script>
-/* Nome do produto: troque aqui e ele muda na interface inteira. */
-const MARCA = { nome: "AZ-900 Tutor", sub: "Microsoft Azure Fundamentals", inicial: "A" };
+/* A certificação (trilha) escolhida define toda a interface: marca, áreas e banco.
+   O catálogo vem do servidor (/trilhas) e o usuário troca pelo seletor na lateral. */
+let MARCA = { nome: "Tutor", sub: "", inicial: "T", cor: "#0078d4" };
+let AREAS = [];                 // áreas da trilha atual (preenchido ao escolher a trilha)
+let TRILHA = null;              // id da trilha atual (ex.: "az900")
+let TRILHAS = {};               // id -> dados da trilha (do catálogo)
 
 let SESSAO = "web";      // no seu computador: sempre a mesma sessão (seu progresso)
 let DEMO = false;         // versão online: cada navegador tem a própria sessão
-const AREAS = [
-  {nome:"Conceitos de nuvem", peso:"25–30%"},
-  {nome:"Arquitetura e serviços do Azure", peso:"35–40%"},
-  {nome:"Gestão e governança do Azure", peso:"30–35%"},
-];
+// A sessão é separada por trilha, para o progresso de cada certificação não se misturar
+const sid = () => `${SESSAO}::${TRILHA}`;
+
 const main = document.getElementById("main");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ICONE_ENVIAR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
-document.title = MARCA.nome;
-document.getElementById("nome-marca").textContent = MARCA.nome;
-document.getElementById("sub-marca").textContent = MARCA.sub;
-document.getElementById("mark").textContent = MARCA.inicial;
+function aplicarMarca(){
+  document.title = MARCA.nome;
+  document.getElementById("nome-marca").textContent = MARCA.nome;
+  document.getElementById("sub-marca").textContent = MARCA.sub;
+  const mk = document.getElementById("mark");
+  mk.textContent = MARCA.inicial;
+  if (MARCA.cor){ mk.style.background = MARCA.cor; document.documentElement.style.setProperty("--brand", MARCA.cor); }
+}
+
+// Sugestões de dúvida geradas a partir das áreas da trilha atual (servem para qualquer certificação)
+function sugestoesDaTrilha(){
+  return (AREAS.length ? AREAS : [{nome:"os conceitos principais"}]).slice(0,4)
+    .map(a => [a.nome, `Explique os conceitos principais de ${a.nome}.`]);
+}
 
 // Markdown simples: negrito, links, listas e parágrafos
 function md(t){
@@ -259,14 +280,8 @@ function sessaoDoNavegador(){
 }
 
 /* ───────── TIRAR DÚVIDAS ───────── */
-const historico = [];          // mensagens já desenhadas (HTML), para trocar de aba sem perder a conversa
+let historico = [];            // mensagens já desenhadas (HTML), para trocar de aba sem perder a conversa
 let historicoCarregado = false; // a conversa salva no banco é buscada uma vez, ao abrir
-const SUGESTOES = [
-  ["Armazenamento", "Qual a diferença entre ZRS e GRS?"],
-  ["Rede", "Para que serve o Gateway de VPN?"],
-  ["Infraestrutura", "Zonas de disponibilidade ou pares de regiões?"],
-  ["Custos", "Calculadora de preços ou Cost Management?"],
-];
 
 function htmlResposta(texto, fontes, meta){
   let h = `<div class="quem">Tutor</div>` + md(texto);
@@ -279,14 +294,14 @@ const htmlEu = t => `<div class="msg eu">${esc(t)}</div>`;
 async function carregarHistorico(){
   historicoCarregado = true;
   try {
-    const msgs = await (await fetch(`/chat/historico/${SESSAO}`)).json();
+    const msgs = await (await fetch(`/chat/historico/${sid()}?trilha=${TRILHA}`)).json();
     for (const m of msgs) historico.push(m.papel === "user" ? htmlEu(m.texto)
       : `<div class="msg ia">${htmlResposta(m.texto, m.extra?.fontes)}</div>`);
   } catch {}
 }
 
 async function novaConversa(){
-  await fetch(`/chat/historico/${SESSAO}`, {method:"DELETE"}).catch(()=>{});
+  await fetch(`/chat/historico/${sid()}?trilha=${TRILHA}`, {method:"DELETE"}).catch(()=>{});
   historico.length = 0; viewChat();
 }
 
@@ -303,12 +318,12 @@ async function viewChat(){
         </div>
         ${vazio ? "" : `<button class="btn ghost" id="nova-conv" title="Apaga esta conversa. Seu progresso continua salvo.">Nova conversa</button>`}
       </div>
-      <p class="lead">Respostas baseadas na documentação oficial da Microsoft, sempre com as fontes.</p>
-      ${vazio ? `<div class="sugs">${SUGESTOES.map(([t,s])=>`<button class="sug"><span class="label">${esc(t)}</span><span>${esc(s)}</span></button>`).join("")}</div>` : ""}
+      <p class="lead">Respostas baseadas na documentação oficial de ${esc(MARCA.sub || "cada certificação")}, sempre com as fontes.</p>
+      ${vazio ? `<div class="sugs">${sugestoesDaTrilha().map(([t,s])=>`<button class="sug"><span class="label">${esc(t)}</span><span>${esc(s)}</span></button>`).join("")}</div>` : ""}
       <div class="msgs" id="msgs"></div>
     </div>
     <div class="composer">
-      <form id="f"><input id="txt" placeholder="Pergunte sobre Azure ou sobre o exame…" autocomplete="off" aria-label="Sua pergunta"><button class="send" id="send" aria-label="Enviar">${ICONE_ENVIAR}</button></form>
+      <form id="f"><input id="txt" placeholder="Pergunte sobre o conteúdo do exame…" autocomplete="off" aria-label="Sua pergunta"><button class="send" id="send" aria-label="Enviar">${ICONE_ENVIAR}</button></form>
       <div class="dica">${DEMO ? "Versão de demonstração num servidor gratuito: cada resposta pode levar até 1 minuto." : "O modelo roda no seu computador, então a resposta pode levar alguns segundos."}</div>
     </div>
   </div>`;
@@ -331,7 +346,7 @@ async function enviar(texto){
   box.scrollIntoView({block:"end"});
   let texto_resp = "";
   try {
-    const r = await fetch("/chat/stream", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sessao_id:SESSAO, mensagem:texto})});
+    const r = await fetch("/chat/stream", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sessao_id:sid(), mensagem:texto, trilha:TRILHA})});
     if (!r.ok){ const d = await r.json().catch(()=>({})); throw new Error(d.erro || `Erro ${r.status}`); }
     const leitor = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     while (true){
@@ -350,7 +365,7 @@ async function enviar(texto){
     }
   } catch(e){
     // TypeError = a requisição nem chegou (API desligada); os outros erros já vêm com a explicação da API
-    const motivo = e instanceof TypeError ? "O tutor parece desligado. Abra de novo pelo atalho Iniciar AZ-900 Tutor." : e.message;
+    const motivo = e instanceof TypeError ? "O tutor parece desligado. Abra de novo pelo atalho Iniciar Tutor." : e.message;
     box.innerHTML = `<div class="erro">Não consegui responder. ${esc(motivo)}</div>`;
     status();
   }
@@ -379,7 +394,7 @@ function viewSim(){
     <div class="areas-pick">${opcoes.map(o=>`<button class="pick ${o.nome===simCfg.area?"on":""}" data-area="${esc(o.nome)}"><b>${esc(o.titulo)}</b><small>${esc(o.detalhe)}</small></button>`).join("")}</div>
     <p class="step-t">2. Quantas questões?</p>
     <div class="qtds">${[5,10,15].map(n=>`<button class="qtd ${n===simCfg.qtd?"on":""}" data-q="${n}">${n}</button>`).join("")}</div>
-    <div class="start-row"><button class="btn primary" id="ini">Começar simulado</button><span class="hint">Meta da Microsoft para a prova: 80% ou mais.</span></div>
+    <div class="start-row"><button class="btn primary" id="ini">Começar simulado</button><span class="hint">Meta para a prova: 80% ou mais.</span></div>
     <div id="simerr"></div>
   </div>`;
   document.querySelectorAll(".pick").forEach(b => b.onclick = () => { simCfg.area = b.dataset.area; document.querySelectorAll(".pick").forEach(x=>x.classList.toggle("on", x===b)); });
@@ -389,7 +404,7 @@ function viewSim(){
 
 async function iniciarSim(){
   try {
-    const r = await fetch(`/simulado/perguntas?sessao_id=${SESSAO}&quantidade=${simCfg.qtd}&area=${encodeURIComponent(simCfg.area)}`);
+    const r = await fetch(`/simulado/perguntas?sessao_id=${sid()}&quantidade=${simCfg.qtd}&area=${encodeURIComponent(simCfg.area)}&trilha=${TRILHA}`);
     const qs = await r.json();
     if (!qs.length) throw new Error("O banco ainda não tem perguntas aprovadas. Rode uma vez: python importar_perguntas.py");
     sim = {qs, pos:0, respostas:[], respondida:null}; renderQ();
@@ -428,7 +443,7 @@ async function responder(letra){
   document.querySelectorAll(".opt").forEach(x => x.disabled = true);
   const q = sim.qs[sim.pos];
   try {
-    const res = await fetch("/simulado/responder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessao_id:SESSAO,pergunta_id:q.id,resposta:letra})}).then(x=>x.json());
+    const res = await fetch("/simulado/responder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessao_id:sid(),pergunta_id:q.id,resposta:letra,trilha:TRILHA})}).then(x=>x.json());
     sim.respondida = {...res, escolha:letra};
     sim.respostas.push({...res, escolha:letra, area:q.area, enunciado:q.enunciado, alternativas:q.alternativas});
   } catch { document.querySelectorAll(".opt").forEach(x => x.disabled = false); }
@@ -463,7 +478,7 @@ function fimSim(){
       </div>
       <div>
         <h1>${pct>=80 ? "Acima da <em>meta</em>." : pct>=70 ? "Quase lá." : "Bora revisar."}</h1>
-        <p class="lead" style="margin:0">${pct>=80 ? "Você passou dos 80% recomendados pela Microsoft. Mantenha o ritmo." : "A meta para a prova é 80%. Revise as questões abaixo e tente de novo."}</p>
+        <p class="lead" style="margin:0">${pct>=80 ? "Você passou dos 80% recomendados. Mantenha o ritmo." : "A meta para a prova é 80%. Revise as questões abaixo e tente de novo."}</p>
       </div>
     </div>
     ${porArea.length > 1 ? `<p class="step-t">Por área</p><div class="porarea">${porArea.map(a=>{ const p = Math.round(100*a.ac/a.n); return `
@@ -484,10 +499,10 @@ function fimSim(){
 
 /* ───────── PROGRESSO ───────── */
 async function viewProg(){
-  main.innerHTML = `<div class="view"><p class="eyebrow">Meu progresso</p><h1>Como você está <em>indo</em></h1><p class="lead">Desempenho por área do exame, com os pesos oficiais da Microsoft.</p><div id="pc"><p class="empty">Carregando…</p></div></div>`;
+  main.innerHTML = `<div class="view"><p class="eyebrow">Meu progresso</p><h1>Como você está <em>indo</em></h1><p class="lead">Desempenho por área do exame, com os pesos oficiais da certificação.</p><div id="pc"><p class="empty">Carregando…</p></div></div>`;
   const pc = document.getElementById("pc");
   try {
-    const p = await fetch(`/progresso/${SESSAO}`).then(r=>r.json());
+    const p = await fetch(`/progresso/${sid()}?trilha=${TRILHA}`).then(r=>r.json());
     if (!p.respostas){ pc.innerHTML = `<p class="empty">Ainda não há respostas. Faça um simulado para começar a medir seu progresso.</p><button class="btn primary" id="gs" style="margin-top:12px">Fazer um simulado</button>`; document.getElementById("gs").onclick = () => ir("sim"); return; }
     pc.innerHTML = `
       <div class="prog-top">
@@ -512,9 +527,48 @@ function ir(v){
   VIEWS[v]();
 }
 document.querySelectorAll(".nav").forEach(b => b.onclick = () => ir(b.dataset.v));
+/* ───────── TRILHAS (certificações) ───────── */
+function aplicarTrilha(id){
+  if (!TRILHAS[id]) return;
+  TRILHA = id;
+  const t = TRILHAS[id];
+  MARCA = { nome: `${t.sigla} Tutor`, sub: t.titulo, inicial: t.inicial, cor: t.cor };
+  AREAS = (t.areas || []).map(a => ({nome:a.nome, peso:a.peso}));
+  aplicarMarca();
+  // troca de certificação: zera a conversa e o simulado em andamento (cada trilha tem o seu)
+  historico = []; historicoCarregado = false; sim = null; simCfg = {area:"", qtd:10};
+  const sel = document.getElementById("sel-trilha"); if (sel && sel.value !== id) sel.value = id;
+  try { localStorage.setItem("tutor-trilha", id); } catch {}
+}
+
+async function carregarTrilhas(){
+  let dados;
+  try { dados = await (await fetch("/trilhas")).json(); }
+  catch { return; }
+  const sel = document.getElementById("sel-trilha");
+  sel.innerHTML = ""; TRILHAS = {};
+  for (const grupo of dados.grupos){
+    const og = document.createElement("optgroup"); og.label = grupo.foco;
+    for (const t of grupo.trilhas){
+      TRILHAS[t.id] = t;
+      const op = document.createElement("option");
+      op.value = t.id; op.textContent = `${t.sigla} · ${t.titulo}`;
+      og.appendChild(op);
+    }
+    sel.appendChild(og);
+  }
+  let inicial = null;
+  try { inicial = localStorage.getItem("tutor-trilha"); } catch {}
+  if (!inicial || !TRILHAS[inicial]) inicial = dados.padrao || Object.keys(TRILHAS)[0];
+  sel.value = inicial;
+  sel.onchange = () => { aplicarTrilha(sel.value); ir("chat"); };
+  aplicarTrilha(inicial);
+}
+
 async function iniciar(){
   const d = await status();
   if (d?.modo_demo){ DEMO = true; SESSAO = sessaoDoNavegador(); document.getElementById("demo").hidden = false; }
+  await carregarTrilhas();
   ir("chat");
   setInterval(status, 30000);
 }

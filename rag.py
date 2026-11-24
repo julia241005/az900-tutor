@@ -12,32 +12,41 @@ from dataclasses import dataclass, field
 
 from openai import OpenAI
 
+import trilhas
 from buscar import buscar
 from config import (LLM_CHAVE, LLM_MAX_TOKENS, LLM_MODELO, LLM_TEMPERATURA, LLM_URL,
-                    SIMILARIDADE_MINIMA)
+                    SIMILARIDADE_MINIMA, TRILHA_PADRAO)
 
 cliente = OpenAI(base_url=LLM_URL, api_key=LLM_CHAVE)
 
+
 # ── PROMPT DE SISTEMA: define o papel e as regras (guardrails) do tutor ──────
-PROMPT_SISTEMA = """Você é o AZ-900 Tutor, um professor especialista em Microsoft Azure \
-que ajuda estudantes brasileiros a passar no exame AZ-900 (Microsoft Azure Fundamentals).
+def prompt_sistema(trilha_id: str = TRILHA_PADRAO) -> str:
+    """Monta o prompt do tutor para a certificação escolhida (trilha)."""
+    t = trilhas.obter(trilha_id)
+    return f"""Você é o {t.sigla} Tutor, um professor especialista que ajuda estudantes \
+brasileiros a passar na certificação {t.sigla} ({t.titulo}, {t.provedor}).
 
 REGRAS:
 1. Responda SOMENTE com base nos TRECHOS OFICIAIS fornecidos. Não invente informações.
 2. Cite as fontes no fim das frases, com o número do trecho entre colchetes: [1], [2]. \
 Não copie a linha "Fonte:" dos trechos.
-3. Se a resposta estiver nos trechos, mesmo que em partes (ex.: um trecho explica o LRS e \
-outro o GRS), JUNTE as partes e responda. Só diga "Não encontrei isso na documentação \
-oficial que tenho." quando NENHUM trecho tratar do assunto.
+3. Se a resposta estiver nos trechos, mesmo que em partes (ex.: um trecho explica uma \
+parte e outro trecho a outra), JUNTE as partes e responda. Só diga "Não encontrei isso na \
+documentação oficial que tenho." quando NENHUM trecho tratar do assunto.
 4. Responda sempre em português do Brasil, de forma didática, clara e objetiva.
 5. Use exemplos simples quando ajudar.
-6. Se a pergunta não for sobre Azure ou computação em nuvem, diga educadamente que você \
-só ajuda com o conteúdo do AZ-900.
+6. Se a pergunta não for sobre o conteúdo do exame {t.sigla} ({t.titulo}), diga \
+educadamente que você só ajuda com o conteúdo do {t.sigla}.
 
 FORMATO:
 - Comece com a resposta direta, em 1 ou 2 frases.
 - Depois explique os detalhes (use tópicos se houver comparação).
 - Termine com uma linha "💡 Dica para a prova:" quando for útil."""
+
+
+# Prompt da trilha padrão (compatibilidade com quem importa a constante)
+PROMPT_SISTEMA = prompt_sistema()
 
 MENSAGEM_SEM_FONTE = (
     "Não encontrei isso na documentação oficial que tenho. "
@@ -56,9 +65,9 @@ class Resultado:
     modelo: str = LLM_MODELO
 
 
-def recuperar(pergunta: str) -> list[dict]:
+def recuperar(pergunta: str, trilha: str = TRILHA_PADRAO) -> list[dict]:
     """R do RAG: busca os trechos e descarta os pouco relevantes."""
-    trechos = buscar(pergunta)
+    trechos = buscar(pergunta, trilha=trilha)
     # mantém o trecho se o significado for parecido OU se ele tiver a palavra exata (ex.: sigla "GRS")
     return [t for t in trechos if t["similaridade"] >= SIMILARIDADE_MINIMA or t.get("palavra_chave")]
 
@@ -71,9 +80,9 @@ def montar_contexto(trechos: list[dict]) -> str:
     return "\n\n---\n\n".join(blocos)
 
 
-def montar_mensagens(pergunta: str, contexto: str) -> list[dict]:
+def montar_mensagens(pergunta: str, contexto: str, trilha: str = TRILHA_PADRAO) -> list[dict]:
     return [
-        {"role": "system", "content": PROMPT_SISTEMA},
+        {"role": "system", "content": prompt_sistema(trilha)},
         {"role": "user", "content": f"TRECHOS OFICIAIS:\n\n{contexto}\n\n---\n\nPERGUNTA DO ALUNO: {pergunta}"},
     ]
 
@@ -86,11 +95,11 @@ def lista_fontes(trechos: list[dict]) -> list[dict]:
     ]
 
 
-def responder_stream(pergunta: str):
+def responder_stream(pergunta: str, trilha: str = TRILHA_PADRAO):
     """G do RAG (Generation), em streaming.
     Gera pedaços de texto (str) conforme o LLM escreve; no fim, gera o objeto Resultado."""
     inicio = time.time()
-    trechos = recuperar(pergunta)
+    trechos = recuperar(pergunta, trilha)
     res = Resultado(fontes=lista_fontes(trechos))
 
     if not trechos:  # guardrail: sem fonte, sem resposta inventada
@@ -100,7 +109,7 @@ def responder_stream(pergunta: str):
         yield res
         return
 
-    mensagens = montar_mensagens(pergunta, montar_contexto(trechos))
+    mensagens = montar_mensagens(pergunta, montar_contexto(trechos), trilha)
     stream = cliente.chat.completions.create(
         model=LLM_MODELO,
         messages=mensagens,
@@ -128,10 +137,10 @@ def responder_stream(pergunta: str):
     yield res
 
 
-def responder(pergunta: str) -> Resultado:
+def responder(pergunta: str, trilha: str = TRILHA_PADRAO) -> Resultado:
     """Versão sem streaming: espera a resposta completa."""
     resultado = None
-    for parte in responder_stream(pergunta):
+    for parte in responder_stream(pergunta, trilha):
         if isinstance(parte, Resultado):
             resultado = parte
     return resultado

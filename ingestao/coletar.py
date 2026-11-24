@@ -7,6 +7,7 @@ Módulos de treinamento são expandidos automaticamente nas suas unidades.
 Detalhes do processo: docs/02-ingestao-e-limpeza.md
 Rode:  python -m ingestao.coletar
 """
+import argparse
 import json
 import re
 import time
@@ -16,10 +17,10 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
-from config import PASTA_BRUTOS
-from ingestao.fontes import FONTES
+import config
+import trilhas
 
-CABECALHO = {"User-Agent": "AZ900-Tutor/1.0 (projeto de estudo)"}
+CABECALHO = {"User-Agent": "Tutor-Certificacoes/1.0 (projeto de estudo)"}
 PAUSA_SEGUNDOS = 1  # educação: não sobrecarregar o site
 IGNORAR_UNIDADES = ("knowledge-check",)  # unidades de quiz não trazem conteúdo explicativo
 # Frases do site que não são conteúdo (avisos de login, rodapés etc.)
@@ -90,7 +91,7 @@ def nome_arquivo(url: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", url.split("/pt-br/")[-1].lower()).strip("_") + ".json"
 
 
-def salvar(url: str, fonte: dict, html: str) -> int:
+def salvar(url: str, fonte: dict, html: str, pasta) -> int:
     titulo, texto = limpar_html(html)
     doc = {
         "url": url,
@@ -100,16 +101,20 @@ def salvar(url: str, fonte: dict, html: str) -> int:
         "coletado_em": date.today().isoformat(),
         "texto": texto,
     }
-    (PASTA_BRUTOS / nome_arquivo(url)).write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
+    (pasta / nome_arquivo(url)).write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  ✅ {titulo[:65]}  ({len(texto):,} caracteres)")
     return 1
 
 
-def main():
-    PASTA_BRUTOS.mkdir(parents=True, exist_ok=True)
+def main(trilha_id: str = None):
+    trilha_id = trilha_id or config.TRILHA_PADRAO
+    t = trilhas.obter(trilha_id)
+    pasta = config.pasta_brutos(trilha_id)
+    pasta.mkdir(parents=True, exist_ok=True)
+    print(f"📚 Coletando fontes da trilha: {t.sigla} ({t.titulo})\n")
     ok, falhas = 0, []
 
-    for fonte in FONTES:
+    for fonte in t.fontes:
         url = fonte["url"]
         try:
             html = baixar(url)
@@ -118,22 +123,24 @@ def main():
                 print(f"📘 Módulo: {url.rstrip('/').split('/')[-1]}  ({len(unidades)} unidades)")
                 for u in unidades:
                     try:
-                        ok += salvar(u, fonte, baixar(u))
+                        ok += salvar(u, fonte, baixar(u), pasta)
                     except Exception as erro:
                         falhas.append(u)
                         print(f"  ❌ {u}  →  {erro}")
             else:
-                ok += salvar(url, fonte, html)
+                ok += salvar(url, fonte, html, pasta)
         except Exception as erro:
             falhas.append(url)
             print(f"❌ {url}  →  {erro}")
 
     print(f"\nColetadas: {ok} páginas | Falhas: {len(falhas)}")
     if falhas:
-        print("Falharam (verifique os links em fontes.py):")
+        print("Falharam (verifique os links da trilha em trilhas.py):")
         for f in falhas:
             print("  -", f)
 
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser(description="Coleta as páginas oficiais de uma trilha (certificação).")
+    ap.add_argument("--trilha", default=None, help="id da trilha (ex.: az900, aws-clf-c02). Padrão: trilha ativa.")
+    main(ap.parse_args().trilha)

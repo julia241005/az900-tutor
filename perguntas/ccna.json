@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo CCNA (200-301), em português, com base em conceitos de rede amplamente documentados. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Fundamentos de rede",
+      "enunciado": "Em qual camada do modelo OSI operam os switches tradicionais, usando endereços MAC para encaminhar quadros?",
+      "alternativas": {"A": "Camada 1 (Física)", "B": "Camada 2 (Enlace)", "C": "Camada 3 (Rede)", "D": "Camada 4 (Transporte)"},
+      "correta": "B",
+      "explicacao": "Switches tradicionais operam na camada 2 (enlace de dados), encaminhando quadros com base em endereços MAC. Roteadores operam na camada 3, usando endereços IP.",
+      "fonte": {"titulo": "What is the OSI Model?", "url": "https://www.cloudflare.com/learning/network-layer/what-is-the-osi-model/"}
+    },
+    {
+      "area": "Conectividade IP",
+      "enunciado": "Quantos endereços de host utilizáveis existem em uma sub-rede IPv4 com máscara /24?",
+      "alternativas": {"A": "254", "B": "256", "C": "128", "D": "512"},
+      "correta": "A",
+      "explicacao": "Uma /24 tem 256 endereços no total (2^8), menos o endereço de rede e o de broadcast, resultando em 254 endereços de host utilizáveis.",
+      "fonte": {"titulo": "What is routing?", "url": "https://www.cloudflare.com/learning/network-layer/what-is-routing/"}
+    },
+    {
+      "area": "Serviços IP",
+      "enunciado": "Qual protocolo atribui automaticamente endereços IP e outras configurações de rede aos dispositivos de uma rede?",
+      "alternativas": {"A": "DNS", "B": "DHCP", "C": "NAT", "D": "NTP"},
+      "correta": "B",
+      "explicacao": "O DHCP (Dynamic Host Configuration Protocol) atribui dinamicamente IPs, máscara, gateway e DNS aos dispositivos. O DNS resolve nomes; o NAT traduz endereços; o NTP sincroniza relógios.",
+      "fonte": {"titulo": "What is DHCP?", "url": "https://www.cloudflare.com/learning/dns/glossary/what-is-dhcp/"}
+    }
+  ]
+}

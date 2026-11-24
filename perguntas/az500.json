@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo AZ-500 (Azure Security Engineer), em português, com base na documentação oficial da Microsoft. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Identidade e acesso",
+      "enunciado": "Qual recurso do Microsoft Entra permite conceder acesso administrativo just-in-time e temporário, reduzindo o número de contas com privilégios permanentes?",
+      "alternativas": {"A": "Privileged Identity Management (PIM)", "B": "Conditional Access", "C": "Azure Policy", "D": "Network Security Group"},
+      "correta": "A",
+      "explicacao": "O PIM (Privileged Identity Management) concede acesso privilegiado just-in-time e por tempo limitado, com aprovação e auditoria, reduzindo riscos de contas sempre privilegiadas.",
+      "fonte": {"titulo": "RBAC personalizado no Entra", "url": "https://learn.microsoft.com/pt-br/entra/identity/role-based-access-control/custom-overview"}
+    },
+    {
+      "area": "Dados e aplicações",
+      "enunciado": "Qual serviço do Azure armazena e gerencia de forma segura segredos, chaves de criptografia e certificados?",
+      "alternativas": {"A": "Azure Key Vault", "B": "Azure Monitor", "C": "Azure Bastion", "D": "Azure Policy"},
+      "correta": "A",
+      "explicacao": "O Azure Key Vault guarda e gerencia segredos, chaves de criptografia e certificados com segurança, separando esses dados sensíveis do código das aplicações.",
+      "fonte": {"titulo": "Visão geral do Azure Key Vault", "url": "https://learn.microsoft.com/pt-br/azure/key-vault/general/overview"}
+    },
+    {
+      "area": "Operações de segurança",
+      "enunciado": "Qual solução da Microsoft é um SIEM/SOAR nativo de nuvem que coleta e correlaciona logs para detectar e responder a ameaças?",
+      "alternativas": {"A": "Microsoft Sentinel", "B": "Azure Key Vault", "C": "Microsoft Entra ID", "D": "Azure Firewall"},
+      "correta": "A",
+      "explicacao": "O Microsoft Sentinel é uma solução SIEM/SOAR nativa de nuvem: coleta logs em escala, correlaciona eventos, detecta ameaças e orquestra respostas. O Key Vault guarda segredos; o Firewall protege a rede.",
+      "fonte": {"titulo": "O que é o Microsoft Sentinel", "url": "https://learn.microsoft.com/pt-br/azure/sentinel/overview"}
+    }
+  ]
+}

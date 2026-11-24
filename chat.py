@@ -10,12 +10,23 @@ Exemplos:
   - Como está meu progresso?         (desempenho por área do exame)
 Digite "sair" para encerrar.
 """
+import argparse
+
 from openai import APIConnectionError
 
+import sessao as sessao_mod
+import trilhas
 from agente import ResultadoAgente, conversar_stream
-from config import LLM_MODELO
+from config import LLM_MODELO, TRILHA_PADRAO
 
-print(f"\n🎓 AZ-900 Tutor (agente) · modelo local: {LLM_MODELO}")
+ap = argparse.ArgumentParser(description="Converse com o tutor no terminal.")
+ap.add_argument("--trilha", default=TRILHA_PADRAO, help="certificação a estudar (ex.: az900, aws-clf-c02).")
+_args = ap.parse_args()
+TRILHA = _args.trilha if trilhas.existe(_args.trilha) else TRILHA_PADRAO
+t = trilhas.obter(TRILHA)
+sessao_mod.obter_sessao("terminal", TRILHA)  # fixa a trilha desta conversa de terminal
+
+print(f"\n🎓 {t.sigla} Tutor (agente) · {t.titulo} · modelo local: {LLM_MODELO}")
 print("Pergunte algo, peça um simulado ou digite 'sair'.\n")
 
 while True:

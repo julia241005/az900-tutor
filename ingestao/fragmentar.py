@@ -6,10 +6,12 @@ com uma pequena sobreposição para não cortar ideias no meio.
 
 Rode:  python -m ingestao.fragmentar
 """
+import argparse
 import json
 import re
 
-from config import ARQ_FRAGMENTOS, PASTA_BRUTOS, SOBREPOSICAO, TAMANHO_FRAGMENTO
+import config
+from config import SOBREPOSICAO, TAMANHO_FRAGMENTO
 
 
 def dividir_por_secoes(texto: str) -> list[tuple[str, str]]:
@@ -66,22 +68,27 @@ def fragmentar_documento(doc: dict) -> list[dict]:
     return fragmentos
 
 
-def main():
+def main(trilha_id: str = None):
+    trilha_id = trilha_id or config.TRILHA_PADRAO
+    pasta_brutos = config.pasta_brutos(trilha_id)
+    arq_fragmentos = config.arq_fragmentos(trilha_id)
     todos = []
-    for arquivo in sorted(PASTA_BRUTOS.glob("*.json")):
+    for arquivo in sorted(pasta_brutos.glob("*.json")):
         doc = json.loads(arquivo.read_text(encoding="utf-8"))
         todos.extend(fragmentar_documento(doc))
 
-    ARQ_FRAGMENTOS.parent.mkdir(parents=True, exist_ok=True)
-    with ARQ_FRAGMENTOS.open("w", encoding="utf-8") as f:
+    arq_fragmentos.parent.mkdir(parents=True, exist_ok=True)
+    with arq_fragmentos.open("w", encoding="utf-8") as f:
         for frag in todos:
             f.write(json.dumps(frag, ensure_ascii=False) + "\n")
 
-    print(f"✅ {len(todos)} fragmentos criados em {ARQ_FRAGMENTOS.name}")
+    print(f"✅ {len(todos)} fragmentos criados em {arq_fragmentos}")
     if todos:
         media = sum(len(f["texto"]) for f in todos) // len(todos)
         print(f"   Tamanho médio: {media} caracteres (~{media // 4} tokens)")
 
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser(description="Fragmenta as páginas coletadas de uma trilha.")
+    ap.add_argument("--trilha", default=None, help="id da trilha (padrão: trilha ativa).")
+    main(ap.parse_args().trilha)

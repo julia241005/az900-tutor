@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo CompTIA Security+ (SY0-701), em português. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Conceitos gerais de segurança",
+      "enunciado": "Na tríade CIA da segurança da informação, qual princípio garante que a informação não seja alterada de forma não autorizada?",
+      "alternativas": {"A": "Confidencialidade", "B": "Integridade", "C": "Disponibilidade", "D": "Autenticação"},
+      "correta": "B",
+      "explicacao": "A Integridade garante que os dados não sejam modificados de forma não autorizada. Confidencialidade impede acesso indevido; Disponibilidade garante que o recurso esteja acessível quando necessário.",
+      "fonte": {"titulo": "What is data encryption?", "url": "https://www.cloudflare.com/learning/ssl/what-is-encryption/"}
+    },
+    {
+      "area": "Ameaças e vulnerabilidades",
+      "enunciado": "Um e-mail finge ser de um banco e induz o usuário a clicar em um link falso para roubar credenciais. Que tipo de ataque é esse?",
+      "alternativas": {"A": "Phishing", "B": "Ataque DDoS", "C": "SQL Injection", "D": "Força bruta"},
+      "correta": "A",
+      "explicacao": "Phishing é um ataque de engenharia social que usa mensagens falsas, parecendo legítimas, para enganar a vítima e roubar credenciais ou dados sensíveis.",
+      "fonte": {"titulo": "What is a phishing attack?", "url": "https://www.cloudflare.com/learning/access-management/phishing-attack/"}
+    },
+    {
+      "area": "Arquitetura de segurança",
+      "enunciado": "Qual modelo de segurança parte do princípio 'nunca confie, sempre verifique', tratando toda solicitação como não confiável até ser autenticada e autorizada?",
+      "alternativas": {"A": "Defesa em profundidade", "B": "Zero Trust", "C": "Modelo de castelo e fosso", "D": "Segurança por obscuridade"},
+      "correta": "B",
+      "explicacao": "O modelo Zero Trust não confia automaticamente em nada, nem dentro do perímetro: toda solicitação é verificada e autorizada. Difere do modelo tradicional 'castelo e fosso', que confia em quem já está dentro.",
+      "fonte": {"titulo": "What is Zero Trust?", "url": "https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust/"}
+    }
+  ]
+}

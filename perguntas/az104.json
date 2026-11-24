@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo AZ-104 (Azure Administrator), em português, com base na documentação oficial da Microsoft. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Identidade e governança",
+      "enunciado": "Qual recurso do Microsoft Entra ID exige uma segunda forma de verificação (como um app autenticador) além da senha no login?",
+      "alternativas": {"A": "RBAC", "B": "Autenticação multifator (MFA)", "C": "Azure Policy", "D": "Grupos de recursos"},
+      "correta": "B",
+      "explicacao": "A autenticação multifator (MFA) exige um segundo fator além da senha, aumentando a segurança do login. O RBAC controla permissões; o Azure Policy aplica regras de conformidade.",
+      "fonte": {"titulo": "O que é o Microsoft Entra ID", "url": "https://learn.microsoft.com/pt-br/entra/fundamentals/whatis"}
+    },
+    {
+      "area": "Armazenamento",
+      "enunciado": "Qual camada (tier) de acesso do Armazenamento de Blobs do Azure é a mais barata para armazenar e indicada para dados raramente acessados, como arquivamento de longo prazo?",
+      "alternativas": {"A": "Hot (Quente)", "B": "Cool (Fria)", "C": "Archive (Arquivo)", "D": "Premium"},
+      "correta": "C",
+      "explicacao": "A camada Archive tem o menor custo de armazenamento, para dados raramente acessados e que toleram horas de latência para recuperação. Hot é para acesso frequente; Cool para acesso ocasional.",
+      "fonte": {"titulo": "Camadas de acesso para dados de blob", "url": "https://learn.microsoft.com/pt-br/azure/storage/blobs/access-tiers-overview"}
+    },
+    {
+      "area": "Rede virtual",
+      "enunciado": "Qual recurso permite distribuir o tráfego de entrada entre várias máquinas virtuais na camada 4 (TCP/UDP) dentro de uma rede virtual do Azure?",
+      "alternativas": {"A": "Azure Load Balancer", "B": "Azure DNS", "C": "Network Security Group", "D": "Azure Bastion"},
+      "correta": "A",
+      "explicacao": "O Azure Load Balancer distribui o tráfego de rede na camada 4 (transporte) entre várias VMs, aumentando disponibilidade e escala. O NSG filtra tráfego; o DNS resolve nomes.",
+      "fonte": {"titulo": "O que é o Azure Load Balancer", "url": "https://learn.microsoft.com/pt-br/azure/load-balancer/load-balancer-overview"}
+    }
+  ]
+}

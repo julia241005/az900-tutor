@@ -21,11 +21,13 @@ import chromadb
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from config import MODELO_EMBEDDING, MODO_BUSCA, NOME_COLECAO, PASTA_VETORES, TOP_K
+import config
+import trilhas
+from config import MODELO_EMBEDDING, MODO_BUSCA, TOP_K, TRILHA_PADRAO
 
 _modelo = None
-_colecao = None
-_indice = None  # cache: fragmentos + vetores + índice de palavras, carregado uma vez
+_colecoes: dict = {}  # coleção ChromaDB por trilha
+_indices: dict = {}   # cache por trilha: fragmentos + vetores + índice de palavras (BM25)
 
 # Unidades de introdução e resumo falam do curso (ex.: como usar o Copilot), não do conteúdo da prova
 UNIDADES_SEM_CONTEUDO_DE_PROVA = ("/1-introduction", "-summary")
@@ -87,11 +89,11 @@ def fusao_rrf(rankings: list[list[int]], k: int = 60) -> dict[int, float]:
 
 
 # ── Carregamento ─────────────────────────────────────────────────────────────
-def _colecao_chroma():
-    global _colecao
-    if _colecao is None:
-        _colecao = chromadb.PersistentClient(path=str(PASTA_VETORES)).get_collection(NOME_COLECAO)
-    return _colecao
+def _colecao_chroma(trilha: str = TRILHA_PADRAO):
+    if trilha not in _colecoes:
+        cliente = chromadb.PersistentClient(path=str(config.pasta_vetores(trilha)))
+        _colecoes[trilha] = cliente.get_collection(trilhas.obter(trilha).colecao)
+    return _colecoes[trilha]
 
 
 def _modelo_embedding():
@@ -101,23 +103,22 @@ def _modelo_embedding():
     return _modelo
 
 
-def _carregar_indice():
-    """Lê todos os fragmentos uma vez e monta o índice de palavras (BM25) em memória."""
-    global _indice
-    if _indice is None:
-        r = _colecao_chroma().get(include=["documents", "metadatas", "embeddings"])
+def _carregar_indice(trilha: str = TRILHA_PADRAO):
+    """Lê todos os fragmentos uma vez (por trilha) e monta o índice de palavras (BM25)."""
+    if trilha not in _indices:
+        r = _colecao_chroma(trilha).get(include=["documents", "metadatas", "embeddings"])
         vetores = np.array(r["embeddings"], dtype=np.float32)
         textos_busca = [f"{m.get('titulo', '')} {m.get('secao', '')} {d}" for d, m in zip(r["documents"], r["metadatas"])]
-        _indice = {
+        _indices[trilha] = {
             "docs": r["documents"], "metas": r["metadatas"], "vetores": vetores,
             "bm25": BM25([tokenizar(t) for t in textos_busca]),
         }
-    return _indice
+    return _indices[trilha]
 
 
-def amostra_por_area(area: str | None, n: int) -> list[dict]:
+def amostra_por_area(area: str | None, n: int, trilha: str = TRILHA_PADRAO) -> list[dict]:
     """Sorteia n trechos de conteúdo (sem o guia de estudo) de uma área do exame."""
-    idx = _carregar_indice()
+    idx = _carregar_indice(trilha)
     candidatos = [
         {"texto": doc, "similaridade": 1.0, **meta}
         for doc, meta in zip(idx["docs"], idx["metas"])
@@ -128,11 +129,12 @@ def amostra_por_area(area: str | None, n: int) -> list[dict]:
 
 
 # ── Busca ────────────────────────────────────────────────────────────────────
-def buscar(pergunta: str, k: int = TOP_K, area: str | None = None, modo: str | None = None) -> list[dict]:
-    """Retorna os k fragmentos mais relevantes para a pergunta.
+def buscar(pergunta: str, k: int = TOP_K, area: str | None = None, modo: str | None = None,
+           trilha: str = TRILHA_PADRAO) -> list[dict]:
+    """Retorna os k fragmentos mais relevantes para a pergunta, na coleção da trilha.
     Cada resultado traz 'similaridade' (significado, 0 a 1) e 'palavra_chave' (se houve palavra exata em comum)."""
     modo = modo or MODO_BUSCA
-    idx = _carregar_indice()
+    idx = _carregar_indice(trilha)
     consulta = _modelo_embedding().encode([pergunta], normalize_embeddings=True)[0]
     sims = idx["vetores"] @ consulta  # similaridade de cosseno (vetores normalizados)
 

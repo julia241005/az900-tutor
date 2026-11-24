@@ -26,17 +26,21 @@ from dataclasses import dataclass, field
 
 import roteador
 import simulado
-from config import LLM_MAX_TOKENS, LLM_MODELO, LLM_TEMPERATURA, ROTEAMENTO
-from ferramentas import FERRAMENTAS, executar
+import trilhas
+from config import LLM_MAX_TOKENS, LLM_MODELO, LLM_TEMPERATURA, ROTEAMENTO, TRILHA_PADRAO
+from ferramentas import executar, ferramentas_da_trilha
 from observabilidade import registrar
 from rag import Resultado, cliente, responder_stream
 from sessao import obter_sessao
 
-PROMPT_AGENTE = """Você é o AZ-900 Tutor, um professor especialista em Microsoft Azure que ajuda \
-estudantes brasileiros a passar no exame AZ-900 (Microsoft Azure Fundamentals).
+
+def prompt_agente(trilha_id: str = TRILHA_PADRAO) -> str:
+    t = trilhas.obter(trilha_id)
+    return f"""Você é o {t.sigla} Tutor, um professor especialista que ajuda estudantes \
+brasileiros a passar na certificação {t.sigla} ({t.titulo}, {t.provedor}).
 
 Você tem ferramentas:
-- buscar_documentacao: use SEMPRE para qualquer dúvida sobre Azure ou nuvem. Nunca responda \
+- buscar_documentacao: use SEMPRE para qualquer dúvida sobre o conteúdo do exame. Nunca responda \
 conceitos de memória.
 - gerar_simulado: use quando o aluno quiser praticar, fazer quiz, teste ou simulado.
 - ver_progresso: use quando o aluno perguntar como está indo, seu desempenho ou o que estudar.
@@ -49,7 +53,7 @@ nenhum trecho tratar do assunto.
 3. Português do Brasil, didático e objetivo: resposta direta primeiro, depois detalhes.
 4. Quando útil, termine com "💡 Dica para a prova:".
 
-Se o assunto não for Azure, nuvem ou o exame AZ-900, diga educadamente que você só ajuda com o AZ-900."""
+Se o assunto não for sobre o conteúdo do exame {t.sigla}, diga educadamente que você só ajuda com o {t.sigla}."""
 
 # Mensagens de conversa simples, que não precisam da documentação
 CONVERSA_SIMPLES = re.compile(
@@ -87,7 +91,7 @@ def _responder_com_documentacao(sessao, mensagem: str, res: ResultadoAgente, fin
     anterior = next((m["content"] for m in reversed(sessao.historico) if m["role"] == "user"), "")
     consulta = f"{anterior} {mensagem}" if anterior and len(mensagem.split()) < 6 else mensagem
     partes = []
-    for parte in responder_stream(consulta):
+    for parte in responder_stream(consulta, sessao.trilha):
         if isinstance(parte, Resultado):
             res.fontes = parte.fontes
             res.tokens_entrada += parte.tokens_entrada
@@ -129,7 +133,7 @@ def conversar_stream(sessao_id: str, mensagem: str):
 
     # ── Passo 1 (modo "regras", padrão): o código decide, sem gastar uma chamada ao LLM ──
     if ROTEAMENTO == "regras":
-        intencao, argumentos = roteador.decidir(mensagem)
+        intencao, argumentos = roteador.decidir(mensagem, sessao.trilha)
         if intencao in ("gerar_simulado", "ver_progresso"):
             res.ferramentas_usadas = [intencao]
             saida = executar(intencao, argumentos, sessao)
@@ -142,7 +146,7 @@ def conversar_stream(sessao_id: str, mensagem: str):
             return
         if intencao == "conversa":
             res.tipo = "conversa"
-            texto = roteador.resposta_conversa(mensagem)
+            texto = roteador.resposta_conversa(mensagem, sessao.trilha)
             yield texto
             yield finalizar(texto)
             return
@@ -150,10 +154,10 @@ def conversar_stream(sessao_id: str, mensagem: str):
         return
 
     # ── Passo 1 (modo "llm"): o LLM decide (com as ferramentas disponíveis) ──────────────
-    mensagens = [{"role": "system", "content": PROMPT_AGENTE}, *sessao.historico,
+    mensagens = [{"role": "system", "content": prompt_agente(sessao.trilha)}, *sessao.historico,
                  {"role": "user", "content": mensagem}]
     decisao = cliente.chat.completions.create(
-        model=LLM_MODELO, messages=mensagens, tools=FERRAMENTAS,
+        model=LLM_MODELO, messages=mensagens, tools=ferramentas_da_trilha(sessao.trilha),
         temperature=0.1, max_tokens=LLM_MAX_TOKENS,
     )
     _somar_uso(res, decisao.usage)
@@ -166,7 +170,7 @@ def conversar_stream(sessao_id: str, mensagem: str):
             yield from _responder_com_documentacao(sessao, mensagem, res, finalizar)
             return
         res.tipo = "conversa"
-        texto = escolha.content or "Olá! Posso explicar conceitos do AZ-900 ou fazer um simulado com você."
+        texto = escolha.content or f"Olá! Posso explicar conceitos do {trilhas.obter(sessao.trilha).sigla} ou fazer um simulado com você."
         yield texto
         yield finalizar(texto)
         return

@@ -13,6 +13,7 @@ O simulado em andamento fica só em memória. Os resultados vão para o banco (b
 from dataclasses import dataclass, field
 
 import banco
+from config import TRILHA_PADRAO
 
 MAX_HISTORICO = 10  # últimas mensagens enviadas ao LLM
 
@@ -20,6 +21,7 @@ MAX_HISTORICO = 10  # últimas mensagens enviadas ao LLM
 @dataclass
 class Sessao:
     sessao_id: str = "terminal"
+    trilha: str = TRILHA_PADRAO                      # certificação que esta sessão está estudando
     historico: list = field(default_factory=list)
     simulado: list = field(default_factory=list)   # perguntas ainda não respondidas
     pergunta_atual: dict | None = None
@@ -30,24 +32,28 @@ class Sessao:
     def lembrar(self, papel: str, texto: str, extra: dict | None = None):
         self.historico.append({"role": papel, "content": texto})
         self.historico = self.historico[-MAX_HISTORICO:]
-        banco.salvar_mensagem(self.sessao_id, papel, texto, extra)
+        banco.salvar_mensagem(self.sessao_id, papel, texto, extra, trilha=self.trilha)
 
 
 _SESSOES: dict[str, Sessao] = {}
 
 
-def obter_sessao(sessao_id: str) -> Sessao:
-    """Devolve a sessão; se o tutor acabou de abrir, recarrega o histórico salvo no banco."""
+def obter_sessao(sessao_id: str, trilha: str | None = None) -> Sessao:
+    """Devolve a sessão; se o tutor acabou de abrir, recarrega o histórico salvo no banco.
+    A trilha define de qual banco (certificação) o histórico é lido."""
+    trilha = trilha or TRILHA_PADRAO
     if sessao_id not in _SESSOES:
-        salvas = banco.mensagens_da_sessao(sessao_id, MAX_HISTORICO)
+        salvas = banco.mensagens_da_sessao(sessao_id, MAX_HISTORICO, trilha=trilha)
         _SESSOES[sessao_id] = Sessao(
             sessao_id=sessao_id,
+            trilha=trilha,
             historico=[{"role": m["papel"], "content": m["texto"]} for m in salvas],
         )
     return _SESSOES[sessao_id]
 
 
-def nova_conversa(sessao_id: str):
+def nova_conversa(sessao_id: str, trilha: str | None = None):
     """Apaga o histórico da conversa (o progresso no simulado continua guardado)."""
-    banco.apagar_mensagens(sessao_id)
+    s = _SESSOES.get(sessao_id)
+    banco.apagar_mensagens(sessao_id, trilha=trilha or (s.trilha if s else TRILHA_PADRAO))
     _SESSOES.pop(sessao_id, None)

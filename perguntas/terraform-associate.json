@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo HashiCorp Terraform Associate (003), em português, com base na documentação oficial da HashiCorp. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Fluxo do Terraform",
+      "enunciado": "Qual comando do Terraform cria ou mostra um plano de execução, descrevendo o que será alterado, SEM aplicar as mudanças?",
+      "alternativas": {"A": "terraform init", "B": "terraform plan", "C": "terraform apply", "D": "terraform destroy"},
+      "correta": "B",
+      "explicacao": "O comando terraform plan calcula e mostra as mudanças necessárias para chegar ao estado desejado, sem aplicá-las. O apply aplica; o init prepara o diretório; o destroy remove recursos.",
+      "fonte": {"titulo": "Terraform CLI Commands", "url": "https://developer.hashicorp.com/terraform/cli/commands"}
+    },
+    {
+      "area": "Estado (state)",
+      "enunciado": "Por que usar um backend remoto (como o Terraform Cloud ou um bucket) para armazenar o arquivo de estado em trabalho de equipe?",
+      "alternativas": {"A": "Para deixar o apply mais rápido", "B": "Para compartilhar o estado e evitar conflitos com bloqueio (locking)", "C": "Para não precisar escrever código", "D": "Para criptografar o código-fonte"},
+      "correta": "B",
+      "explicacao": "Um backend remoto permite que a equipe compartilhe o mesmo estado e oferece bloqueio (state locking), evitando que duas pessoas apliquem mudanças ao mesmo tempo e corrompam o estado.",
+      "fonte": {"titulo": "State", "url": "https://developer.hashicorp.com/terraform/language/state"}
+    },
+    {
+      "area": "Módulos e provedores",
+      "enunciado": "O que é um módulo no Terraform?",
+      "alternativas": {"A": "Um contêiner de recursos usados juntos, reutilizável", "B": "Um tipo de variável", "C": "Um comando da CLI", "D": "Um arquivo de estado"},
+      "correta": "A",
+      "explicacao": "Um módulo é um contêiner de vários recursos usados em conjunto; permite reutilizar e organizar a configuração. O módulo raiz é o diretório principal; módulos filhos são chamados por ele.",
+      "fonte": {"titulo": "Modules", "url": "https://developer.hashicorp.com/terraform/language/modules"}
+    }
+  ]
+}

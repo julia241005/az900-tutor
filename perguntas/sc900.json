@@ -1,0 +1,29 @@
+{
+  "descricao": "Banco inicial de perguntas no estilo SC-900 (Security, Compliance and Identity Fundamentals), em português, com base na documentação oficial da Microsoft. Conteúdo original.",
+  "perguntas": [
+    {
+      "area": "Identidade (Microsoft Entra)",
+      "enunciado": "Qual recurso do Microsoft Entra ID aplica controles de acesso com base em sinais como usuário, local e risco, exigindo MFA em situações de maior risco?",
+      "alternativas": {"A": "Acesso Condicional", "B": "Azure Policy", "C": "Microsoft Purview", "D": "Grupos de segurança"},
+      "correta": "A",
+      "explicacao": "O Acesso Condicional avalia sinais (usuário, dispositivo, local, risco) e aplica decisões, como exigir MFA ou bloquear, conforme a política. É um recurso central de identidade do Microsoft Entra.",
+      "fonte": {"titulo": "O que é o Microsoft Entra ID", "url": "https://learn.microsoft.com/pt-br/entra/fundamentals/whatis"}
+    },
+    {
+      "area": "Conceitos de segurança e conformidade",
+      "enunciado": "O modelo Zero Trust da Microsoft parte de qual princípio fundamental?",
+      "alternativas": {"A": "Confiar em tudo dentro da rede corporativa", "B": "Verificar explicitamente, usar privilégio mínimo e assumir violação", "C": "Usar apenas senhas fortes", "D": "Bloquear todo o tráfego de internet"},
+      "correta": "B",
+      "explicacao": "O Zero Trust se baseia em três princípios: verificar explicitamente, usar acesso com privilégio mínimo e assumir que a violação pode ocorrer (assume breach).",
+      "fonte": {"titulo": "Defender for Cloud", "url": "https://learn.microsoft.com/pt-br/azure/defender-for-cloud/defender-for-cloud-introduction"}
+    },
+    {
+      "area": "Conformidade (Microsoft Purview)",
+      "enunciado": "Qual solução da Microsoft ajuda a classificar, rotular e proteger dados sensíveis, além de aplicar prevenção contra perda de dados (DLP)?",
+      "alternativas": {"A": "Microsoft Sentinel", "B": "Microsoft Entra ID", "C": "Microsoft Purview", "D": "Azure Firewall"},
+      "correta": "C",
+      "explicacao": "O Microsoft Purview cuida de governança e conformidade de dados: classificação, rótulos de confidencialidade e DLP. O Sentinel é SIEM; o Entra é identidade; o Firewall protege a rede.",
+      "fonte": {"titulo": "Microsoft Purview", "url": "https://learn.microsoft.com/pt-br/purview/purview"}
+    }
+  ]
+}

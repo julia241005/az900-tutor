@@ -12,26 +12,34 @@ import re
 from dataclasses import dataclass
 
 import banco
+import trilhas
 from buscar import amostra_por_area
-from config import LLM_MODELO, SIMULADO_GERAR_COM_IA
+from config import LLM_MODELO, SIMULADO_GERAR_COM_IA, TRILHA_PADRAO
 from rag import cliente, montar_contexto
 from sessao import Sessao
 
 LETRAS = ["A", "B", "C", "D"]
 
-PROMPT_SIMULADO = """Você cria perguntas de múltipla escolha no estilo do exame Microsoft AZ-900, \
+
+def prompt_simulado(trilha_id: str = TRILHA_PADRAO) -> str:
+    t = trilhas.obter(trilha_id)
+    return f"""Você cria perguntas de múltipla escolha no estilo do exame {t.sigla} ({t.titulo}), \
 em português do Brasil, baseadas SOMENTE no trecho oficial fornecido.
 
 Regras:
 - Cada pergunta tem 4 alternativas (A, B, C, D) e apenas UMA correta.
-- As alternativas erradas devem ser plausíveis (conceitos parecidos do Azure), mas claramente incorretas segundo o trecho.
+- As alternativas erradas devem ser plausíveis (conceitos parecidos), mas claramente incorretas segundo o trecho.
 - Não use detalhes que o trecho não afirma.
 - A explicação diz por que a correta está certa, em 1 ou 2 frases, SEM citar letras \
 (escreva o conceito, não "a opção B").
 
 Responda APENAS com JSON válido, neste formato:
-{"perguntas": [{"enunciado": "...", "alternativas": {"A": "...", "B": "...", "C": "...", "D": "..."}, \
-"correta": "B", "explicacao": "..."}]}"""
+{{"perguntas": [{{"enunciado": "...", "alternativas": {{"A": "...", "B": "...", "C": "...", "D": "..."}}, \
+"correta": "B", "explicacao": "..."}}]}}"""
+
+
+# Compatibilidade com quem importa a constante
+PROMPT_SIMULADO = prompt_simulado()
 
 
 def _extrair_json(texto: str) -> dict:
@@ -82,17 +90,17 @@ class Uso:
     completion_tokens: int = 0
 
 
-def gerar_perguntas(area: str | None, quantidade: int = 3) -> tuple[list[dict], Uso]:
+def gerar_perguntas(area: str | None, quantidade: int = 3, trilha: str = TRILHA_PADRAO) -> tuple[list[dict], Uso]:
     """Gera perguntas. Retorna (perguntas, uso_de_tokens).
     Uma pergunta por trecho, em chamadas separadas: assim a FONTE citada é sempre
     o trecho que originou a pergunta (modelos pequenos erravam o número do trecho)."""
     uso = Uso()
     perguntas = []
-    for trecho in amostra_por_area(area, quantidade):
+    for trecho in amostra_por_area(area, quantidade, trilha):
         resp = cliente.chat.completions.create(
             model=LLM_MODELO,
             messages=[
-                {"role": "system", "content": PROMPT_SIMULADO},
+                {"role": "system", "content": prompt_simulado(trilha)},
                 {"role": "user", "content": f"TRECHO OFICIAL:\n\n{montar_contexto([trecho])}\n\nCrie 1 pergunta."},
             ],
             temperature=0.5,
@@ -110,16 +118,17 @@ def gerar_perguntas(area: str | None, quantidade: int = 3) -> tuple[list[dict], 
 
 
 def obter_perguntas(sessao: Sessao, area: str | None, quantidade: int = 3) -> tuple[list[dict], object]:
-    """Usa o banco de perguntas aprovadas. Se SIMULADO_GERAR_COM_IA estiver ligado, a IA gera
-    o que faltar e salva como 'pendente' para revisão humana (revisar_perguntas.py)."""
-    ja_respondidas = {r["enunciado"] for r in banco.respostas_do_aluno(sessao.sessao_id)}
-    perguntas = banco.perguntas_aprovadas(area, quantidade, evitar=ja_respondidas)
+    """Usa o banco de perguntas aprovadas da trilha da sessão. Se SIMULADO_GERAR_COM_IA estiver
+    ligado, a IA gera o que faltar e salva como 'pendente' para revisão humana (revisar_perguntas.py)."""
+    trilha = sessao.trilha
+    ja_respondidas = {r["enunciado"] for r in banco.respostas_do_aluno(sessao.sessao_id, trilha)}
+    perguntas = banco.perguntas_aprovadas(area, quantidade, evitar=ja_respondidas, trilha=trilha)
     uso = None
     faltam = quantidade - len(perguntas)
     if faltam > 0 and SIMULADO_GERAR_COM_IA:
-        novas, uso = gerar_perguntas(area, faltam)
+        novas, uso = gerar_perguntas(area, faltam, trilha)
         for p in novas:
-            banco.salvar_pergunta(p, status="pendente")
+            banco.salvar_pergunta(p, status="pendente", trilha=trilha)
             p["status"] = "pendente"
         perguntas += novas
     random.shuffle(perguntas)
@@ -146,7 +155,7 @@ def corrigir(sessao: Sessao, letra: str) -> str:
     p = sessao.pergunta_atual
     acertou = letra.upper() == p["correta"]
     sessao.resultados.append({"area": p["area"], "correta": acertou})
-    banco.registrar_resposta(sessao.sessao_id, p, acertou)  # memória de longo prazo
+    banco.registrar_resposta(sessao.sessao_id, p, acertou, trilha=sessao.trilha)  # memória de longo prazo
     if acertou:
         sessao.acertos_rodada += 1
 

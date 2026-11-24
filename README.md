@@ -1,7 +1,9 @@
-# ☁️ AZ-900 Tutor
+# ☁️ Tutor de Certificações (AZ-900, AWS CLF-C02 e outras)
 
-**Um assistente de estudo com IA para a certificação Microsoft Azure Fundamentals (AZ-900).**
-Ele responde dúvidas consultando a documentação oficial da Microsoft, mostra de onde tirou cada informação, aplica simulados e acompanha o seu desempenho por área do exame.
+**Um assistente de estudo com IA para certificações de TI.** Começou focado no **Microsoft Azure Fundamentals (AZ-900)** e hoje é **multi-certificação**: o usuário escolhe a certificação (Azure, AWS, redes, DevOps, segurança...) e o tutor responde, simula e acompanha o progresso **daquela** prova.
+Ele responde dúvidas consultando a documentação **oficial** de cada certificação, mostra de onde tirou cada informação, aplica simulados e acompanha o seu desempenho por área do exame.
+
+> 🎓 **Várias certificações.** Escolha a certificação no seletor da lateral. Cada uma tem suas próprias áreas, fontes oficiais, banco de perguntas e progresso (ver [doc 13](docs/13-multi-certificacao.md)). Para adicionar uma nova, basta editar `trilhas.py`.
 
 > 💸 **Custo zero.** A IA roda no seu próprio computador. Nenhuma API paga, nenhuma assinatura.
 
@@ -48,7 +50,7 @@ Prefiro ser transparente. Estes são os pontos fracos conhecidos:
 
 | Limitação | Por quê |
 |---|---|
-| **Só AZ-900** | Ele foi feito para responder só sobre essa prova. Outros assuntos são recusados de propósito |
+| **Uma certificação por vez** | Ele responde só sobre a certificação selecionada; outros assuntos são recusados de propósito. Para uma certificação responder no chat, é preciso rodar a ingestão das fontes dela (o AZ-900 já vem pronto) |
 | **É lento** | A IA roda no processador, sem placa de vídeo. Na medição, uma resposta levava em média **24 segundos** (já reduzi as chamadas à IA de 2 para 1 por pergunta). Na versão online gratuita, pode levar até 1 minuto. O simulado e o progresso são instantâneos, porque não usam IA |
 | **Erra às vezes** | O modelo é pequeno (3 bilhões de parâmetros) para caber num computador comum. Na avaliação, ele trouxe a fonte certa em 97% das perguntas, mas em alguns casos leu errado o trecho. Por isso as fontes estão sempre visíveis: confira |
 | **Banco de questões pequeno** | São 30 questões revisadas por mim, com fonte oficial. A IA até consegue gerar questões, mas nos testes nenhuma passou na minha revisão, então essa função fica desligada |
@@ -132,11 +134,25 @@ pip install -r requirements.txt
 
 ollama pull qwen2.5:3b              # baixa o modelo de IA (~2 GB)
 
-python -m ingestao.coletar          # baixa as páginas oficiais
+python -m ingestao.coletar          # baixa as páginas oficiais (AZ-900)
 python -m ingestao.fragmentar       # divide em pedaços
 python -m ingestao.indexar          # cria o banco de busca
-python importar_perguntas.py        # carrega as questões do simulado
+python importar_perguntas.py        # carrega as questões do simulado (de todas as certificações)
 ```
+
+> ♻️ **Já usava a versão só-AZ-900?** Rode **uma vez** `python migrar_dados.py`: ele move o seu índice e o seu progresso para `data/az900/` (novo layout multi-certificação), **sem reindexar**.
+
+### Estudar outra certificação
+
+No chat, o simulado e o progresso já funcionam para qualquer certificação assim que as perguntas são importadas. Para o **chat com IA** responder sobre outra certificação, rode a ingestão dela (uma vez):
+
+```bash
+python -m ingestao.coletar    --trilha aws-clf-c02
+python -m ingestao.fragmentar --trilha aws-clf-c02
+python -m ingestao.indexar    --trilha aws-clf-c02
+```
+
+Depois é só escolher a certificação no seletor da lateral. As certificações disponíveis estão em `trilhas.py`.
 
 ### Dia a dia
 
@@ -160,7 +176,10 @@ python atualizar_base.py     # baixa a documentação de novo e reindexa se algo
 
 ```
 az900-tutor/
-├── ingestao/              ← baixa, limpa, divide e indexa a documentação
+├── trilhas.py             ← catálogo de certificações (áreas, pesos, fontes) — ponto único de configuração
+├── ingestao/              ← baixa, limpa, divide e indexa a documentação (por trilha)
+├── perguntas/             ← bancos de perguntas curadas, um por certificação
+├── migrar_dados.py        ← migra o layout antigo para data/<id>/ (uma vez)
 ├── buscar.py              ← busca híbrida (significado + palavra exata)
 ├── rag.py                 ← monta a resposta com as fontes
 ├── roteador.py            ← decide o que fazer: dúvida, simulado, progresso ou conversa
@@ -194,6 +213,7 @@ az900-tutor/
 | 10 | [Custo, tokens e observabilidade](docs/10-custo.md) |
 | 11 | [Segurança e ética](docs/11-seguranca-e-etica.md) |
 | 12 | [Publicação](docs/12-publicacao.md) |
+| 13 | [Várias certificações (multi-trilha)](docs/13-multi-certificacao.md) |
 
 O passo a passo completo do desenvolvimento está no [ROADMAP](ROADMAP.md).
 
@@ -207,7 +227,7 @@ O passo a passo completo do desenvolvimento está no [ROADMAP](ROADMAP.md).
 - [ ] **Modo prova real:** cronômetro e nota só no final, como no dia do exame
 - [ ] **Revisar meus erros:** refazer só as questões erradas até acertar
 - [ ] Flashcards com repetição espaçada
-- [ ] Outras certificações (AZ-104, AI-900) usando a mesma estrutura
+- [x] **Várias certificações** (Azure, AWS, redes, DevOps, segurança) com seleção pelo usuário — ver [doc 13](docs/13-multi-certificacao.md)
 - [ ] Demonstração em vídeo
 
 ---
